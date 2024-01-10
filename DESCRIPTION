@@ -1,0 +1,20 @@
+Package: moiraine
+Title: Construction of Reproducible Pipelines for Testing and Comparing Multi-omics Integration Tools
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Olivia", "Angelin-Bonnet", 
+    email = "O.Angelin-Bonnet@massey.ac.nz",
+    role = c("aut", "cre"), 
+    comment = c(ORCID = "0000-0002-7708-2919")))
+Description: A package to facilitate the construction of reproducible pipelines to evaluate 
+  and compare multi-omics integration tools. Handles import of multi-omics datasets
+  and associated metadata, datasets preparation (transformation, pre-filtering, etc),
+   construction of input objects for several multi-omics integration packages
+  (such as mixOmics or MOFA), as well as visualisation of the results and comparison
+  of different integration tools.
+URL: https://github.com/PlantandFoodResearch/moiraine
+BugReports: https://github.com/PlantandFoodResearch/moiraine/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
