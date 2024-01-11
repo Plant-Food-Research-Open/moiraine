@@ -34,7 +34,7 @@ metadata from each csv file.
 \examples{
 \dontrun{
 ## in the _targets.R
-library(MOITestPipeline)
+library(moiraine)
 
 list(
   import_fmetadata_csv_factory(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_omics_sets.R
 \name{create_omics_set_factory}
 \alias{create_omics_set_factory}
-\title{Target factory for omics set creation}
+\title{Target factory for omics sets creation}
 \usage{
 create_omics_set_factory(
   datasets,
@@ -13,25 +13,31 @@ create_omics_set_factory(
 )
 }
 \arguments{
-\item{datasets}{Vector of symbols, the names of the targets containing the omics datasets.}
+\item{datasets}{Vector of symbols, the names of the targets containing the
+omics datasets.}
 
-\item{omics_types}{Character vector, which type of omics data is being stored for each dataset?
-Possible values are 'genomics', 'transcriptomics', 'metabolomics' and 'phenomics'.}
+\item{omics_types}{Character vector, which type of omics data is being stored
+for each dataset? Possible values are \code{'genomics'}, \code{'transcriptomics'},
+\code{'metabolomics'} and \code{'phenomics'}.  Use \code{'phenomics'} for any other omics.
+Use \code{'phenomics'} for any other omics.}
 
-\item{features_metadatas}{Vector of symbols, the names of the targets containing the features metadata
-data-frame associated with each omics dataset. Use \code{NULL} if no feature metadata exists for a dataset.}
+\item{features_metadatas}{Vector of symbols, the names of the targets
+containing the features metadata data-frame associated with each omics
+dataset. Use \code{NULL} if no feature metadata exists for a dataset.}
 
-\item{samples_metadatas}{Vector of symbols, the names of the targets containing the samples metadata
-data-frame associated with each omics dataset. Use \code{NULL} if no samples metadata exists for a dataset.}
+\item{samples_metadatas}{Vector of symbols, the names of the targets
+containing the samples metadata data-frame associated with each omics
+dataset. Use \code{NULL} if no samples metadata exists for a dataset.}
 
-\item{target_name_suffixes}{Vector of symbols, a suffix to add to the name of the targets created by this
-target factory for each dataset. If none provided, the suffixes will be extracted from the \code{datasets} argument.
+\item{target_name_suffixes}{Character vector, a suffix to add to the name of
+the targets created by this target factory for each dataset. If none
+provided, the suffixes will be extracted from the \code{datasets} argument.
 Default value is NULL.}
 }
 \value{
 A list of target objects, with three datasets provided, and
-\code{target_name_suffixes = c("geno", "transcripto", "metabo")}, the following targets will be returned: \code{set_geno},
-\code{set_transcripto} and \code{set_metabo}.
+\code{target_name_suffixes = c("geno", "transcripto", "metabo")}, the following
+targets will be returned: \code{set_geno}, \code{set_transcripto} and \code{set_metabo}.
 }
 \description{
 Creates a list of targets that generate omics sets from targets containing
@@ -40,12 +46,14 @@ datasets, features and samples metadata.
 \examples{
 \dontrun{
 ## in the _targets.R
-library(MOITestPipeline)
+library(moiraine)
+library(targets)
 
 list(
   ## targets to import the different datasets
 
   ## Example where genomics dataset has no features metadata information
+  ## Will generate the following targets: set_geno, set_transcripto
   create_omics_set_factory(
     datasets = c(data_geno, data_transcripto),
     omics_types = c("genomics", "transcriptomics"),

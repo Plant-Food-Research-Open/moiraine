@@ -7,18 +7,40 @@
 create_multiomics_set(sets_list, datasets_names = NULL, show_warnings = TRUE)
 }
 \arguments{
-\item{sets_list}{List of Biobase Set objects, created via \code{\link{create_omics_set}}. Currently accepted ojects: \code{SnpSet},
-\code{ExpressionSet}, \code{MetabolomeSet}, \code{PhenotypeSet}.}
+\item{sets_list}{List of \link[Biobase:class.eSet]{Biobase::eSet} objects, created via
+\code{\link[=create_omics_set]{create_omics_set()}}. Currently accepted objects: \link[Biobase:class.SnpSet]{Biobase::SnpSet},
+\link[Biobase:class.ExpressionSet]{Biobase::ExpressionSet}, \linkS4class{MetabolomeSet},
+\linkS4class{PhenotypeSet}.}
 
-\item{datasets_names}{Optional, vector of character, name for each Set object. Will be appended to the data type in the resulting
-object. If the \code{sets_list} list contains several objects of the same data type (e.g. several SnpSets), their names must be unique.
-If "" is provided, no name will be appended to the data type for the corresponding dataset.}
+\item{datasets_names}{Optional, vector of character, name for each Set
+object. Will be appended to the data type in the resulting object. If the
+\code{sets_list} list contains several objects of the same data type (e.g.
+several SnpSets), their names must be unique. If "" is provided, no name
+will be appended to the data type for the corresponding dataset.}
 
-\item{show_warnings}{Logical, should warnings be displayed when adding a set to the MultiDataSet object? Default value is \code{TRUE}.}
+\item{show_warnings}{Logical, should warnings be displayed when adding a set
+to the MultiDataSet object? Default value is \code{TRUE}.}
 }
 \value{
-a \code{\link[MultiDataSet]{MultiDataSet-class}}.
+\link[MultiDataSet:MultiDataSet-class]{MultiDataSet::MultiDataSet} object.
 }
 \description{
-Creates a MultiDataSet object from a list of Biobase Set objects to store the different omics sets.
+Creates a MultiDataSet object from a list of Biobase Set objects to store the
+different omics sets.
+}
+\examples{
+\dontrun{
+## set_geno, set_transcripto and set_metabo are all Set objects
+## Generating a MultiDataSet object with standard name
+create_multiomics_set(
+  list(set_geno, set_transcripto, set_metabo)
+)
+
+## Adding custom names for genomics and metabolomics datasets
+## but not for the transcriptomics dataset
+create_multiomics_set(
+  list(set_geno, set_transcripto, set_metabo),
+  datasets_names = c("genome1", "", "lcms")
+)
+}
 }

@@ -43,7 +43,7 @@ metadata from each GFF/GTF file.
 \examples{
 \dontrun{
 ## in the _targets.R
-library(MOITestPipeline)
+library(moiraine)
 
 list(
   import_fmetadata_gff_factory(

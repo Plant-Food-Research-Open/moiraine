@@ -52,13 +52,14 @@ create_omics_set <- function(dataset,
                              features_metadata = NULL,
                              samples_metadata = NULL) {
 
-  omics_types <- rlang::arg_match(omics_types)
+  omics_type <- rlang::arg_match(omics_type)
 
-  res <- switch(omics_type,
-                "genomics" = new("SnpSet", call = dataset),
-                "transcriptomics" = Biobase::ExpressionSet(assayData = dataset),
-                "metabolomics" = new("MetabolomeSet", call = dataset),
-                "phenomics" = new("PhenotypeSet", call = dataset)
+  res <- switch(
+    omics_type,
+    "genomics" = new("SnpSet", call = dataset),
+    "transcriptomics" = Biobase::ExpressionSet(assayData = dataset),
+    "metabolomics" = new("MetabolomeSet", call = dataset),
+    "phenomics" = new("PhenotypeSet", call = dataset)
   )
 
   if (!is.null(features_metadata)) {
@@ -180,16 +181,16 @@ create_omics_set_factory <- function(datasets,
                                      features_metadatas = NULL,
                                      samples_metadatas = NULL,
                                      target_name_suffixes = NULL) {
-  n_datasets <- length(.input2symVect(rlang::enquo(datasets)))
-  n_fmeta <- length(.input2symVect(rlang::enquo(features_metadatas)))
-  n_smeta <- length(.input2symVect(rlang::enquo(samples_metadatas)))
+  n_datasets <- length(.input_to_symbol(rlang::enquo(datasets)))
+  n_fmeta <- length(.input_to_symbol(rlang::enquo(features_metadatas)))
+  n_smeta <- length(.input_to_symbol(rlang::enquo(samples_metadatas)))
 
   if (length(omics_types) != n_datasets) {
     stop("'datasets' and 'omics_types' vectors must have the same length.")
   }
 
   if (length(target_name_suffixes) != n_datasets &&
-      !is.null(target_name_suffixes)) {
+        !is.null(target_name_suffixes)) {
     stop("'datasets' and 'target_name_suffixes' vectors must have the same length.")
   }
 
@@ -202,15 +203,15 @@ create_omics_set_factory <- function(datasets,
   }
 
   values <- tibble::tibble(
-    ds = .input2symVect(rlang::enquo(datasets)),
+    ds = .input_to_symbol(rlang::enquo(datasets)),
     ot = omics_types,
-    fmet = .input2symVect(rlang::enquo(features_metadatas)),
-    smet = .input2symVect(rlang::enquo(samples_metadatas))
+    fmet = .input_to_symbol(rlang::enquo(features_metadatas)),
+    smet = .input_to_symbol(rlang::enquo(samples_metadatas))
   )
 
   if (is.null(target_name_suffixes)) {
     target_name_suffixes <- stringr::str_remove(
-      .symbolVect2charVect(rlang::enquo(datasets)),
+      .symbol_to_char(rlang::enquo(datasets)),
       "data_"
     )
   }
@@ -259,64 +260,103 @@ create_omics_set_factory <- function(datasets,
 #' @export
 add_omics_set <- function(mo_data, omics_set, ds_name, ...) {
   type <- class(omics_set)[[1]]
-  fct <- switch(type,
-         "SnpSet" = MultiDataSet::add_snps,
-         "ExpressionSet" = MultiDataSet::add_rnaseq,
-         "MetabolomeSet" = add_metabo,
-         "PhenotypeSet" = add_pheno
+  add_function <- switch(
+    type,
+    "SnpSet" = MultiDataSet::add_snps,
+    "ExpressionSet" = MultiDataSet::add_rnaseq,
+    "MetabolomeSet" = add_metabo,
+    "PhenotypeSet" = add_pheno,
+    stop("object ", type, " cannot be added to MultiDataSet object.")
   )
-  fct(mo_data, omics_set, dataset.name = ds_name, ...)
+  add_function(mo_data, omics_set, dataset.name = ds_name, ...)
 }
-
-##### STOPPED HERE
 
 #' Create a MultiDataSet object to store multi-omics data
 #'
-#' Creates a MultiDataSet object from a list of Biobase Set objects to store the different omics sets.
+#' Creates a MultiDataSet object from a list of Biobase Set objects to store the
+#' different omics sets.
 #'
-#' @param sets_list List of Biobase Set objects, created via \code{\link{create_omics_set}}. Currently accepted ojects: \code{SnpSet},
-#' \code{ExpressionSet}, \code{MetabolomeSet}, \code{PhenotypeSet}.
-#' @param datasets_names Optional, vector of character, name for each Set object. Will be appended to the data type in the resulting
-#' object. If the `sets_list` list contains several objects of the same data type (e.g. several SnpSets), their names must be unique.
-#' If "" is provided, no name will be appended to the data type for the corresponding dataset.
-#' @param show_warnings Logical, should warnings be displayed when adding a set to the MultiDataSet object? Default value is `TRUE`.
-#' @return a \code{\link[MultiDataSet]{MultiDataSet-class}}.
+#' @param sets_list List of [Biobase::eSet-class] objects, created via
+#'   [create_omics_set()]. Currently accepted objects: [Biobase::SnpSet-class],
+#'   [Biobase::ExpressionSet-class], [MetabolomeSet-class],
+#'   [PhenotypeSet-class].
+#' @param datasets_names Optional, vector of character, name for each Set
+#'   object. Will be appended to the data type in the resulting object. If the
+#'   `sets_list` list contains several objects of the same data type (e.g.
+#'   several SnpSets), their names must be unique. If "" is provided, no name
+#'   will be appended to the data type for the corresponding dataset.
+#' @param show_warnings Logical, should warnings be displayed when adding a set
+#'   to the MultiDataSet object? Default value is `TRUE`.
+#' @returns [MultiDataSet::MultiDataSet-class] object.
+#' @examples
+#' \dontrun{
+#' ## set_geno, set_transcripto and set_metabo are all Set objects
+#' ## Generating a MultiDataSet object with standard name
+#' create_multiomics_set(
+#'   list(set_geno, set_transcripto, set_metabo)
+#' )
+#'
+#' ## Adding custom names for genomics and metabolomics datasets
+#' ## but not for the transcriptomics dataset
+#' create_multiomics_set(
+#'   list(set_geno, set_transcripto, set_metabo),
+#'   datasets_names = c("genome1", "", "lcms")
+#' )
+#' }
 #' @export
-create_multiomics_set <- function(sets_list, datasets_names = NULL, show_warnings = TRUE) {
-  # if(is.null(names(sets_list))) stop("The sets_list list must be named.")
-  # if(length(setdiff(names(sets_list), c("genomics", "transcriptomics", "metabolomics", "phenomics")))) stop("Names of the sets_list list must be one of 'genomics', 'transcriptomics', 'metabolomics', 'phenomics'.")
+create_multiomics_set <- function(sets_list,
+                                  datasets_names = NULL,
+                                  show_warnings = TRUE) {
 
-  if (!length(sets_list)) stop("sets_list list is empty.")
+  if (!length(sets_list)) {
+    stop("sets_list list is empty.")
+  }
 
-  cl <- sapply(sets_list, class)
-  if (length(setdiff(cl, c("SnpSet", "ExpressionSet", "MetabolomeSet", "PhenotypeSet")))) stop("Elements in sets_list must be SnpSet, ExpressionSet, MetabolomeSet or PhenotypeSet objects.")
+  cl <- purrr::map_chr(sets_list, \(x) class(x)[[1]])
+  poss_classes <- c("SnpSet", "ExpressionSet", "MetabolomeSet", "PhenotypeSet")
+
+  if (!all(cl %in% poss_classes)) {
+    stop(
+      "Elements in sets_list must be ",
+      paste0(poss_classes, collapse = ", "),
+      " objects."
+    )
+  }
 
   if (!is.null(datasets_names)) {
-    if (length(datasets_names) != length(sets_list)) stop("dataset_names vector must have same length as sets_list list.")
+    if (length(datasets_names) != length(sets_list)) {
+      stop("dataset_names vector must have same length as sets_list list.")
+    }
 
-    if (any(duplicated(paste0(cl, datasets_names)))) stop("Dataset names for objects of a same type must be unique.")
+    if (any(duplicated(paste0(cl, datasets_names)))) {
+      stop("Dataset names for objects of a same type must be unique.")
+    }
   } else {
-    ## if several sets_list elements have the same data type, must provide unique datasets_names
+    ## if several sets_list elements have the same data type,
+    ## must provide unique datasets_names
     datasets_names <- .make_unique_ids(cl)
   }
 
   res <- MultiDataSet::createMultiDataSet()
 
-  for (i in 1:length(sets_list)) {
-    x <- sets_list[i]
-    ds_name <- datasets_names[i]
+  for (i in seq_along(sets_list)) {
+    x <- sets_list[[i]]
+    ds_name <- datasets_names[[i]]
     if (ds_name == "") ds_name <- NULL
 
-    res <- .add_omics_set(res, sets_list[[i]], cl[i], ds_name, warnings = show_warnings)
+    res <- add_omics_set(
+      res,
+      x,
+      ds_name,
+      warnings = show_warnings
+    )
   }
 
   ## Check that the samples metadata is consistent across the datasets
-  temp <- get_samples_metadata(res) |>
+  temp <- Biobase::pData(res) |>
     purrr::reduce(
       function(.x, .y) {
         cc <- intersect(colnames(.x), colnames(.y))
-        # .x <- dplyr::select(.x, tidyselect::all_of(cc))
-        # .y <- dplyr::select(.y, tidyselect::all_of(cc))
         dplyr::full_join(.x, .y, by = cc)
       }
     )
@@ -333,13 +373,29 @@ create_multiomics_set <- function(sets_list, datasets_names = NULL, show_warning
   return(res)
 }
 
-
-.symbolVect2charVect <- function(x) {
+#' Convert symbols to character
+#'
+#' Converts a vector of symbols into a character vector of their values.
+#'
+#' @param x Vector of symbols
+#' @returns A character vector with the same size as `x`.
+#'
+#' @noRd
+.symbol_to_char <- function(x) {
   string <- rlang::quo_text(x, nlines = Inf)
   unlist(strsplit(gsub("(c\\(|\\)|\\s)", "", string), ","))
 }
 
-.input2symVect <- function(x) {
+#' Converts a vector into symbols vector
+#'
+#' Converts an input vector into a vector of symbols, to be used for targets
+#' factories. If input value is `NULL`, will return `expression(NULL)`.
+#'
+#' @param x Vector.
+#' @returns a vector of symbols with same length as `x`.
+#'
+#' @noRd
+.input_to_symbol <- function(x) {
   string <- rlang::quo_text(x, nlines = Inf)
 
   if (string == "NULL") {
@@ -347,7 +403,6 @@ create_multiomics_set <- function(sets_list, datasets_names = NULL, show_warning
   }
 
   string <- unlist(strsplit(gsub("(c\\(|\\)|\\s)", "", string), ","))
-  # res <- rlang::syms(string)
   res <- str2expression(string)
 
   return(res)

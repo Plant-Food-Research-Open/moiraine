@@ -12,7 +12,8 @@ test_get_data_list <- function() {
     import_dataset_csv(
       data_files[i],
       col_id = ifelse(i == "B", "Sample", "Feature"),
-      features_as_rows = (i != "B")
+      features_as_rows = (i != "B"),
+      show_col_types = FALSE
     )
   })
   names(data_list) <- LETTERS[1:n_omics]
@@ -33,7 +34,8 @@ test_get_fmeta_list <- function() {
   fmeta_list <- lapply(LETTERS[1:n_omics], function(i) {
     import_fmetadata_csv(
       fmeta_files[i],
-      col_id = "Feature"
+      col_id = "Feature",
+      show_col_types = FALSE
     )
   })
   names(fmeta_list) <- LETTERS[1:n_omics]
@@ -55,7 +57,8 @@ test_get_smeta_list <- function() {
   smeta_list <- lapply(LETTERS[1:n_omics], function(i) {
     import_smetadata_csv(
       smeta_files[i],
-      col_id = "Sample"
+      col_id = "Sample",
+      show_col_types = FALSE
     )
   })
   names(smeta_list) <- LETTERS[1:n_omics]

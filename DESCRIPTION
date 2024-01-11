@@ -28,18 +28,18 @@ Imports:
     purrr,
     readr,
     rlang,
+    stringi,
     stringr,
     tarchetypes,
     targets,
+    textclean,
     tibble,
     tidyr,
     tidyselect
 Suggests: 
     GenomicFeatures,
     rtracklayer,
-    stringi,
-    testthat (>= 3.0.0),
-    textclean
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)

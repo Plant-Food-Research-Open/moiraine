@@ -43,7 +43,7 @@ each csv file.
 \examples{
 \dontrun{
 ## in the _targets.R
-library(MOITestPipeline)
+library(moiraine)
 
 list(
   import_dataset_csv_factory(
