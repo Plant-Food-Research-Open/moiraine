@@ -650,9 +650,9 @@ import_smetadata_csv_factory <- function(files,
     )
   }
 
-  res <- lapply(df, function(x) {
+  res <- lapply(df, function(x) { ## apply to each column
     if (is.character(x)) {
-      ## Detect if any non-ascii characters
+      ## Detect if any non-ascii characters in column
       non_ascii_indx <- which(stringr::str_detect(x, "[^[:ascii:]]"))
 
       if (length(non_ascii_indx)) {
