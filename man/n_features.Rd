@@ -7,11 +7,11 @@
 n_features(mo_data)
 }
 \arguments{
-\item{mo_data}{A \code{\link[MultiDataSet]{MultiDataSet-class}} object.}
+\item{mo_data}{A \link[MultiDataSet:MultiDataSet-class]{MultiDataSet::MultiDataSet} object.}
 }
 \value{
-A named vector, where each element is the number of features in the
-corresponding dataset.
+A named integer vector, where each element is the number of features
+in the corresponding dataset.
 }
 \description{
 Gives the number of features in each dataset of a MultiDataSet object.

@@ -100,63 +100,63 @@ test_that(".make_var_list works", {
   )
 })
 
-# test_that(".check_input_var_fmetadata works", {
-#   multiomics_set <- test_get_multidataset()
-#
-#   test <- list("snps+A" = "position", "rnaseq" = "TEST")
-#   expect_error(
-#     .check_input_var_fmetadata(test, multiomics_set),
-#     "'test' argument: 'TEST' is not a column in the features metadata for the rnaseq dataset. Possible values are:.+"
-#   )
-#   test <- list("snps+A" = "position", "rnaseq" = "chromosome")
-#   expect_error(
-#     .check_input_var_fmetadata(test, multiomics_set),
-#     NA
-#   )
-#   test <- list("snps+A" = NULL, "rnaseq" = "chromosome")
-#   expect_error(
-#     .check_input_var_fmetadata(test, multiomics_set),
-#     NA
-#   )
-# })
-#
-#
-# test_that(".check_input_var_smetadata works", {
-#   multiomics_set <- test_get_multidataset()
-#
-#   test <- list("snps+A" = "pheno_group", "rnaseq" = "TEST")
-#   expect_error(
-#     .check_input_var_smetadata(test, multiomics_set),
-#     "'test' argument: 'TEST' is not a column in the samples metadata for the rnaseq dataset. Possible values are:.+"
-#   )
-#   test <- list("snps+A" = "pheno_group", "rnaseq" = "time")
-#   expect_error(
-#     .check_input_var_smetadata(test, multiomics_set),
-#     NA
-#   )
-#   test <- list("snps+A" = NULL, "rnaseq" = "time")
-#   expect_error(
-#     .check_input_var_smetadata(test, multiomics_set),
-#     NA
-#   )
-# })
-#
-# test_that(".check_input_var_smetadata_common works", {
-#   multiomics_set <- test_get_multidataset()
-#
-#   test <- "TEST"
-#   expect_error(
-#     .check_input_var_smetadata_common(test, multiomics_set),
-#     "'test' argument: 'TEST' is not a column in the samples metadata of any dataset. Possible values are:.+"
-#   )
-#   test <- "time"
-#   expect_error(
-#     .check_input_var_smetadata_common(test, multiomics_set),
-#     NA
-#   )
-#   test <- NULL
-#   expect_error(
-#     .check_input_var_smetadata_common(test, multiomics_set),
-#     NA
-#   )
-# })
+test_that(".check_input_var_fmetadata works", {
+  multiomics_set <- test_get_multidataset()
+
+  test <- list("snps+A" = "position", "rnaseq" = "TEST")
+  expect_error(
+    .check_input_var_fmetadata(test, multiomics_set),
+    "'test' argument: 'TEST' is not a column in the features metadata for the rnaseq dataset. Possible values are:.+"
+  )
+  test <- list("snps+A" = "position", "rnaseq" = "chromosome")
+  expect_error(
+    .check_input_var_fmetadata(test, multiomics_set),
+    NA
+  )
+  test <- list("snps+A" = NULL, "rnaseq" = "chromosome")
+  expect_error(
+    .check_input_var_fmetadata(test, multiomics_set),
+    NA
+  )
+})
+
+
+test_that(".check_input_var_smetadata works", {
+  multiomics_set <- test_get_multidataset()
+
+  test <- list("snps+A" = "pheno_group", "rnaseq" = "TEST")
+  expect_error(
+    .check_input_var_smetadata(test, multiomics_set),
+    "'test' argument: 'TEST' is not a column in the samples metadata for the rnaseq dataset. Possible values are:.+"
+  )
+  test <- list("snps+A" = "pheno_group", "rnaseq" = "time")
+  expect_error(
+    .check_input_var_smetadata(test, multiomics_set),
+    NA
+  )
+  test <- list("snps+A" = NULL, "rnaseq" = "time")
+  expect_error(
+    .check_input_var_smetadata(test, multiomics_set),
+    NA
+  )
+})
+
+test_that(".check_input_var_smetadata_common works", {
+  multiomics_set <- test_get_multidataset()
+
+  test <- "TEST"
+  expect_error(
+    .check_input_var_smetadata_common(test, multiomics_set),
+    "'test' argument: 'TEST' is not a column in the samples metadata of any dataset. Possible values are:.+"
+  )
+  test <- "time"
+  expect_error(
+    .check_input_var_smetadata_common(test, multiomics_set),
+    NA
+  )
+  test <- NULL
+  expect_error(
+    .check_input_var_smetadata_common(test, multiomics_set),
+    NA
+  )
+})

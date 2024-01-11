@@ -354,7 +354,7 @@ options_list_as_tibble <- function(options_list) {
 
     datasets <- levels(toplot$dataset)
     if (is.null(datasets)) datasets <- unique(toplot$dataset)
-    mo_data <- .check_input_multidataset(mo_data, datasets)
+    mo_data <- check_input_multidataset(mo_data, datasets)
 
     res <- get_features_labels(mo_data, label_cols, truncate)
 

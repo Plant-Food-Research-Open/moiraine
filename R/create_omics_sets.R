@@ -259,6 +259,8 @@ create_omics_set_factory <- function(datasets,
 #' }
 #' @export
 add_omics_set <- function(mo_data, omics_set, ds_name, ...) {
+  check_is_multidataset(mo_data)
+
   type <- class(omics_set)[[1]]
   add_function <- switch(
     type,
