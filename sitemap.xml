@@ -16,6 +16,42 @@
     <loc>https://bookish-disco-p832pyq.pages.github.io/index.html</loc>
   </url>
   <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/MetabolomeSet-class.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/PhenotypeSet-class.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/add_metabo-MultiDataSet-MetabolomeSet-method.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/add_metabo-methods.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/add_pheno-MultiDataSet-PhenotypeSet-method.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/add_pheno-methods.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_multiomics_set.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_omics_set.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_omics_set_factory.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/dot-check_input_var_smetadata.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/dot-check_input_var_smetadata_common.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/hclust_matrix_rows.html</loc>
+  </url>
+  <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/import_dataset_csv.html</loc>
   </url>
   <url>
@@ -41,5 +77,11 @@
   </url>
   <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/is_equal_or_null.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/options_list_as_tibble.html</loc>
   </url>
 </urlset>
