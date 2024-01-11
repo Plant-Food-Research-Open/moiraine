@@ -306,7 +306,7 @@ import_smetadata_csv <- function(file, col_id, ...) {
 #' @examples
 #' \dontrun{
 #' ## in the _targets.R
-#' library(MOITestPipeline)
+#' library(moiraine)
 #'
 #' list(
 #'   import_dataset_csv_factory(
@@ -383,7 +383,7 @@ import_dataset_csv_factory <- function(files,
 #' @examples
 #' \dontrun{
 #' ## in the _targets.R
-#' library(MOITestPipeline)
+#' library(moiraine)
 #'
 #' list(
 #'   import_fmetadata_csv_factory(
@@ -460,7 +460,7 @@ import_fmetadata_csv_factory <- function(files,
 #' @examples
 #' \dontrun{
 #' ## in the _targets.R
-#' library(MOITestPipeline)
+#' library(moiraine)
 #'
 #' list(
 #'   import_fmetadata_gff_factory(
@@ -542,7 +542,7 @@ import_fmetadata_gff_factory <- function(files,
 #' @examples
 #' \dontrun{
 #' ## in the _targets.R
-#' library(MOITestPipeline)
+#' library(moiraine)
 #'
 #' list(
 #'   import_smetadata_csv_factory(

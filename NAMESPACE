@@ -2,6 +2,9 @@
 
 export(add_metabo)
 export(add_pheno)
+export(create_multiomics_set)
+export(create_omics_set)
+export(create_omics_set_factory)
 export(hclust_matrix_rows)
 export(import_dataset_csv)
 export(import_dataset_csv_factory)
