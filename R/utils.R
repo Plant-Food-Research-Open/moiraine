@@ -344,7 +344,7 @@ options_list_as_tibble <- function(options_list) {
                                         mo_data,
                                         truncate = NULL) {
   ## for devtools::check
-  dataset <- NULL
+  dataset <- feature_id <- NULL
 
   if (!is.null(label_cols)) {
     if (is.null(mo_data)) {
