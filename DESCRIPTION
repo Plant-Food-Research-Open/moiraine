@@ -23,4 +23,22 @@ Imports:
     dplyr,
     ggplot2,
     methods,
-    MultiDataSet
+    MultiDataSet,
+    purrr,
+    readr,
+    rlang,
+    stringr,
+    tarchetypes,
+    targets,
+    tibble,
+    tidyr,
+    tidyselect
+Suggests: 
+    GenomicFeatures,
+    rtracklayer,
+    stringi,
+    testthat (>= 3.0.0),
+    textclean
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)

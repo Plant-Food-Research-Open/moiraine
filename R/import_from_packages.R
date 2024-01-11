@@ -7,7 +7,7 @@ NULL
 #' @import methods
 NULL
 
-#' @importFrom dplyr sym
+#' @importFrom dplyr sym where
 NULL
 
 #' @importFrom ggplot2 aes

@@ -1,0 +1,21 @@
+Sample,name,pheno_group,time
+sample_11,Sample 11,group2,11
+sample_12,Sample 12,group2,12
+sample_13,Sample 13,group2,13
+sample_14,Sample 14,group1,14
+sample_15,Sample 15,group2,15
+sample_16,Sample 16,group2,16
+sample_17,Sample 17,group1,17
+sample_18,Sample 18,group2,18
+sample_19,Sample 19,group2,19
+sample_20,Sample 20,group1,20
+sample_21,Sample 21,group1,21
+sample_22,Sample 22,group1,22
+sample_23,Sample 23,group1,23
+sample_24,Sample 24,group2,24
+sample_25,Sample 25,group2,25
+sample_31,Sample 31,group2,26
+sample_32,Sample 32,group2,27
+sample_33,Sample 33,group1,28
+sample_34,Sample 34,group1,29
+sample_35,Sample 35,group2,30

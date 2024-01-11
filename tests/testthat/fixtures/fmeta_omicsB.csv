@@ -1,0 +1,36 @@
+Feature,chromosome,start,end,name
+featureB_1,ch3,75,95,lychee
+featureB_2,ch3,84,104,cloudberry
+featureB_3,ch2,18,38,damson
+featureB_4,ch3,79,99,loquat
+featureB_5,ch2,14,34,redcurrant
+featureB_6,ch2,49,69,rambutan
+featureB_7,ch2,56,76,banana
+featureB_8,ch3,76,96,fig
+featureB_9,ch2,41,61,clementine
+featureB_10,ch2,16,36,cherry
+featureB_11,ch3,3,23,olive
+featureB_12,ch1,29,49,pineapple
+featureB_13,ch1,89,109,eggplant
+featureB_14,ch3,24,44,kiwi fruit
+featureB_15,ch3,31,51,kiwi fruit
+featureB_16,ch2,39,59,elderberry
+featureB_17,ch3,32,52,lychee
+featureB_18,ch3,9,29,cantaloupe
+featureB_19,ch3,82,102,mandarine
+featureB_20,ch1,39,59,jackfruit
+featureB_21,ch2,12,32,chili pepper
+featureB_22,ch3,54,74,coconut
+featureB_23,ch3,68,88,physalis
+featureB_24,ch2,73,93,bilberry
+featureB_25,ch1,85,105,eggplant
+featureB_26,ch1,52,72,raisin
+featureB_27,ch1,99,119,lychee
+featureB_28,ch3,3,23,salal berry
+featureB_29,ch2,99,119,damson
+featureB_30,ch2,22,42,kiwi fruit
+featureB_31,ch2,5,25,redcurrant
+featureB_32,ch3,66,86,blood orange
+featureB_33,ch3,68,88,tangerine
+featureB_34,ch3,38,58,damson
+featureB_35,ch1,57,77,physalis
