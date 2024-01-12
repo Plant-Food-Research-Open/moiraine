@@ -20,12 +20,17 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     Biobase,
+    ComplexHeatmap,
     dplyr,
+    GGally,
+    ggforce,
+    ggnewscale,
     ggplot2,
     here,
     methods,
     MultiDataSet,
     purrr,
+    RColorBrewer,
     readr,
     rlang,
     stringi,
@@ -37,9 +42,13 @@ Imports:
     tidyr,
     tidyselect
 Suggests: 
+    corrplot,
     GenomicFeatures,
+    ggbeeswarm,
+    hexbin,
     rtracklayer,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    UpSetR
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)

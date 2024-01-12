@@ -337,8 +337,6 @@ options_list_as_tibble <- function(options_list) {
 #'   avoid issues with very long labels in plots). If `NULL` (default value), no
 #'   truncation will be performed.
 #' @returns the `toplot` data-frame with an additional column `label`.
-#'
-#' @noRd
 .add_features_labels_toplot <- function(toplot,
                                         label_cols,
                                         mo_data,
