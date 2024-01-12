@@ -207,7 +207,7 @@ options_list_as_tibble <- function(options_list) {
 #'   corresponding dataset. The names should correspond to dataset names in
 #'   `mo_data`. Should be checked with `.make_var_list()`.
 #' @param mo_data A `MultiDataSet` object containing features information for
-#'   the datasets. Should be checked with `.check_input_multidataset()`.
+#'   the datasets. Should be checked with `check_input_multidataset()`.
 #' @returns Nothing. Will throw an error if need be.
 #'
 #' @noRd
@@ -253,7 +253,7 @@ options_list_as_tibble <- function(options_list) {
 #'   corresponding dataset. The names should correspond to dataset names in
 #'   `mo_data`. Should be checked with `.make_var_list()`.
 #' @param mo_data A `MultiDataSet` object containing samples information for the
-#'   datasets. Should be checked with `.check_input_multidataset()`.
+#'   datasets. Should be checked with `check_input_multidataset()`.
 #' @returns Nothing. Will throw an error if need be.
 .check_input_var_smetadata <- function(x, mo_data) {
   error_prefix <- paste0("'", deparse(substitute(x)), "' argument")
@@ -291,7 +291,7 @@ options_list_as_tibble <- function(options_list) {
 #'
 #' @param x Character, name of the column from the samples metadata.
 #' @param mo_data A `MultiDataSet` object containing samples information for the
-#'   datasets. Should be checked with `.check_input_multidataset()`.
+#'   datasets. Should be checked with `check_input_multidataset()`.
 #' @returns Nothing. Will throw an error if need be.
 .check_input_var_smetadata_common <- function(x, mo_data) {
   if (is.null(x)) {
@@ -376,66 +376,4 @@ options_list_as_tibble <- function(options_list) {
   }
 
   return(toplot)
-}
-
-#' Make Quarto report template from Rmd template
-#'
-#' Generates the Quarto report templates from corresponding Rmd report
-#' templates.
-#'
-#' @noRd
-.make_quarto_template <- function() {
-  ## Constructing template for report header and first part
-  main_rmd <- here::here("inst/templates/report_template.Rmd")
-
-  main_rmd_con <- file(main_rmd, "r")
-  main_rmd_lines <- readLines(main_rmd_con)
-  close(main_rmd_con)
-
-  yaml_header_end <- which(main_rmd_lines == "---")[2]
-  yaml_header <- main_rmd_lines[seq_len(yaml_header_end)]
-  content <- main_rmd_lines[-seq_len(yaml_header_end)]
-
-  yaml_header[yaml_header == "date: '`r format(Sys.Date(), \"%B %d, %Y\")`'"] <- "date: today"
-  yaml_header[yaml_header == "output:"] <- "format:"
-  yaml_header[yaml_header == "  html_document:"] <- "  html:"
-  yaml_header <- yaml_header[!(yaml_header %in% c("     toc_float: true", "     theme: flatly"))]
-
-  tmp <- which(yaml_header == "  html:")
-  yaml_header <- c(
-    yaml_header[seq_len(tmp)],
-    "     toc-location: right",
-    "     embed-resources: true",
-    yaml_header[-seq_len(tmp)]
-  )
-
-  content <- content |>
-    stringr::str_remove_all(" \\{\\.tabset \\.tabset-pills\\}") |>
-    stringr::str_remove_all(" \\{\\.active\\}")
-
-  main_qmd <- here::here("inst/templates/quarto_report_template.qmd")
-  main_qmd_con <- file(main_qmd, "w")
-  writeLines(c(yaml_header, content), con = main_qmd_con)
-  close(main_qmd_con)
-
-  dir("inst/templates/", pattern = "fragment.+Rmd") |>
-    purrr::walk(
-      function(.x) {
-        file_con <- file(here::here("inst/templates", .x), "r")
-        content <- readLines(file_con)
-        close(file_con)
-
-        content <- content |>
-          stringr::str_remove_all(" \\{\\.tabset \\.tabset-pills\\}") |>
-          stringr::str_remove_all(" \\{\\.active\\}")
-
-        new_file <- paste0(
-          "quarto_",
-          stringr::str_replace(.x, "\\.Rmd$", ".qmd")
-        )
-        new_file_con <- file(here::here("inst/templates", new_file), "w")
-        writeLines(content, con = new_file_con)
-        close(new_file_con)
-      }
-    )
 }

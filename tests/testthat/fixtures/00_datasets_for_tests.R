@@ -252,13 +252,17 @@ saveRDS(pca_res, file = here("tests/testthat/fixtures/pca_res.rds"))
 ##############################################
 ## Run sPLS-DA on multiomics set for testing ##
 ##############################################
-splsda_res <- run_splsda(
+
+set.seed(54)
+splsda_input <- get_input_splsda(
   multiomics_set,
-  to_keep_n = 10,
   dataset_name = "rnaseq",
-  group = "pheno_group",
-  ncomp = 2,
-  multilevel = NULL
+  group = "pheno_group"
+)
+splsda_res <- run_splsda(
+  splsda_input,
+  to_keep_n = 10,
+  ncomp = 2
 )
 saveRDS(splsda_res, file = here("tests/testthat/fixtures/splsda_res.rds"))
 
@@ -267,6 +271,7 @@ saveRDS(splsda_res, file = here("tests/testthat/fixtures/splsda_res.rds"))
 ## Run sPLS on multiomics set for testing ##
 ##############################################
 
+set.seed(21)
 spls_input <- get_input_spls(
   multiomics_set,
   "regression",
@@ -285,6 +290,7 @@ saveRDS(spls_run, file = here("tests/testthat/fixtures/spls_res.rds"))
 ## Run DIABLO on multiomics set for testing ##
 ##############################################
 
+set.seed(67)
 diablo_input <- get_input_mixomics_supervised(
   multiomics_set[, 1:3],
   "pheno_group"
@@ -300,8 +306,14 @@ saveRDS(diablo_run, file = here("tests/testthat/fixtures/diablo_res.rds"))
 ## Run MOFA on multiomics set for testing ##
 ############################################
 
-mofa_input <- get_input_mofa(multiomics_set[, 1:3])
-mofa_res <- MOFA2::run_mofa(mofa_input)
+mofa_input <- get_input_mofa(
+  multiomics_set[, 1:3],
+  options_list = list(
+    model_options = list(num_factors = 1),
+    training_options = list(seed = 42)
+  )
+)
+mofa_res <- MOFA2::run_mofa(mofa_input, use_basilisk = TRUE)
 saveRDS(mofa_res, file = here("tests/testthat/fixtures/mofa_res.rds"))
 
 
@@ -309,6 +321,7 @@ saveRDS(mofa_res, file = here("tests/testthat/fixtures/mofa_res.rds"))
 ## Run sO2PLS on multiomics set for testing ##
 ##############################################
 
+set.seed(33)
 omicspls_input <- get_input_omicspls(multiomics_set, c("rnaseq", "metabolome"))
 
 so2pls_res <- so2pls_o2m(

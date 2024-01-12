@@ -10,7 +10,7 @@
 \item{x}{Character, name of the column from the samples metadata.}
 
 \item{mo_data}{A \code{MultiDataSet} object containing samples information for the
-datasets. Should be checked with \code{.check_input_multidataset()}.}
+datasets. Should be checked with \code{check_input_multidataset()}.}
 }
 \value{
 Nothing. Will throw an error if need be.

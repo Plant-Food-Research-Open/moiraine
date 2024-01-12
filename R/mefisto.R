@@ -1,0 +1,21 @@
+#' Generate MEFISTO input data
+#'
+#' Creates an object that can be used as input for the MEFISTO analysis implemented in the MOFA2 package. It contains the omics datasets
+#' as well as features and samples metadata.
+#'
+#' @param mo_data A \code{\link[MultiDataSet]{MultiDataSet-class}} object.
+#' @param covariates Character or character vector of length 2, the column name(s) in the samples metadata
+#' data-frames to use as continuous covariates.
+#' @param datasets Character vector, the names of the datasets from \code{mo_data} to include in the analysis.
+#' @param groups Character, the column name in the samples metadata data-frames to use as groups
+#' (use \code{\link{get_samples_metadata}} to view the samples metadata data-frame for each dataset).
+#' @param options_list A named list. Should contain at most 4 elements, named 'data_options', 'model_options', 'training_options' and 'mefisto_options'. Provide respectively the
+#' data, model, training and mefisto options to apply for the MEFISTO run. See \code{\link[MOFA2]{get_default_data_options}}, \code{\link[MOFA2]{get_default_model_options}},
+#' \code{\link[MOFA2]{get_default_training_options}} and \code{\link[MOFA2]{get_default_mefisto_options}}.
+#' @param only_common_samples Logical, whether only the samples present in all datasets should be returned.
+#' Default value is \code{FALSE}.
+#' @return A \code{\link[MOFA2]{MOFA}} object.
+#' @export
+get_input_mefisto <- function(mo_data, covariates, datasets = names(mo_data), groups = NULL, options_list = NULL, only_common_samples = FALSE) {
+  get_input_mofa2(mo_data, datasets, covariates, groups, options_list, only_common_samples)
+}

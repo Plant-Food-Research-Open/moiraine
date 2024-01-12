@@ -13,7 +13,7 @@ corresponding dataset. The names should correspond to dataset names in
 \code{mo_data}. Should be checked with \code{.make_var_list()}.}
 
 \item{mo_data}{A \code{MultiDataSet} object containing samples information for the
-datasets. Should be checked with \code{.check_input_multidataset()}.}
+datasets. Should be checked with \code{check_input_multidataset()}.}
 }
 \value{
 Nothing. Will throw an error if need be.

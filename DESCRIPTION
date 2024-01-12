@@ -20,19 +20,30 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     Biobase,
+    circlize,
     ComplexHeatmap,
     dplyr,
     GGally,
     ggforce,
     ggnewscale,
     ggplot2,
+    ggpubr,
+    ggrepel,
+    grid,
     here,
     methods,
+    mixOmics,
+    MOFA2,
     MultiDataSet,
+    OmicsPLS,
+    patchwork,
+    pcaMethods,
     purrr,
     RColorBrewer,
     readr,
     rlang,
+    scales,
+    stats,
     stringi,
     stringr,
     tarchetypes,
@@ -40,15 +51,29 @@ Imports:
     textclean,
     tibble,
     tidyr,
-    tidyselect
+    tidyselect,
+    utils
 Suggests: 
+    bestNormalize,
+    BiocParallel,
+    cluster,
     corrplot,
+    DESeq2,
+    DT,
+    gage,
     GenomicFeatures,
     ggbeeswarm,
+    grDevices,
     hexbin,
+    htmltools,
+    kableExtra,
+    knitr,
+    plotly,
+    rmarkdown,
     rtracklayer,
     testthat (>= 3.0.0),
-    UpSetR
+    UpSetR,
+    vsn
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
