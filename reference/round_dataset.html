@@ -95,7 +95,15 @@ above <code>max_val</code> will be set to <code>max_val</code>.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## Let's imagine that we imputed missing values in the genomics dataset from</span></span></span>
+<span class="r-in"><span><span class="co">## mo_data using NIPALS-PCA. The imputed values are continuous, but the</span></span></span>
+<span class="r-in"><span><span class="co">## dataset contains dosage values for a diploid organism (i.e. values can</span></span></span>
+<span class="r-in"><span><span class="co">## be 0, 1, 2). We'll round the imputed values and make sure they can't be</span></span></span>
+<span class="r-in"><span><span class="co">## negative or higher than 2.</span></span></span>
+<span class="r-in"><span><span class="fu">round_dataset</span><span class="op">(</span><span class="va">mo_data</span>, <span class="st">"snps"</span>, min_val <span class="op">=</span> <span class="fl">0</span>, max_val <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
