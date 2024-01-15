@@ -802,7 +802,7 @@ replace_dataset <- function(mo_data, dataset_name, new_data) {
 #' ## Let's imagine that we imputed missing values in the genomics dataset from
 #' ## mo_data using NIPALS-PCA. The imputed values are continuous, but the
 #' ## dataset contains dosage values for a diploid organism (i.e. values can
-#' be 0, 1, 2). We'll round the imputed values and make sure they can't be
+#' ## be 0, 1, 2). We'll round the imputed values and make sure they can't be
 #' ## negative or higher than 2.
 #' round_dataset(mo_data, "snps", min_val = 0, max_val = 2)
 #' }

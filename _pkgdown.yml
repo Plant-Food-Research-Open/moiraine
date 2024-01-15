@@ -2,3 +2,196 @@ url: https://bookish-disco-p832pyq.pages.github.io/
 template:
   bootstrap: 5
 
+reference:
+- title: "Project management"
+  desc: "Getting started with a new data integration project"
+  contents:
+  - create_targets_pipeline
+  - create_report
+
+- title: "Data import"
+  desc: "Importing data into R"
+  contents:
+  - import_dataset_csv
+  - import_fmetadata_csv
+  - import_fmetadata_gff
+  - import_smetadata_csv
+  - import_dataset_csv_factory
+  - import_fmetadata_csv_factory
+  - import_fmetadata_gff_factory
+  - import_smetadata_csv_factory
+
+- title: "Omics and multi-omics sets creation"
+  desc: "Creating omics sets"
+  contents:
+  - create_omics_set
+  - create_omics_set_factory
+  - create_multiomics_set
+  - MetabolomeSet
+  - PhenotypeSet
+  - add_metabo
+  - add_pheno
+
+- title: "Multi-omics sets (MultiDataSet objects)"
+- subtitle: "Querying"
+  desc: "Querying the MultiDataSet object"
+  contents:
+  - n_features
+  - n_samples
+  - get_features
+  - get_samples
+  - get_datasets
+  - get_features_metadata
+  - get_samples_metadata
+  - get_samples_metadata_combined
+  - check_missing_values
+  - get_features_labels
+  - join_features_metadata
+  - join_samples_metadata
+- subtitle: "Plotting"
+  desc: "Plotting properties of omics datasets"
+  contents:
+  - plot_samples_upset
+  - plot_density_data
+  - plot_meansd_data
+  - plot_data_covariate
+- subtitle: "Modifying"
+  desc: "Modifying or subsetting datasets or metadata"
+  contents:
+  - replace_dataset
+  - round_dataset
+  - add_features_metadata
+  - add_samples_metadata
+  - subset_features
+
+- title: "PCA"
+  desc: "PCA and missing values imputation on multi-omics set"
+  contents:
+  - run_pca
+  - get_complete_data
+  - pca_complete_data_factory
+  - plot_screeplot_pca
+  - plot_samples_coordinates_pca
+  - get_pca_arguments
+
+- title: "Transformation"
+  desc: "Omics datasets transformation and normalisation"
+  contents:
+  - starts_with("transform_")
+  - transformation_datasets_factory
+  - get_transformed_data
+  - get_table_transformations
+
+- title: "Prefiltering"
+  desc: "Features prefiltering for multi-omics set"
+- subtitle: "Unsupervised (Median Absolute Variation)"
+  contents:
+  - select_features_mad
+  - select_features_cov
+  - get_filtered_dataset_variability
+  - feature_preselection_mad_factory
+  - feature_preselection_cov_factory
+  - plot_feature_preselection_mad
+  - plot_feature_preselection_cov
+- subtitle: "Supervised (sPLS-DA)"
+  contents:
+  - perf_splsda
+  - run_splsda
+  - get_filtered_dataset_splsda
+  - feature_preselection_splsda_factory
+  - plot_feature_preselection_splsda
+
+- title: "Supervised integration"
+  desc: "Integration of datasets aiming to discriminate samples based on an outcome of interest"
+- subtitle: "DIABLO"
+  desc: "Supervised integration with the DIABLO method from mixOmics"
+  contents:
+  - get_input_mixomics_supervised
+  - run_pairwise_pls
+  - starts_with("diablo_")
+- subtitle: "MEFISTO"
+  desc: "Supervised integration with the MEFISTO method from MOFA2 (for time-series or spatially resolved data)"
+  contents:
+  - get_input_mefisto
+
+- title: "Unsupervised integration"
+  desc: "Integration of datasets aiming at assessing variation common to the datasets"
+- subtitle: "MOFA"
+  desc: "Unsupervised integration with the MOFA method from MOFA2"
+  contents:
+  - get_input_mofa2
+  - get_input_mofa
+  - starts_with("mofa_")
+
+- subtitle: "sO2PLS"
+  desc: "Unsupervised integration of 2 datasets with the sO2PLS method from omicsPLS"
+  contents:
+  - get_input_omicspls
+  - starts_with("so2pls_")
+- subtitle: "sPLS"
+  desc: "Unsupervised integration of 2 datasets with the sPLS method from mixOmics"
+  contents:
+  - get_input_mixomics_unsupervised
+  - starts_with("spls_")
+
+- title: "Standardised method output"
+  desc: "Functions to get and query the results of an integration method as a standardised R object"
+  contents:
+  - get_output
+  - get_latent_dimensions
+- subtitle: "Plotting functions"
+  contents:
+  - plot_samples_score
+  - plot_samples_score_pair
+  - plot_samples_score_covariate
+  - plot_features_weight_distr
+  - plot_features_weight_pair
+  - plot_features_weight_covariate
+  - plot_top_features
+
+- title: "Methods evaluation"
+  desc: "Evaluating the results of an integration method against prior knowledge"
+  contents:
+  - evaluate_feature_selection_table
+  - make_feature_sets_from_df
+  - make_feature_sets_from_fm
+  - check_feature_sets
+  - reduce_feature_sets_data
+  - evaluate_method_enrichment
+  - plot_features_weight_set
+  - compute_samples_silhouette
+
+- title: "Methods comparison"
+  desc: "Comparison of the results from several integration methods"
+  contents:
+  - get_samples_score_correlation
+  - get_features_weight_correlation
+  - starts_with("comparison")
+  - compute_consensus_importance
+  - consensus_importance_metric
+  - show_consensus_metrics
+
+- title: "Other (utils)"
+  desc: "Other miscellaneous functions"
+- subtitle: "Helper MultiDataSet object"
+  contents:
+  - check_is_multidataset
+  - check_input_multidataset
+- subtitle: "Helper plotting functions"
+  contents:
+  - plot_correlation_matrix
+  - plot_correlation_matrix_full
+  - ggpairs_custom
+  - plot_x_wrapper
+  - plot_x_continuous
+  - plot_x_discrete
+- subtitle: "Misc."
+  contents:
+  - hclust_matrix_rows
+  - options_list_as_tibble
+  - is_equal_or_null
+- title: internal
+  contents:
+  - '`add_metabo,MultiDataSet,MetabolomeSet-method`'
+  - '`add_pheno,MultiDataSet,PhenotypeSet-method`'
+  - starts_with(".")
