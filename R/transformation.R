@@ -199,67 +199,79 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
 
 #' Applies a transformation to a dataset from a MultiDataSet object
 #'
-#' Applies a transformation to a dataset from a MultiDataSet object. Implemented transformations
-#' are: Variance Stabilising Normalisation (from the `vsn` package), Variance Stabilising
-#' Transformation (from the `DESeq2` package - only for count data), and appropriate feature-wise
-#' normalisation through the `BestNormalise` package.
+#' Applies a transformation to a dataset from a `MultiDataSet` object.
+#' Implemented transformations are: Variance Stabilising Normalisation (from the
+#' `vsn` package), Variance Stabilising Transformation (from the `DESeq2`
+#' package - only for count data), and appropriate feature-wise normalisation
+#' through the `BestNormalise` package.
 #'
-#' Currently implemented transformations and recommendations based on dataset type:
-#' \itemize{
-#' \item `vsn`: Variance Stabilising normalisation, implemented in the \code{\link[vsn]{justvsn}}
-#' function from the `vsn` package. This method was originally developed for microarray intensities.
-#' In practice, applies the \code{\link{transform_vsn}} function. This transformation is recommended
-#' for microarray, metabolome, chemical or other intensity-based datasets.
-#' \item `vst-deseq2`: Variance Stabilising Transformation, implemented in the
-#' \code{\link[DESeq2]{varianceStabilizingTransformation}} function from the `DESeq2` package.
-#' This method is applicable to count data only. In practice, applies the \code{\link{transform_vst}} function.
-#' This transformation is recommended for RNAseq or similar count-based datasets.
-#' \item `best-normalize-auto`: most appropriate normalisation method automatically selected from a number
-#' of options, implemented in the \code{\link[bestNormalize]{bestNormalize}} function from the
-#' `bestNormalize` package. In practice, applies the \code{\link{transform_bestNormalise_auto}} function.
-#' This transformation is recommended for phenotypes that are each measured on different scales (since the
-#' transformation method selected will potentially be different across the phenotypes), preferably with a
-#' reasonable number of features (less than 100) to avoid large computation times.
-#' \item `best-normalize-manual`: performs the same transformation (specified with the `method` argument)
-#' to each feature of a dataset. This transformation is recommended for phenotypes data in which the
-#' different phenotypes are measured on the same scale. The different normalisation methods are:
-#' * `"arcsinh_x"`: data is transformed as `log(x + sqrt(x^2 + 1))`;
-#' * `"boxcox"`: Box Cox transformation;
-#' * `"center_scale"`: data is centered and scaled;
-#' * `"exp_x"`: data is transformed as `exp(x)`;
-#' * `"log_x"`: data is transformed as `log_b(x+a)` (`a` and `b` either selected automatically or passed as
-#' arguments);
-#' * `"orderNorm"`: Ordered Quantile technique;
-#' * `"sqrt_x"`: data transformed as `sqrt(x + a)` (`a` selected automatically or passed as argument),
-#' * `"yeojohnson"`: Yeo-Johnson transformation.
-#' }
+#' Currently implemented transformations and recommendations based on dataset
+#' type:
+#' * `vsn`: Variance Stabilising normalisation, implemented in the
+#' [vsn::justvsn()] function from the `vsn` package. This method was originally
+#' developed for microarray intensities. This transformation is recommended for
+#' microarray, metabolome, chemical or other intensity-based datasets. In
+#' practice, applies the [transform_vsn()] function.
+#' * `vst-deseq2`: Variance Stabilising Transformation, implemented in the
+#' [DESeq2::varianceStabilizingTransformation()] function from the `DESeq2`
+#' package. This method is applicable to count data only. This transformation is
+#' recommended for RNAseq or similar count-based datasets. In practice, applies
+#' the [transform_vst()] function.
+#' * `best-normalize-auto`: most appropriate normalisation method automatically
+#' selected from a number of options, implemented in the
+#' [bestNormalize::bestNormalize()] function from the `bestNormalize` package.
+#' This transformation is recommended for phenotypes that are each measured on
+#' different scales (since the transformation method selected will potentially
+#' be different across the features), preferably with a reasonable number of
+#' features (less than 100) to avoid large computation times. In practice,
+#' applies the [transform_bestNormalise_auto()] function.
+#' * `best-normalize-manual`: performs the same transformation (specified
+#' through the `method` argument) to each feature of a dataset. This
+#' transformation is recommended for phenotypes data in which the different
+#' phenotypes are measured on the same scale. The different normalisation
+#' methods are:
+#'   * `"arcsinh_x"`: data is transformed as `log(x + sqrt(x^2 + 1))`;
+#'   * `"boxcox"`: Box Cox transformation;
+#'   * `"center_scale"`: data is centered and scaled;
+#'   * `"exp_x"`: data is transformed as `exp(x)`;
+#'   * `"log_x"`: data is transformed as `log_b(x+a)` (`a` and `b` either
+#'                selected automatically or passed as arguments);
+#'   * `"orderNorm"`: Ordered Quantile technique;
+#'   * `"sqrt_x"`: data transformed as `sqrt(x + a)` (`a` selected automatically
+#'                 or passed as argument),
+#'   * `"yeojohnson"`: Yeo-Johnson transformation.
 #'
 #' @param mo_data A \code{\link[MultiDataSet]{MultiDataSet-class}} object.
 #' @param dataset Character, name of the dataset to transform.
-#' @param transformation Character, transformation to be applied. Possible values are: `vsn`,
-#' `vst-deseq2`, `best-normalize`. See `Details`.
-#' @param return_multidataset Logical, should a MultiDataSet object with the original data replaced
-#' by the transformed data returned? If `FALSE`, the output of the function depends on `return_matrix_only`.
-#' Default value is `FALSE`.
-#' @param return_matrix_only Logical, should only the transformed matrix be returned? If `TRUE`,
-#' the function will return a matrix. If `FALSE`, the function instead returns a list with the
-#' transformed data and potentially other information relevant to the transformation. Ignored if
-#' `return_multidataset` is `TRUE`. Default value is `FALSE`.
-#' @param verbose Logical, should information about the transformation be printed? Default value is `TRUE`.
-#' @param method Character, if `transformation = 'best-normalize-manual'`, which normalisation method
-# " should be applied. See possible values in \code{\link{transform_bestNormalise_manual}}. Ignored for
-#' other transformations.
-#' @param ... Further arguments passed to the \code{\link[bestNormalize]{bestNormalize}} function or the
-#' `method` function from the `bestNormalize` package.
-#' @return \itemize{
-#' \item if `return_multidataset = TRUE`: a \code{\link[MultiDataSet]{MultiDataSet-class}} object,
-#' in which the original data for the transformed dataset has been replaced.
-#' \item if `return_multidataset = FALSE` and `return_matrix_only = TRUE`: a matrix with the
-#' transformed data.
-#' \item if `return_multidataset = FALSE` and `return_matrix_only = FALSE`: a list with two elements,
-#' `transformed_data` containing a matrix of transformed data, and `info_transformation` containing
-#' information about the transformation (depends on the transformation applied).
-#' }
+#' @param transformation Character, transformation to be applied. Possible
+#'   values are: `vsn`, `vst-deseq2`, `best-normalize-auto` or
+#'   `best-normalize-manual`. See `Details`.
+#' @param return_multidataset Logical, should a `MultiDataSet` object with the
+#'   original data replaced by the transformed data returned? If `FALSE`, the
+#'   output of the function depends on `return_matrix_only`. Default value is
+#'   `FALSE`.
+#' @param return_matrix_only Logical, should only the transformed matrix be
+#'   returned? If `TRUE`, the function will return a matrix. If `FALSE`, the
+#'   function instead returns a list with the transformed data as well as
+#'   other information relevant to the transformation. Ignored if
+#'   `return_multidataset` is `TRUE`. Default value is `FALSE`.
+#' @param verbose Logical, should information about the transformation be
+#'   printed? Default value is `TRUE`.
+#' @param method Character, if `transformation = 'best-normalize-manual'`, which
+#'   normalisation method should be applied. See possible values in
+#'   [transform_bestNormalise_manual()]. Ignored for other transformations.
+#' @param ... Further arguments passed to the [bestNormalize::bestNormalize()]
+#'   function or the `method` function from the `bestNormalize` package.
+#' @returns
+#' * if `return_multidataset = TRUE`: a [MultiDataSet::MultiDataSet-class]
+#' object, in which the original data for the transformed dataset has been
+#' replaced.
+#' * if `return_multidataset = FALSE` and `return_matrix_only = TRUE`: a matrix
+#' with the transformed data.
+#' * if `return_multidataset = FALSE` and `return_matrix_only = FALSE`: a list
+#' with two elements, `transformed_data` containing a matrix of transformed
+#' data, and `info_transformation` containing information about the
+#' transformation (depends on the transformation applied).
 #' @export
 transform_dataset <- function(mo_data,
                               dataset,
