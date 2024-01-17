@@ -141,5 +141,15 @@ test_that("transform_dataset works", {
   )
   expect_error(transform_dataset(multiomics_set, "snps+A", "best-normalize-manual"), "'method' argument should be provided for 'best-normalize-manual' transformation.")
 
+  res <- transform_dataset(
+    multiomics_set,
+    "rnaseq",
+    "best-normalize-manual",
+    method = "center_scale",
+    return_multidataset = TRUE
+  )
+  expect_s4_class(res, "MultiDataSet")
+  expect_equal(names(res), c("snps+A", "rnaseq", "metabolome", "phenotypes"))
+
   # expect_message(transform_dataset(multiomics_set, dataset = "snps+A", transformation = "best-normalize-auto", method = "center_scale"))
 })

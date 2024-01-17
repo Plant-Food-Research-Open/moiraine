@@ -281,7 +281,13 @@ transform_dataset <- function(mo_data,
                               verbose = TRUE,
                               method,
                               ...) {
-  mo_data <- check_input_multidataset(mo_data, dataset)
+  ## We don't want to subset the dataset
+  check_is_multidataset(mo_data)
+  .check_names(
+    dataset,
+    names(mo_data),
+    "'_W_' datasets are not present in mo_data. Possible dataset names are: '_C_'."
+  )
 
   .check_names(
     transformation,
@@ -569,7 +575,7 @@ transformation_datasets_factory <- function(mo_data_target,
 #' @export
 get_table_transformations <- function(transformation_result, best_normalize_details = FALSE) {
   ## for devtools::check
-  Features <- NULL
+  Features <- Feature <- NULL
 
   transf_name <- c(
     "vsn" = "Variance Stabilising Normalisation (vsn)",
