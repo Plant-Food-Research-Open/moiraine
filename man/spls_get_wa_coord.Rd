@@ -7,13 +7,14 @@
 spls_get_wa_coord(spls_res)
 }
 \arguments{
-\item{spls_res}{The output from the \code{\link[=spls_run]{spls_run()}} or \code{\link[mixOmics:spls]{mixOmics::spls()}} function.}
+\item{spls_res}{The output from the \code{\link[=spls_run]{spls_run()}} or \code{\link[mixOmics:spls]{mixOmics::spls()}}
+function.}
 }
 \value{
 A matrix of samples coordinates, with samples in rows and joint
 components in columns.
 }
 \description{
-Computes the average sample coordinates for sPLS components
-across the two datasets.
+Computes the average sample coordinates for sPLS components across the two
+datasets.
 }

@@ -7,29 +7,32 @@
 spls_tune(spls_input, keepX = NULL, keepY = NULL, cpus = NULL, ...)
 }
 \arguments{
-\item{spls_input}{A \code{mixOmics} input object created with \code{\link{get_input_mixomics_unsupervised}}.}
+\item{spls_input}{A \code{mixOmics} input object created with
+\code{\link[=get_input_mixomics_unsupervised]{get_input_mixomics_unsupervised()}}.}
 
-\item{keepX}{Numeric vector, values for the number of features to retain from dataset X
-to test. Default value is \code{NULL} (default sequence of values will be used, see details).}
+\item{keepX}{Numeric vector, values for the number of features to retain from
+dataset X to test. Default value is \code{NULL} (default sequence of values will
+be used, see details).}
 
-\item{keepY}{Numeric vector, values for the number of features to retain from dataset Y
-to test. Default value is \code{NULL} (default sequence of values will be used, see details).}
+\item{keepY}{Numeric vector, values for the number of features to retain from
+dataset Y to test. Default value is \code{NULL} (default sequence of values will
+be used, see details).}
 
-\item{cpus}{Integer, the number of CPUs to use when running the code in parallel. For advanced users,
-see the \code{BPPARAM} argument of \code{\link[mixOmics]{tune.spls}}.}
+\item{cpus}{Integer, the number of CPUs to use when running the code in
+parallel. For advanced users, see the \code{BPPARAM} argument of
+\code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}.}
 
-\item{...}{Further arguments passed to \code{\link[mixOmics]{tune.spls}}.}
+\item{...}{Further arguments passed to \code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}.}
 }
 \value{
-A list (see \code{\link[mixOmics]{tune.spls}}).
+A list (see \code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}).
 }
 \description{
 Peforms cross-validation to assess the optimal number of features to retain
 in each dataset for a sPLS run (implemented in the \code{mixOmics} package).
 }
 \details{
-If no value is provided for \code{keepX} or \code{keepY}, the sequence
-\code{seq(5, 30, 5)} will be used, truncated to only retain
-values that are inferior or equal to the number of features in the X or Y
-dataset.
+If no value is provided for \code{keepX} or \code{keepY}, the sequence \code{seq(5, 30, 5)}
+will be used, truncated to only retain values that are inferior or equal to
+the number of features in the X or Y dataset.
 }

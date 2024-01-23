@@ -7,11 +7,13 @@
 spls_get_params(spls_res)
 }
 \arguments{
-\item{spls_res}{The output from \code{\link[mixOmics]{spls}} or \code{\link{spls_run}}.}
+\item{spls_res}{The output from \code{\link[mixOmics]{spls}} or
+\code{\link{spls_run}}.}
 }
 \value{
 A tibble.
 }
 \description{
-Extracts the \code{ncomp}, \code{keepX} and \code{keepY} parameters from a sPLS run and format them into a table.
+Extracts the \code{ncomp}, \code{keepX} and \code{keepY} parameters from a sPLS run and
+format them into a table.
 }

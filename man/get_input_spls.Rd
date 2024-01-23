@@ -7,39 +7,45 @@
 get_input_spls(mo_data, mode, datasets = names(mo_data), multilevel = NULL)
 }
 \arguments{
-\item{mo_data}{A \code{\link[MultiDataSet]{MultiDataSet-class}} object.}
+\item{mo_data}{A \link[MultiDataSet:MultiDataSet-class]{MultiDataSet::MultiDataSet} object.}
 
-\item{mode}{Character, the mode of PLS to use of the analysis (see \href{http://mixomics.org/methods/spls/}{sPLS documentation}).
-Should be one of \code{'regression'}, \code{'canonical'}, \code{'invariant'} or \code{'classic'}.}
+\item{mode}{Character, the mode of PLS to use of the analysis (see \href{http://mixomics.org/methods/spls/}{sPLS documentation}). Should be one of
+\code{'regression'}, \code{'canonical'}, \code{'invariant'} or \code{'classic'}.}
 
 \item{datasets}{Character vector of length 2, the names of the datasets from
 \code{mo_data} to include in the analysis.}
 
-\item{multilevel}{Character vector of length 1 or 3 to be used as information about repeated measurements.
-See Details.}
+\item{multilevel}{Character vector of length 1 or 3 to be used as information
+about repeated measurements. See Details. Default value is \code{NULL}, i.e.
+the multilevel option will not be used.}
 }
 \value{
-A list, in which each element corresponds to one omics dataset, with samples as rows and features as columns.
-The mode to use for the analysis is stored in the \code{mode} attribute of the returned object.
+A list, in which each element corresponds to one omics dataset, with
+samples as rows and features as columns. The mode to use for the analysis
+is stored in the \code{mode} attribute of the returned object.
 }
 \description{
-Creates an object that can be used as input for the (s)PLS functions from the mixOmics package.
-It contains the two omics datasets selected, restricted to common samples.
+Creates an object that can be used as input for the (s)PLS functions from the
+mixOmics package. It contains the two omics datasets selected, restricted to
+common samples.
 }
 \details{
-\code{multilevel} argument: enables the multilevel option (see
-\href{http://mixomics.org/methods/multilevel/}{mixOmics site}) to deal with repeated measurements.
-\code{\link[mixOmics:spls]{mixOmics::spls()}} enables one- and two-factor decomposition. For one-factor decomposition,
-\code{multilevel} argument should be the name of the column in the samples metadata that gives the
-ID of the observation units (e.g. the ID of the subjects that were measured several times). The resulting
-design matrix (stored in the \code{multilevel} argument of the returned object) will be a data-frame
-with one column which gives the ID (as integer) of the observation units corresponding to each sample
-in the omics datasets. For two-factor decomposition, \code{multilevel} should be of length 3. The
-first value, similarly to the one-factor decomposition, should be the name of the column in the
-samples metadata that gives the ID of the observation units (e.g. the ID of the subjects that were
-measured several times). The second and third values should be the name of the columns in the samples
-metadata that give the two factors considered. The resulting design matrix (stored in the \code{multilevel}
-argument of the returned object) will be a data-frame with three columns: the first column gives the
-ID (as integer) of the observation units corresponding to each sample in the omics datasets; the
-second and third columns give the levels of the two factors.
+\code{multilevel} argument: enables the multilevel option (see \href{http://mixomics.org/methods/multilevel/}{mixOmics site}) to deal with repeated
+measurements. \code{\link[mixOmics:spls]{mixOmics::spls()}} enables one- and two-factor decomposition.
+For one-factor decomposition, \code{multilevel} argument should be the name of the
+column in the samples metadata that gives the ID of the observation units
+(e.g. the ID of the subjects that were measured several times). The resulting
+design matrix (stored in the \code{multilevel} argument of the returned object)
+will be a data-frame with one column which gives the ID (as integer) of the
+observation units corresponding to each sample in the omics datasets. For
+two-factor decomposition, \code{multilevel} should be of length 3. The first
+value, similarly to the one-factor decomposition, should be the name of the
+column in the samples metadata that gives the ID of the observation units
+(e.g. the ID of the subjects that were measured several times). The second
+and third values should be the name of the columns in the samples metadata
+that give the two factors considered. The resulting design matrix (stored in
+the \code{multilevel} argument of the returned object) will be a data-frame with
+three columns: the first column gives the ID (as integer) of the observation
+units corresponding to each sample in the omics datasets; the second and
+third columns give the levels of the two factors.
 }

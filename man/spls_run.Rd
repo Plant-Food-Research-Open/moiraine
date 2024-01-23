@@ -7,14 +7,15 @@
 spls_run(spls_input, ...)
 }
 \arguments{
-\item{spls_input}{A \code{mixOmics} input object created with \code{\link{get_input_spls}}.}
+\item{spls_input}{A mixOmics input object created with \code{\link[=get_input_spls]{get_input_spls()}}.}
 
 \item{...}{Arguments passed to \code{\link[mixOmics:spls]{mixOmics::spls()}}.}
 }
 \value{
-An object of class \code{mixo.spls} (if \code{keepX} and/or \code{keepY} arguments were provided)
-or \code{mix.pls} (if they were not), see \code{\link[mixOmics:spls]{mixOmics::spls()}} and \code{\link[mixOmics:pls]{mixOmics::pls()}}.
+An object of class \code{mixo.spls} (if \code{keepX} and/or \code{keepY} arguments
+were provided) or \code{mix.pls} (if they were not), see \code{\link[mixOmics:spls]{mixOmics::spls()}} and
+\code{\link[mixOmics:pls]{mixOmics::pls()}}.
 }
 \description{
-Runs the sPLS algorithm (\code{\link[mixOmics]{spls}}) from the \code{mixOmics} package.
+Runs the sPLS algorithm (\code{\link[mixOmics:spls]{mixOmics::spls()}}) from the mixOmics package.
 }

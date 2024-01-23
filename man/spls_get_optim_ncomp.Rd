@@ -12,18 +12,21 @@ spls_get_optim_ncomp(spls_perf, thr = 0.0975, min_ncomp = 1)
 \item{thr}{Numeric, the threshold to be used for the \code{Q2} values. Default
 value is 0.0975.}
 
-\item{min_ncomp}{Integer, the minimum \code{ncomp} value to be returned. Default value is 1, i.e. this argument does
-not play a role in selecting the \code{comp} value. Can be useful if we want at least 2 latent components for final plots.}
+\item{min_ncomp}{Integer, the minimum \code{ncomp} value to be returned. Default
+value is 1, i.e. this argument does not play a role in selecting the \code{comp}
+value. Can be useful if we want at least 2 latent components for final
+plots.}
 }
 \value{
-An integer, the optimal number of components to use for the sPLS run.
+An integer, the optimal number of components to use for the sPLS
+run.
 }
 \description{
 Select the optimal number of components to compute in a sPLS run from the
-cross-validation results obtained with \code{\link[mixOmics:perf]{mixOmics::perf()}} on a PLS or sPLS result,
-using the the mean \code{Q2.total} values. Note that this function is experimental,
-the corresponding diagnostic plots should be considered when selecting the
-optimal number of components to use.
+cross-validation results obtained with \code{\link[mixOmics:perf]{mixOmics::perf()}} on a PLS or sPLS
+result, using the the mean \code{Q2.total} values. Note that this function is
+experimental, the corresponding diagnostic plots should be considered when
+selecting the optimal number of components to use.
 }
 \details{
 The selection is made as follows:

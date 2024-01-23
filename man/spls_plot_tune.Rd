@@ -7,19 +7,23 @@
 spls_plot_tune(spls_tune_res)
 }
 \arguments{
-\item{spls_tune_res}{The result of \code{\link{spls_tune}} or \code{\link[mixOmics]{tune.spls}}.}
+\item{spls_tune_res}{The result of \code{\link[=spls_tune]{spls_tune()}} or \code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}.}
 }
 \value{
 A ggplot.
 }
 \description{
-Displays the results of cross-validation to tune the number of components to retain in each dataset
-for a sPLS run. Similar to \code{\link[mixOmics]{plot.tune.spls}}.
+Displays the results of cross-validation to tune the number of components to
+retain in each dataset for a sPLS run. Similar to
+\code{\link[mixOmics:plot.tune]{mixOmics::plot.tune.spls()}}.
 }
 \details{
-The plot displays the correlation or RSS between the latent components obtained with the corresponding values
-of \code{keepX} (x-axis) and \code{keepY} (y-axis) and the latent components of the full model (i.e. that retains all features).
-The colour of the points shows the mean correlation/RSS across the cross-validation folds, and the size of the points'
-shadow (in gray) represents the coefficient of variation (COV) of the correlation/RSS, i.e. standard error divided by mean.
-The point corresponding with the optimal value for \code{keepX} and \code{keepY} is indicating with a red border.
+The plot displays the correlation or RSS between the latent components
+obtained with the corresponding values of \code{keepX} (x-axis) and \code{keepY}
+(y-axis) and the latent components of the full model (i.e. that retains all
+features). The colour of the points shows the mean correlation/RSS across the
+cross-validation folds, and the size of the points' shadow (in gray)
+represents the coefficient of variation (COV) of the correlation/RSS, i.e.
+standard error divided by mean. The point corresponding with the optimal
+value for \code{keepX} and \code{keepY} is indicating with a red border.
 }
