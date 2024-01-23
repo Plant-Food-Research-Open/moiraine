@@ -741,7 +741,11 @@ diablo_plot <- function(diablo_res,
 #' )
 #' }
 #' @export
-diablo_plot_var <- function(diablo_res, mo_data, label_cols = "feature_id", truncate = NULL, ...) {
+diablo_plot_var <- function(diablo_res,
+                            mo_data,
+                            label_cols = "feature_id",
+                            truncate = NULL,
+                            ...) {
   ## for devtools::check
   dataset <- data <- feature_id <- NULL
 

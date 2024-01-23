@@ -387,3 +387,73 @@ spls_get_wa_coord <- function(spls_res) {
   return(res)
 }
 
+#' Plots sPLS features correlation circle
+#'
+#' Displays the sPLS correlation circle plot, but uses available feature
+#' metadata to display feature names.
+#'
+#' @param spls_res The output from [mixOmics::spls()] or [spls_run()].
+#' @inheritParams get_features_labels
+#' @param ... Additional arguments passed to [mixOmics::plotVar()].
+#' @returns A plot (see [mixOmics::plotVar()]).
+#' @examples
+#' \dontrun{
+#' # Use the default features ID for the plot
+#' spls_plot_var(
+#'   spls_final_run,
+#'   mo_data,
+#'   "feature_id",
+#'   overlap = FALSE,
+#'   cex = c(3, 3),
+#'   comp = 1:2
+#' )
+#'
+#' # Using a different column from the feature metadata of each omics dataset
+#' diablo_plot_var(
+#'   spls_final_run,
+#'   mo_presel_supervised,
+#'   c(
+#'     "rnaseq" = "Name",
+#'     "metabolome" = "name"
+#'   ),
+#'   overlap = FALSE,
+#'   cex = c(3, 3),
+#'   comp = 1:2
+#' )
+#' }
+#' @export
+spls_plot_var <- function(spls_res,
+                          mo_data,
+                          label_cols = "feature_id",
+                          truncate = NULL,
+                          ...) {
+  ## for devtools::check
+  dataset <- data <- feature_id <- NULL
+
+  datasets <- c("X", "Y")
+
+  datasets_name <- attr(spls_res, "datasets_name")
+  if (is.null(datasets_name)) datasets_name <- datasets
+
+  mo_data <- check_input_multidataset(mo_data, datasets_name)
+
+  ## Need to get feature names only for features in input data
+  features_list <- datasets |>
+    purrr::map(
+      ~rownames(spls_res$loadings[[.x]])
+    ) |>
+    unlist()
+
+  ## Extract labels to use for features
+  feature_names <- get_features_labels(mo_data, label_cols, truncate) |>
+    dplyr::filter(feature_id %in% features_list) |>
+    dplyr::group_by(dataset) |>
+    tidyr::nest() |>
+    dplyr::mutate(
+      data = purrr::map(data, tibble::deframe)
+    ) |>
+    tibble::deframe()
+
+
+  mixOmics::plotVar(spls_res, var.names = feature_names, ...)
+}
