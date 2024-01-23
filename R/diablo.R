@@ -197,18 +197,36 @@ diablo_pairwise_pls_factory <- function(mixomics_data, ..., threshold = 0.8, low
   return(targets)
 }
 
-.diablo_generate_design_matrix <- function(design_matrix, datasets_name) {
+#' Generate a design matrix for DIABLO
+#'
+#' Generates a design matrix for DIABLO, following a predesigned pattern as
+#' recommended by the mixOmics authors.
+#'
+#' @param datasets_name Character vector, the names of the datasets to
+#'   integrate. Should include the value `"Y"` to represent the samples outcome
+#'   groups.
+#' @param design_matrix Character, the type of design matrix to generate. Should
+#'   be one of `"null"`, `"weighted_full"` or `"full"`.
+#' @returns A matrix with as many rows and columns as the length of
+#'   `datasets_name`, and filled with either 0 (`design_matrix = "null"`), 0.1
+#'   (`design_matrix = "weighted_full"`) or 1 (`design_matrix = "full"`). Values
+#'   in the diagonal are set to 0, and values in the `"Y"` row and columns are
+#'   set to 1.
+#' @export
+diablo_predefined_design_matrix <- function(datasets_name,
+                                          design_matrix = c("null",
+                                                            "weighted_full",
+                                                            "full")) {
+  design_matrix <- rlang::arg_match(design_matrix)
+
   datasets_name <- c(setdiff(datasets_name, "Y"), "Y")
 
-  if (length(design_matrix) > 1) stop("design_matrix argument should be of length 1.")
-
-  if (!(design_matrix %in% c("null", "weighted_full", "full"))) stop("design_matrix argument should be one of: 'null', 'weighted_full', 'full.'")
-
   temp <- c("null" = 0, "weighted_full" = 0.1, "full" = 1)
-  res <- matrix(temp[design_matrix],
-                nrow = length(datasets_name),
-                ncol = length(datasets_name),
-                dimnames = list(datasets_name, datasets_name)
+  res <- matrix(
+    temp[design_matrix],
+    nrow = length(datasets_name),
+    ncol = length(datasets_name),
+    dimnames = list(datasets_name, datasets_name)
   )
 
   res[, "Y"] <- 1
@@ -243,7 +261,10 @@ diablo_run <- function(mixomics_data, design_matrix, ...) {
   datasets_name <- setdiff(names(mixomics_data), "Y")
 
   if (is.character(design_matrix)) {
-    design_matrix <- .diablo_generate_design_matrix(design_matrix, datasets_name)
+    design_matrix <- diablo_predefined_design_matrix(
+      datasets_name,
+      design_matrix
+    )
   }
 
   args <- list(...)
@@ -371,7 +392,10 @@ diablo_tune <- function(mixomics_data, design_matrix, keepX_list = NULL, cpus = 
   datasets_name <- setdiff(names(mixomics_data), "Y")
 
   if (is.character(design_matrix)) {
-    design_matrix <- .diablo_generate_design_matrix(design_matrix, datasets_name)
+    design_matrix <- diablo_predefined_design_matrix(
+      datasets_name,
+      design_matrix
+    )
   }
 
   ## Create the grid of values to be tested for keepX

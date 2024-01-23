@@ -1,7 +1,7 @@
 test_that("diablo_run works", {
   multiomics_set <- test_get_multidataset()[, 1:3]
   diablo_input <- get_input_mixomics_supervised(multiomics_set, "pheno_group")
-  design_matrix <- .diablo_generate_design_matrix("weighted_full", names(multiomics_set))
+  design_matrix <- diablo_predefined_design_matrix(names(multiomics_set), "weighted_full")
 
   ## For a PLS-DA run
   expect_no_error(
@@ -44,4 +44,32 @@ test_that("diablo_run works", {
   res$call <- "removed from test"
   res_splsda$call <- "removed from test"
   expect_identical(res, res_splsda)
+})
+
+test_that("diablo_predefined_design_matrix works", {
+
+  ds_names <- c("A", "B", "C", "Y")
+  template <- matrix(-1, nrow = 4, ncol = 4, dimnames = list(ds_names, ds_names))
+  template["Y", ] <- 1
+  template[, "Y"] <- 1
+  diag(template) <- 0
+
+  fill_template <- function(x) {
+    template[template == -1] <- x
+    return(template)
+  }
+
+  expect_error(diablo_predefined_design_matrix(ds_names, "TEST"))
+  expect_equal(
+    diablo_predefined_design_matrix(ds_names, "null"),
+    fill_template(0)
+  )
+  expect_equal(
+    diablo_predefined_design_matrix(ds_names, "weighted_full"),
+    fill_template(0.1)
+  )
+  expect_equal(
+    diablo_predefined_design_matrix(ds_names, "full"),
+    fill_template(1)
+  )
 })
