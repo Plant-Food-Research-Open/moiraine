@@ -57,40 +57,43 @@ in each dataset for a sPLS run (implemented in the <code>mixOmics</code> package
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>spls_input</dt>
-<dd><p>A <code>mixOmics</code> input object created with <code><a href="get_input_mixomics_unsupervised.html">get_input_mixomics_unsupervised</a></code>.</p></dd>
+<dd><p>A <code>mixOmics</code> input object created with
+<code><a href="get_input_mixomics_unsupervised.html">get_input_mixomics_unsupervised()</a></code>.</p></dd>
 
 
 <dt>keepX</dt>
-<dd><p>Numeric vector, values for the number of features to retain from dataset X
-to test. Default value is <code>NULL</code> (default sequence of values will be used, see details).</p></dd>
+<dd><p>Numeric vector, values for the number of features to retain from
+dataset X to test. Default value is <code>NULL</code> (default sequence of values will
+be used, see details).</p></dd>
 
 
 <dt>keepY</dt>
-<dd><p>Numeric vector, values for the number of features to retain from dataset Y
-to test. Default value is <code>NULL</code> (default sequence of values will be used, see details).</p></dd>
+<dd><p>Numeric vector, values for the number of features to retain from
+dataset Y to test. Default value is <code>NULL</code> (default sequence of values will
+be used, see details).</p></dd>
 
 
 <dt>cpus</dt>
-<dd><p>Integer, the number of CPUs to use when running the code in parallel. For advanced users,
-see the <code>BPPARAM</code> argument of <code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">tune.spls</a></code>.</p></dd>
+<dd><p>Integer, the number of CPUs to use when running the code in
+parallel. For advanced users, see the <code>BPPARAM</code> argument of
+<code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">mixOmics::tune.spls()</a></code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Further arguments passed to <code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">tune.spls</a></code>.</p></dd>
+<dd><p>Further arguments passed to <code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">mixOmics::tune.spls()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list (see <code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">tune.spls</a></code>).</p>
+<p>A list (see <code><a href="https://rdrr.io/pkg/mixOmics/man/tune.spls.html" class="external-link">mixOmics::tune.spls()</a></code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If no value is provided for <code>keepX</code> or <code>keepY</code>, the sequence
-<code>seq(5, 30, 5)</code> will be used, truncated to only retain
-values that are inferior or equal to the number of features in the X or Y
-dataset.</p>
+    <p>If no value is provided for <code>keepX</code> or <code>keepY</code>, the sequence <code>seq(5, 30, 5)</code>
+will be used, truncated to only retain values that are inferior or equal to
+the number of features in the X or Y dataset.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
