@@ -2,28 +2,30 @@
 % Please edit documentation in R/so2pls.R
 \name{so2pls_get_optim_keep}
 \alias{so2pls_get_optim_keep}
-\title{Extract optimal number of features to keep from cross-validation results for sO2PLS}
+\title{Extract optimal number of features to keep from cross-validation results for
+sO2PLS}
 \usage{
 so2pls_get_optim_keep(cv_res, use_1sd_rule = TRUE)
 }
 \arguments{
-\item{cv_res}{List, result from a call to the \code{\link{so2pls_crossval_sparsity}} or
-\code{\link[OmicsPLS]{crossval_sparsity}}.}
+\item{cv_res}{List, result from a call to the \code{\link[=so2pls_crossval_sparsity]{so2pls_crossval_sparsity()}} or
+\code{\link[OmicsPLS:crossval_sparsity]{OmicsPLS::crossval_sparsity()}}.}
 
-\item{use_1sd_rule}{Boolean, should the 1 standard deviation rule be used when
-selecting the optimal number of features to retain? See \code{Details}.}
+\item{use_1sd_rule}{Boolean, should the 1 standard deviation rule be used
+when selecting the optimal number of features to retain? See Details.}
 }
 \value{
 A list with elements \code{keepx} and \code{keepy}, each a vector of length
-equal to the number of joint components, where the ith element giving the number of features
-to retain from dataset \code{X} (\code{keepx}) or \code{Y} (\code{keepy}) for the ith
-joint component.
+equal to the number of joint components, where the ith element giving the
+number of features to retain from dataset \code{X} (\code{keepx}) or \code{Y} (\code{keepy})
+for the i-th joint component.
 }
 \description{
 Extracts the optimal number of features to retain from datasets \code{X} and \code{Y}
 for the joint components.
 }
 \details{
-The 1-SD rule means that we are retaining the smallest number of features yielding an
-average covariance that is within 1SD of the maximum covariance obtained.
+The 1-SD rule means that we are retaining the smallest number of features
+yielding an average covariance that is within 1SD of the maximum covariance
+obtained.
 }

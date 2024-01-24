@@ -201,7 +201,13 @@ so2pls_crossval_o2m <- function(omicspls_input,
 #' @return A ggplot.
 #' @export
 so2pls_plot_cv <- function(cv_res, nb_col = NULL) {
-  if (!is(cv_res, "cvo2m")) stop("Expecting a cvo2m object. Make sure input is the output from the so2pls_crossval_o2m() or OmicsPLS::crossval_o2m() function.")
+  if (!is(cv_res, "cvo2m")) {
+    stop(
+      "Expecting a cvo2m object. ",
+      "Make sure input is the output from the so2pls_crossval_o2m() ",
+      "or OmicsPLS::crossval_o2m() function."
+    )
+  }
 
   names_datasets <- attr(cv_res, "datasets_name")
   if (is.null(names_datasets)) names_datasets <- c("X", "Y")
@@ -217,9 +223,13 @@ so2pls_plot_cv <- function(cv_res, nb_col = NULL) {
       values_to = "MSE"
     ) |>
     tidyr::separate(names, c("ny", "n"), sep = "\\.") |>
-    dplyr::mutate(dplyr::across(dplyr::starts_with("n"), ~ as.numeric(stringr::str_extract(.x, "\\d+"))),
-                  n = paste0("Number of joint components: ", n),
-                  is_optimal = MSE == min(MSE)
+    dplyr::mutate(
+      dplyr::across(
+        dplyr::starts_with("n"),
+        ~ as.numeric(stringr::str_extract(.x, "\\d+"))
+      ),
+      n = paste0("Number of joint components: ", n),
+      is_optimal = MSE == min(MSE)
     ) |>
     dplyr::arrange(is_optimal)
 
@@ -228,9 +238,18 @@ so2pls_plot_cv <- function(cv_res, nb_col = NULL) {
     ggplot2::geom_tile(linewidth = 1) +
     ggplot2::facet_wrap(~n, ncol = nb_col) +
     ggplot2::scale_fill_viridis_c(option = "plasma") +
-    ggplot2::scale_colour_manual(values = c("TRUE" = "red", "FALSE" = "white"), guide = "none") +
-    ggplot2::scale_x_continuous(breaks = min(toplot$nx):max(toplot$nx), expand = ggplot2::expansion()) +
-    ggplot2::scale_y_continuous(breaks = min(toplot$ny):max(toplot$ny), expand = ggplot2::expansion()) +
+    ggplot2::scale_colour_manual(
+      values = c("TRUE" = "red", "FALSE" = "white"),
+      guide = "none"
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = min(toplot$nx):max(toplot$nx),
+      expand = ggplot2::expansion()
+    ) +
+    ggplot2::scale_y_continuous(
+      breaks = min(toplot$ny):max(toplot$ny),
+      expand = ggplot2::expansion()
+    ) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(
@@ -268,7 +287,12 @@ so2pls_get_optim_ncomp <- function(cv_res) {
       values_to = "MSE"
     ) |>
     tidyr::separate(names, c("ny", "n"), sep = "\\.") |>
-    dplyr::mutate(dplyr::across(dplyr::starts_with("n"), ~ as.integer(stringr::str_extract(.x, "\\d+")))) |>
+    dplyr::mutate(
+      dplyr::across(
+        dplyr::starts_with("n"),
+        ~ as.integer(stringr::str_extract(.x, "\\d+"))
+      )
+    ) |>
     dplyr::filter(MSE == min(MSE)) |>
     dplyr::select(n, nx, ny)
 
@@ -560,22 +584,24 @@ so2pls_crossval_sparsity <- function(omicspls_input, n, nx, ny, nr_folds = 10, k
   return(res)
 }
 
-#' Extract optimal number of features to keep from cross-validation results for sO2PLS
+#' Extract optimal number of features to keep from cross-validation results for
+#' sO2PLS
 #'
-#' Extracts the optimal number of features to retain from datasets \code{X} and \code{Y}
+#' Extracts the optimal number of features to retain from datasets `X` and `Y`
 #' for the joint components.
 #'
-#' The 1-SD rule means that we are retaining the smallest number of features yielding an
-#' average covariance that is within 1SD of the maximum covariance obtained.
+#' The 1-SD rule means that we are retaining the smallest number of features
+#' yielding an average covariance that is within 1SD of the maximum covariance
+#' obtained.
 #'
-#' @param cv_res List, result from a call to the \code{\link{so2pls_crossval_sparsity}} or
-#' \code{\link[OmicsPLS]{crossval_sparsity}}.
-#' @param use_1sd_rule Boolean, should the 1 standard deviation rule be used when
-#' selecting the optimal number of features to retain? See \code{Details}.
-#' @return A list with elements \code{keepx} and \code{keepy}, each a vector of length
-#' equal to the number of joint components, where the ith element giving the number of features
-#' to retain from dataset \code{X} (\code{keepx}) or \code{Y} (\code{keepy}) for the ith
-#' joint component.
+#' @param cv_res List, result from a call to the [so2pls_crossval_sparsity()] or
+#'   [OmicsPLS::crossval_sparsity()].
+#' @param use_1sd_rule Boolean, should the 1 standard deviation rule be used
+#'   when selecting the optimal number of features to retain? See Details.
+#' @returns A list with elements `keepx` and `keepy`, each a vector of length
+#'   equal to the number of joint components, where the ith element giving the
+#'   number of features to retain from dataset `X` (`keepx`) or `Y` (`keepy`)
+#'   for the i-th joint component.
 #' @export
 so2pls_get_optim_keep <- function(cv_res, use_1sd_rule = TRUE) {
   x <- cv_res$Best
@@ -586,8 +612,8 @@ so2pls_get_optim_keep <- function(cv_res, use_1sd_rule = TRUE) {
     )
   } else {
     res <- list(
-      keepx = x[stringr::str_detect(names(x), "x\\d+")],
-      keepy = x[stringr::str_detect(names(x), "y\\d+")]
+      keepx = x[stringr::str_detect(names(x), "x\\d*$")],
+      keepy = x[stringr::str_detect(names(x), "y\\d*$")]
     )
   }
 

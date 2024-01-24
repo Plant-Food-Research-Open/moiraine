@@ -50,7 +50,7 @@ spls_plot_var(
 )
 
 # Using a different column from the feature metadata of each omics dataset
-diablo_plot_var(
+spls_plot_var(
   spls_final_run,
   mo_presel_supervised,
   c(
