@@ -1170,23 +1170,65 @@ plot_features_weight_covariate <- function(method_output,
 }
 
 
+#' Plot of variance explained
+#'
+#' Displays the percentage of variance explained by each latent dimension in the
+#' output of a dimension reduction method for each dataset analysed.
+#'
+#' @param method_output Integration method output generated via the
+#'   `get_output()` function.
+#' @param datasets Character vector giving the datasets to display. Default
+#'   value is `NULL`, i.e. all datasets will be shown.
+#' @param latent_dimensions Character vector giving the latent dimensions to
+#'   display. Default value is `NULL`, i.e. all latent dimensions will be shown.
+#' @param ncol Integer, number of columns in the faceted plot. Default value is
+#'   `NULL`.
+#' @param free_y_axis Logical, whether the y-axis (representing the percentage
+#'   of variance) should have the same range for all datasets. Default value is
+#'   `FALSE`.
+#' @param cumulative Logical, whether the cumulative percentage of variance
+#'   explained should be plotted. Default is `FALSE`.
+#'
+#' @returns A ggplot.
+#' @export
 plot_variance_explained <- function(method_output,
                                     datasets = NULL,
                                     latent_dimensions = NULL,
                                     ncol = NULL,
-                                    free_y_axis = FALSE) {
+                                    free_y_axis = FALSE,
+                                    cumulative = FALSE) {
+
+  ## for devtools::check
+  dataset <- latent_dimension <- prop_var_expl <- label <- NULL
 
   method_output <- method_output |>
     .filter_output_dimensions(latent_dimensions) |>
     .filter_output_datasets(datasets)
 
+  title_prefix <- ifelse(cumulative, "Cumulative p", "P")
   scales_y_axis <- ifelse(free_y_axis, "free", "free_x")
 
-  method_output$variance_explained |>
+  toplot <- method_output$variance_explained
+
+  if (cumulative) {
+    toplot <- toplot |>
+      dplyr::group_by(dataset) |>
+      dplyr::arrange(latent_dimension) |>
+      dplyr::mutate(
+        prop_var_expl = cumsum(prop_var_expl)
+      ) |>
+      dplyr::ungroup()
+  }
+
+  toplot |>
+    dplyr::mutate(
+      label = paste0(round(100 * prop_var_expl, 1), "%")
+    ) |>
     ggplot2::ggplot(
-      ggplot2::aes(x = latent_dimension, y = prop_var_expl)
+      ggplot2::aes(x = latent_dimension, y = prop_var_expl, fill = dataset)
     ) +
     ggplot2::geom_col() +
+    ggplot2::geom_text(aes(label = label), vjust = -0.15, size = 3) +
     ggplot2::facet_wrap(~ dataset, scales = scales_y_axis, ncol = ncol) +
     ggplot2::scale_y_continuous(
       expand = ggplot2::expansion(mult = c(0, 0.05)),
@@ -1194,15 +1236,17 @@ plot_variance_explained <- function(method_output,
     ) +
     ggplot2::labs(
       title = paste0(
-        "Percentage of variance explained - ",
+        title_prefix,
+        "ercentage of variance explained - ",
         attr(method_output, "method")
       ),
       x = "Latent dimensions",
-      y = "Percentage of variance explained"
+      y = paste0(title_prefix, "ercentage of variance explained")
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      plot.title = ggplot2::element_text(hjust = 0.5)
+      plot.title = ggplot2::element_text(hjust = 0.5),
+      legend.position = "none"
     )
 
 }

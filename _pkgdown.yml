@@ -141,6 +141,7 @@ reference:
   - get_latent_dimensions
 - subtitle: "Plotting functions"
   contents:
+  - plot_variance_explained
   - plot_samples_score
   - plot_samples_score_pair
   - plot_samples_score_covariate
