@@ -329,5 +329,9 @@ get_top_features <- function(method_output,
     dplyr::filter(dataset %in% datasets) |>
     dplyr::mutate(dataset = droplevels(dataset))
 
+  res$variance_explained <- res$variance_explained |>
+    dplyr::filter(dataset %in% datasets) |>
+    dplyr::mutate(dataset = droplevels(dataset))
+
   return(res)
 }

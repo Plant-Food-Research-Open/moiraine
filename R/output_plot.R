@@ -1169,6 +1169,44 @@ plot_features_weight_covariate <- function(method_output,
   return(p)
 }
 
+
+plot_variance_explained <- function(method_output,
+                                    datasets = NULL,
+                                    latent_dimensions = NULL,
+                                    ncol = NULL,
+                                    free_y_axis = FALSE) {
+
+  method_output <- method_output |>
+    .filter_output_dimensions(latent_dimensions) |>
+    .filter_output_datasets(datasets)
+
+  scales_y_axis <- ifelse(free_y_axis, "free", "free_x")
+
+  method_output$variance_explained |>
+    ggplot2::ggplot(
+      ggplot2::aes(x = latent_dimension, y = prop_var_expl)
+    ) +
+    ggplot2::geom_col() +
+    ggplot2::facet_wrap(~ dataset, scales = scales_y_axis, ncol = ncol) +
+    ggplot2::scale_y_continuous(
+      expand = ggplot2::expansion(mult = c(0, 0.05)),
+      labels = scales::percent
+    ) +
+    ggplot2::labs(
+      title = paste0(
+        "Percentage of variance explained - ",
+        attr(method_output, "method")
+      ),
+      x = "Latent dimensions",
+      y = "Percentage of variance explained"
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5)
+    )
+
+}
+
 ##Would work if for so2pls we write "rnaseq-specific" rather than "rnaseq specific"
 .rm_dataset_from_latentdim <- function(method_output) {
 
