@@ -119,7 +119,8 @@ get_top_features <- function(method_output,
   }
 
   res <- join_features_metadata(res, mo_data) |>
-    dplyr::arrange(latent_dimension, dataset, dplyr::desc(importance))
+    dplyr::arrange(latent_dimension, dataset, dplyr::desc(importance)) |>
+    dplyr::ungroup()
 
   return(res)
 }
