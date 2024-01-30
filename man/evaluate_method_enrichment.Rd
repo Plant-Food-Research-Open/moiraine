@@ -19,44 +19,49 @@ evaluate_method_enrichment(
 )
 }
 \arguments{
-\item{method_output}{Integration method output generated via the \code{get_output()} function.}
+\item{method_output}{Integration method output generated via the
+\code{get_output()} function.}
 
-\item{feature_sets}{Named list, where each element corresponds to a feature set,
-and contains a vector of features ID of all features belonging to that set.}
+\item{feature_sets}{Named list, where each element corresponds to a feature
+set, and contains a vector of features ID of all features belonging to that
+set.}
 
-\item{datasets}{Character vector, the names of the datasets to consider in the
-enrichment analysis. If \code{NULL} (default value), features from all datasets
-will be included in the analysis.}
+\item{datasets}{Character vector, the names of the datasets to consider in
+the enrichment analysis. If \code{NULL} (default value), features from all
+datasets will be included in the analysis.}
 
-\item{latent_dimensions}{Character vector, the latent dimensions for which an enrichment
-analysis should be performed. If \code{NULL} (default value), all latent dimensions will
-be analysed.}
+\item{latent_dimensions}{Character vector, the latent dimensions for which an
+enrichment analysis should be performed. If \code{NULL} (default value), all
+latent dimensions will be analysed.}
 
-\item{use_abs}{Logical, whether to use the absolute value of the features metric to
-perform the enrichment. If \code{TRUE} (default value), it allows to higlight feature sets
-in which the features have high weight/importance score, both positive and negative.
-If \code{FALSE}, it will instead highlight feature sets in which the weights or importance
-scores all have the same sign (coordinated change).}
+\item{use_abs}{Logical, whether to use the absolute value of the features
+metric to perform the enrichment. If \code{TRUE} (default value), it allows to
+highlight feature sets in which the features have high weight/importance
+score, both positive and negative. If \code{FALSE}, it will instead highlight
+feature sets in which the weights all have the same sign (coordinated
+change).}
 
 \item{rank_test}{Logical, whether a non-parametric Wilcoxon Mann-Whitney test
-should be used instead of the default two-sample t-test (i.e. based on features
-rank rather than their metric). Default value is \code{FALSE}.}
+should be used instead of the default two-sample t-test (i.e. based on
+features rank rather than their metric). Default value is \code{FALSE}.}
 
 \item{min_set_size}{Integer, the minimum number of features in a set required
 in order to compute an enrichment score for the set. Default value is 5.}
 
-\item{add_missing_features}{Logical, whether features that are in a multi-omics dataset
-(provided through the \code{mo_data} argument) but don't have a weight in the integration results
-(e.g. because they were not selected in the pre-processing step) should be added in the
-results. If \code{TRUE} (default value), they will be added with an importance or weight of 0.}
+\item{add_missing_features}{Logical, whether features that are in a
+multi-omics dataset (provided through the \code{mo_data} argument) but don't
+have a weight in the integration results (e.g. because they were not
+selected in the pre-processing step) should be added in the results. If
+\code{TRUE} (default value), they will be added with an importance score of 0.}
 
 \item{mo_data}{A \code{\link[MultiDataSet]{MultiDataSet-class}} object. If
-\code{add_missing_features} is true, all features in the multi-omics dataset with no
-weight in the integration method result will be added with a weight of 0.}
+\code{add_missing_features} is true, all features in the multi-omics dataset
+with no weight in the integration method result will be added with an
+importance score of 0.}
 
 \item{sets_info_df}{Data-frame, information about the feature sets that will
-be added to the enrichment results. If \code{NULL} (default value), no information
-will be added to the results.}
+be added to the enrichment results. If \code{NULL} (default value), no
+information will be added to the results.}
 
 \item{col_set}{Character, name of the column in \code{sets_info_df} containing the
 set IDs. Should match the names of the \code{feature_sets} list.}
@@ -67,28 +72,31 @@ a tibble of enrichment results.
 \description{
 Performs an enrichment analysis for each latent dimension in an integration
 result, based on user-defined feature sets. The enrichment analysis is done
-with the \code{\link[gage:gage]{gage::gage()}} function from the \href{https://bioconductor.org/packages/gage/}{\code{gage}}
-package.
+with the \code{\link[gage:gage]{gage::gage()}} function from the
+\href{https://bioconductor.org/packages/gage/}{\code{gage}} package, using the
+features' signed importance score as features metric.
 }
 \details{
-When \code{add_missing_features} is \code{TRUE} (default behaviour) and a MultiDataSet object
-is passed through the \code{mo_data} argument, features present in the multi-omics dataset
-but absent in the integration method's results will be added
-to the method's result with a weight of 0. This make sure that if, from a set
-of 30 features, 25 of these features were removed during the feature pre-selection
-stage, the enrichment considers that these 25 features were not given high
-weights by the method. Otherwise, if \code{add_missing_features} is \code{FALSE}, these
-25 features will be ignored, and so the enrichment analysis may find that one
-latent dimension is enriched for this particular set, even though there only are
-5 features out of 30 from the set that contribute to the latent dimension.
-Also note that multiple-testing correction is applied at the latent dimension
-level, and there is no correction across the latent dimensions.
+When \code{add_missing_features} is \code{TRUE} (default behaviour) and a MultiDataSet
+object is passed through the \code{mo_data} argument, features present in the
+multi-omics dataset but absent in the integration method's results will be
+added to the method's result with a weight of 0. This make sure that if, from
+a set of 30 features, 25 of these features were removed during the feature
+pre-selection stage, the enrichment considers that these 25 features were not
+given high weights by the method. Otherwise, if \code{add_missing_features} is
+\code{FALSE}, these 25 features will be ignored, and so the enrichment analysis
+may find that one latent dimension is enriched for this particular set, even
+though there only are 5 features out of 30 from the set that contribute to
+the latent dimension. Also note that multiple-testing correction is applied
+at the latent dimension level, and there is no correction across the latent
+dimensions.
 
-When setting \code{use_abs} to \code{FALSE}, for each latent dimension, their enrichment
-for the features test is tested twice: once for enrichment in features with
-positive weight/importance, and once for features with negative weight/importance
-score. This will be indicated in the \code{direction} column of the resulting tibble.
+When setting \code{use_abs} to \code{FALSE}, for each latent dimension, their
+enrichment for the features test is tested twice: once for enrichment in
+features with positive weight/importance, and once for features with negative
+weight/importance score. This will be indicated in the \code{direction} column of
+the resulting tibble.
 
-Note that we built this function using the gage vignette on
-\href{https://bioconductor.org/packages/release/bioc/vignettes/gage/inst/doc/RNA-seqWorkflow.pdf}{RNA-Seq Data Pathway and Gene-set Analysis Workflow}, section 7.1.
+Note that we built this function using the gage vignette on \href{https://bioconductor.org/packages/release/bioc/vignettes/gage/inst/doc/RNA-seqWorkflow.pdf}{RNA-Seq Data Pathway and Gene-set Analysis Workflow},
+section 7.1.
 }

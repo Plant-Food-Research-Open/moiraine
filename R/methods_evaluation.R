@@ -338,62 +338,72 @@ check_feature_sets <- function(feature_sets, mo_data, datasets = names(mo_data))
 #'
 #' Performs an enrichment analysis for each latent dimension in an integration
 #' result, based on user-defined feature sets. The enrichment analysis is done
-#' with the [gage::gage()] function from the [`gage`](https://bioconductor.org/packages/gage/)
-#' package.
+#' with the [gage::gage()] function from the
+#' [`gage`](https://bioconductor.org/packages/gage/) package, using the
+#' features' signed importance score as features metric.
 #'
-#' When `add_missing_features` is `TRUE` (default behaviour) and a MultiDataSet object
-#' is passed through the `mo_data` argument, features present in the multi-omics dataset
-#' but absent in the integration method's results will be added
-#' to the method's result with a weight of 0. This make sure that if, from a set
-#' of 30 features, 25 of these features were removed during the feature pre-selection
-#' stage, the enrichment considers that these 25 features were not given high
-#' weights by the method. Otherwise, if `add_missing_features` is `FALSE`, these
-#' 25 features will be ignored, and so the enrichment analysis may find that one
-#' latent dimension is enriched for this particular set, even though there only are
-#' 5 features out of 30 from the set that contribute to the latent dimension.
-#' Also note that multiple-testing correction is applied at the latent dimension
-#' level, and there is no correction across the latent dimensions.
+#' When `add_missing_features` is `TRUE` (default behaviour) and a MultiDataSet
+#' object is passed through the `mo_data` argument, features present in the
+#' multi-omics dataset but absent in the integration method's results will be
+#' added to the method's result with a weight of 0. This make sure that if, from
+#' a set of 30 features, 25 of these features were removed during the feature
+#' pre-selection stage, the enrichment considers that these 25 features were not
+#' given high weights by the method. Otherwise, if `add_missing_features` is
+#' `FALSE`, these 25 features will be ignored, and so the enrichment analysis
+#' may find that one latent dimension is enriched for this particular set, even
+#' though there only are 5 features out of 30 from the set that contribute to
+#' the latent dimension. Also note that multiple-testing correction is applied
+#' at the latent dimension level, and there is no correction across the latent
+#' dimensions.
 #'
-#' When setting `use_abs` to `FALSE`, for each latent dimension, their enrichment
-#' for the features test is tested twice: once for enrichment in features with
-#' positive weight/importance, and once for features with negative weight/importance
-#' score. This will be indicated in the `direction` column of the resulting tibble.
+#' When setting `use_abs` to `FALSE`, for each latent dimension, their
+#' enrichment for the features test is tested twice: once for enrichment in
+#' features with positive weight/importance, and once for features with negative
+#' weight/importance score. This will be indicated in the `direction` column of
+#' the resulting tibble.
 #'
-#' Note that we built this function using the gage vignette on
-#' [RNA-Seq Data Pathway and Gene-set Analysis Workflow](https://bioconductor.org/packages/release/bioc/vignettes/gage/inst/doc/RNA-seqWorkflow.pdf), section 7.1.
+#' Note that we built this function using the gage vignette on [RNA-Seq Data
+#' Pathway and Gene-set Analysis
+#' Workflow](https://bioconductor.org/packages/release/bioc/vignettes/gage/inst/doc/RNA-seqWorkflow.pdf),
+#' section 7.1.
 #'
 #'
-#' @param method_output Integration method output generated via the `get_output()` function.
-#' @param feature_sets Named list, where each element corresponds to a feature set,
-#' and contains a vector of features ID of all features belonging to that set.
-#' @param datasets Character vector, the names of the datasets to consider in the
-#' enrichment analysis. If `NULL` (default value), features from all datasets
-#' will be included in the analysis.
-#' @param latent_dimensions Character vector, the latent dimensions for which an enrichment
-#' analysis should be performed. If `NULL` (default value), all latent dimensions will
-#' be analysed.
-#' @param use_abs Logical, whether to use the absolute value of the features metric to
-#' perform the enrichment. If `TRUE` (default value), it allows to higlight feature sets
-#' in which the features have high weight/importance score, both positive and negative.
-#' If `FALSE`, it will instead highlight feature sets in which the weights or importance
-#' scores all have the same sign (coordinated change).
+#' @param method_output Integration method output generated via the
+#'   `get_output()` function.
+#' @param feature_sets Named list, where each element corresponds to a feature
+#'   set, and contains a vector of features ID of all features belonging to that
+#'   set.
+#' @param datasets Character vector, the names of the datasets to consider in
+#'   the enrichment analysis. If `NULL` (default value), features from all
+#'   datasets will be included in the analysis.
+#' @param latent_dimensions Character vector, the latent dimensions for which an
+#'   enrichment analysis should be performed. If `NULL` (default value), all
+#'   latent dimensions will be analysed.
+#' @param use_abs Logical, whether to use the absolute value of the features
+#'   metric to perform the enrichment. If `TRUE` (default value), it allows to
+#'   highlight feature sets in which the features have high weight/importance
+#'   score, both positive and negative. If `FALSE`, it will instead highlight
+#'   feature sets in which the weights all have the same sign (coordinated
+#'   change).
 #' @param rank_test Logical, whether a non-parametric Wilcoxon Mann-Whitney test
-#' should be used instead of the default two-sample t-test (i.e. based on features
-#' rank rather than their metric). Default value is `FALSE`.
+#'   should be used instead of the default two-sample t-test (i.e. based on
+#'   features rank rather than their metric). Default value is `FALSE`.
 #' @param min_set_size Integer, the minimum number of features in a set required
-#' in order to compute an enrichment score for the set. Default value is 5.
-#' @param add_missing_features Logical, whether features that are in a multi-omics dataset
-#' (provided through the `mo_data` argument) but don't have a weight in the integration results
-#' (e.g. because they were not selected in the pre-processing step) should be added in the
-#' results. If `TRUE` (default value), they will be added with an importance or weight of 0.
+#'   in order to compute an enrichment score for the set. Default value is 5.
+#' @param add_missing_features Logical, whether features that are in a
+#'   multi-omics dataset (provided through the `mo_data` argument) but don't
+#'   have a weight in the integration results (e.g. because they were not
+#'   selected in the pre-processing step) should be added in the results. If
+#'   `TRUE` (default value), they will be added with an importance score of 0.
 #' @param mo_data A \code{\link[MultiDataSet]{MultiDataSet-class}} object. If
-#' `add_missing_features` is true, all features in the multi-omics dataset with no
-#' weight in the integration method result will be added with a weight of 0.
+#'   `add_missing_features` is true, all features in the multi-omics dataset
+#'   with no weight in the integration method result will be added with an
+#'   importance score of 0.
 #' @param sets_info_df Data-frame, information about the feature sets that will
-#' be added to the enrichment results. If `NULL` (default value), no information
-#' will be added to the results.
+#'   be added to the enrichment results. If `NULL` (default value), no
+#'   information will be added to the results.
 #' @param col_set Character, name of the column in `sets_info_df` containing the
-#' set IDs. Should match the names of the `feature_sets` list.
+#'   set IDs. Should match the names of the `feature_sets` list.
 #' @returns a tibble of enrichment results.
 #' @export
 evaluate_method_enrichment <- function(method_output,
@@ -411,7 +421,7 @@ evaluate_method_enrichment <- function(method_output,
 
   ## for devtools::check
   latent_dimension <- data <- weight <- direction <- stat.mean <- pvalue <- NULL
-  p.val <- q.val <- p.geomean <- set.size <- exp1 <- adj_pvalue <- NULL
+  p.val <- q.val <- p.geomean <- set.size <- exp1 <- adj_pvalue <- importance <- NULL
 
   if (!rlang::is_installed("gage")) {
     stop(
@@ -443,11 +453,14 @@ evaluate_method_enrichment <- function(method_output,
 
   ## Extracting for each latent dimension the vector of features weight
   features_weight <- method_output$features_weight |>
+    dplyr::mutate(
+      signed_importance = sign(weight) * importance
+    ) |>
     dplyr::group_by(latent_dimension) |>
     tidyr::nest() |>
     dplyr::mutate(data = purrr::map(
       data,
-      ~ dplyr::select(.x, feature_id, weight) |>
+      ~ dplyr::select(.x, feature_id, signed_importance) |>
         tibble::deframe()
     )) |>
     tibble::deframe()
