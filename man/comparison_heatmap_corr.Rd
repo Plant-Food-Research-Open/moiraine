@@ -7,7 +7,8 @@
 comparison_heatmap_corr(
   output_list,
   latent_dimensions = NULL,
-  include_missing_features = FALSE
+  include_missing_features = FALSE,
+  legend_ncol = 1
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ examples). If \code{NULL} (default value), all latent dimensions will be used.}
 
 \item{include_missing_features}{Logical, see
 \code{\link[=get_features_weight_correlation]{get_features_weight_correlation()}} for details. Default value is \code{FALSE}.}
+
+\item{legend_ncol}{Integer, number of columns in the legend. Default value is
+\code{1}.}
 }
 \value{
 a \code{ComplexHeatmap::Heatmap}.

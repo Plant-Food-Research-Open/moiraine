@@ -4,14 +4,21 @@
 \alias{.heatmap_features_weight_corr}
 \title{Heatmap of features weight correlation}
 \usage{
-.heatmap_features_weight_corr(output_list, include_missing_features = FALSE)
+.heatmap_features_weight_corr(
+  output_list,
+  include_missing_features = FALSE,
+  legend_ncol = 1
+)
 }
 \arguments{
 \item{output_list}{List of integration methods output generated via the
 \code{get_output()} function.}
 
-\item{include_missing_features}{Logical, see \code{\link[=get_features_weight_correlation]{get_features_weight_correlation()}}
-for details. Default value is \code{FALSE}.}
+\item{include_missing_features}{Logical, see
+\code{\link[=get_features_weight_correlation]{get_features_weight_correlation()}} for details. Default value is \code{FALSE}.}
+
+\item{legend_ncol}{Integer, number of columns in the legend. Default value is
+\code{1}.}
 }
 \value{
 a \code{ComplexHeatmap::Heatmap} (lower triangle only).

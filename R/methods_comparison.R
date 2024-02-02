@@ -119,11 +119,15 @@ get_samples_score_correlation <- function(output_list) {
 #' the latent dimensions constructed by several integration methods.
 #'
 #' @param output_list List of integration methods output generated via the
-#' `get_output()` function.
-#' @param include_missing_features Logical, see [get_features_weight_correlation()]
-#' for details. Default value is `FALSE`.
+#'   `get_output()` function.
+#' @param include_missing_features Logical, see
+#'   [get_features_weight_correlation()] for details. Default value is `FALSE`.
+#' @param legend_ncol Integer, number of columns in the legend. Default value is
+#'   `1`.
 #' @returns a `ComplexHeatmap::Heatmap` (lower triangle only).
-.heatmap_features_weight_corr <- function(output_list, include_missing_features = FALSE) {
+.heatmap_features_weight_corr <- function(output_list,
+                                          include_missing_features = FALSE,
+                                          legend_ncol = 1) {
   ## For devtools::check
   latent_dimension <- long_name <- short_name <- NULL
 
@@ -166,7 +170,7 @@ get_samples_score_correlation <- function(output_list) {
     gp = grid::gpar(col = "white"),
     annotation_legend_param = list(
       direction = "horizontal",
-      ncol = 3,
+      ncol = legend_ncol,
       title_position = "topcenter"
     )
   )
@@ -359,6 +363,8 @@ get_samples_score_correlation <- function(output_list) {
 #'   examples). If `NULL` (default value), all latent dimensions will be used.
 #' @param include_missing_features Logical, see
 #'   [get_features_weight_correlation()] for details. Default value is `FALSE`.
+#' @param legend_ncol Integer, number of columns in the legend. Default value is
+#'   `1`.
 #' @returns a `ComplexHeatmap::Heatmap`.
 #' @examplesIf FALSE
 #' ## Comparing the output from DIABLO, sO2PLS and MOFA
@@ -391,13 +397,20 @@ get_samples_score_correlation <- function(output_list) {
 #'
 #' comparison_heatmap_corr(res)
 #' @export
-comparison_heatmap_corr <- function(output_list, latent_dimensions = NULL, include_missing_features = FALSE) {
+comparison_heatmap_corr <- function(output_list,
+                                    latent_dimensions = NULL,
+                                    include_missing_features = FALSE,
+                                    legend_ncol = 1) {
   output_list <- output_list |>
     .check_names_output_list() |>
     .filter_output_dimensions_list(latent_dimensions)
 
   ## Correlation heatmap of features weight
-  hll <- .heatmap_features_weight_corr(output_list, include_missing_features)
+  hll <- .heatmap_features_weight_corr(
+    output_list,
+    include_missing_features,
+    legend_ncol
+  )
   dendro_fw <- hll@row_dend_param$obj
 
   ## Correlation heatmap of samples score
