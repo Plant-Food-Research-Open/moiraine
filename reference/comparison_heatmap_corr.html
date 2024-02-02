@@ -66,7 +66,8 @@ next to each other.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">comparison_heatmap_corr</span><span class="op">(</span></span>
 <span>  <span class="va">output_list</span>,</span>
 <span>  latent_dimensions <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  include_missing_features <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  include_missing_features <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend_ncol <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +90,11 @@ examples). If <code>NULL</code> (default value), all latent dimensions will be u
 <dt>include_missing_features</dt>
 <dd><p>Logical, see
 <code><a href="get_features_weight_correlation.html">get_features_weight_correlation()</a></code> for details. Default value is <code>FALSE</code>.</p></dd>
+
+
+<dt>legend_ncol</dt>
+<dd><p>Integer, number of columns in the legend. Default value is
+<code>1</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

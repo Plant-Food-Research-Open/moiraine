@@ -51,7 +51,11 @@ the latent dimensions constructed by several integration methods.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.heatmap_features_weight_corr</span><span class="op">(</span><span class="va">output_list</span>, include_missing_features <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.heatmap_features_weight_corr</span><span class="op">(</span></span>
+<span>  <span class="va">output_list</span>,</span>
+<span>  include_missing_features <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend_ncol <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,8 +66,13 @@ the latent dimensions constructed by several integration methods.</p>
 
 
 <dt>include_missing_features</dt>
-<dd><p>Logical, see <code><a href="get_features_weight_correlation.html">get_features_weight_correlation()</a></code>
-for details. Default value is <code>FALSE</code>.</p></dd>
+<dd><p>Logical, see
+<code><a href="get_features_weight_correlation.html">get_features_weight_correlation()</a></code> for details. Default value is <code>FALSE</code>.</p></dd>
+
+
+<dt>legend_ncol</dt>
+<dd><p>Integer, number of columns in the legend. Default value is
+<code>1</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
