@@ -216,7 +216,8 @@ geno_fmeta_df <- geno_fmeta_raw_df |>
         fdr
       ),
     by = "marker"
-  )
+  ) |>
+  replace_na(list("qtl_type" = "non signif"))
 
 ## Filtering according to the paper; ie removing markers with:
 ## - > 10% more missing values
@@ -525,7 +526,7 @@ rnaseq_mat <- rnaseq_df |>
 ## Average genomics composition to be used to replace
 ## missing values
 geno_comp_means <- smeta_df |>
-  select(starts_with("geno_comp")) |>
+  select(matches("geno_comp_\\d")) |>
   pivot_longer(
     cols = everything(),
     names_to = "var",
@@ -585,6 +586,17 @@ de_res <- topTags(comp, n = nrow(rnaseq_mat))$table |>
       de_signif == "DE" & log_fc > 0 ~ "upregulated"
     )
   )
+
+## Adding genes missing from analysis
+de_res <- de_res |>
+  bind_rows(
+    tibble(
+      gene_id = setdiff(rnaseq_df$gene_id, de_res$gene_id),
+      de_signif = "Not DE",
+      de_status = "Not DE"
+    )
+  )
+
 
 ## Running the metabolomics DE analysis ----------------------------------------------
 
@@ -771,15 +783,16 @@ de_metabo |>
 
 geno_comp_df <- smeta_df |>
   filter(!is.na(geno_comp_1)) |>
-  select(animal_id, starts_with("geno_comp")) |>
+  select(animal_id, matches("geno_comp_\\d")) |>
   column_to_rownames("animal_id") |>
   as.data.frame()
 
+set.seed(685)
 kmeans_res <- kmeans(geno_comp_df, centers = 3, nstart = 10)
 smeta_df <- smeta_df |>
   mutate(
     geno_comp_cluster = kmeans_res$cluster[animal_id],
-    geno_comp_cluster = paste0("K", geno_comp_cluster)
+    geno_comp_cluster = str_c("K", geno_comp_cluster)
   )
 
 ## Writing datasets ------------------------------------------------------------
