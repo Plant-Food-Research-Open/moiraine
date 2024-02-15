@@ -18,6 +18,7 @@ plot_data_heatmap(
   truncate = NULL,
   legend_title_size = 10,
   legend_text_size = 10,
+  legend_ncol = 1,
   ...
 )
 }
@@ -68,6 +69,9 @@ truncation will be performed.}
 \item{legend_title_size}{Integer, size in points of legend title.}
 
 \item{legend_text_size}{Integer, size in points of legend elements text.}
+
+\item{legend_ncol}{Integer, number of columns in the legend. Default value is
+\code{1}.}
 
 \item{...}{Additional arguments passed to the \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}}
 function.}

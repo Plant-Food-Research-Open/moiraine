@@ -224,6 +224,8 @@ plot_meansd_data <- function(mo_data,
 #' @inheritParams .add_features_labels_toplot
 #' @param legend_title_size Integer, size in points of legend title.
 #' @param legend_text_size Integer, size in points of legend elements text.
+#' @param legend_ncol Integer, number of columns in the legend. Default value is
+#'   `1`.
 #' @param ... Additional arguments passed to the [ComplexHeatmap::Heatmap()]
 #'   function.
 #' @returns A [ComplexHeatmap::Heatmap-class] object.
@@ -268,6 +270,7 @@ plot_data_heatmap <- function(mo_data,
                               truncate = NULL,
                               legend_title_size = 10,
                               legend_text_size = 10,
+                              legend_ncol = 1,
                               ...) {
   ## For devtools::check
   dataset <- values <- label <- sample_id <- feature_id <- NULL
@@ -408,7 +411,7 @@ plot_data_heatmap <- function(mo_data,
     gp = grid::gpar(col = "white"),
     annotation_legend_param = list(
       direction = "horizontal",
-      ncol = 3,
+      ncol = legend_ncol,
       title_position = "topcenter",
       labels_gp = grid::gpar(fontsize = legend_text_size),
       title_gp = grid::gpar(fontsize = legend_title_size, fontface = "bold")
@@ -435,7 +438,7 @@ plot_data_heatmap <- function(mo_data,
       gp = grid::gpar(col = "white"),
       annotation_legend_param = list(
         direction = "horizontal",
-        ncol = 3,
+        ncol = legend_ncol,
         title_position = "topcenter",
         labels_gp = grid::gpar(fontsize = legend_text_size),
         title_gp = grid::gpar(fontsize = legend_title_size, fontface = "bold")
