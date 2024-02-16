@@ -112,6 +112,56 @@ test_that("transform_bestNormalise_manual works", {
   expect_equal(t2$transformation, "best-normalize-manual-center_scale")
 })
 
+test_that("transform_logx works", {
+
+  mat1 <- matrix(c(0, 1, 2, 3), nrow = 2)
+
+  expect_equal(
+    transform_logx(mat1, return_matrix_only = TRUE, base = 2),
+    log2(mat1 + 0.5)
+  )
+  expect_equal(
+    transform_logx(mat1, return_matrix_only = TRUE, base = 10, pre_log_function = \(x){x + 1}),
+    log10(mat1 + 1)
+  )
+  expect_warning(
+    transform_logx(mat1, return_matrix_only = TRUE, base = 10, pre_log_function = NULL),
+    "The matrix contains zero values; log-transformation will yield `-Inf`."
+  )
+
+  expect_equal(
+    transform_logx(mat1, return_matrix_only = FALSE, base = 2),
+    list(
+      transformed_data = log2(mat1 + 0.5),
+      info_transformation = list(log_base = 2, pre_log_function = offset_half_min),
+      transformation = "log2"
+    )
+  )
+  expect_equal(
+    transform_logx(mat1, return_matrix_only = FALSE, base = 10, pre_log_function = \(x){x + 1}),
+    list(
+      transformed_data = log10(mat1 + 1),
+      info_transformation = list(log_base = 10, pre_log_function = \(x){x + 1}),
+      transformation = "log10"
+    )
+  )
+})
+
+test_that("offset_half_min works", {
+  mat1 <- matrix(c(0, 1, 2, 3), nrow = 2)
+  mat2 <- matrix(c(2, 1, 2, 3), nrow = 2)
+
+  expect_equal(
+    offset_half_min(mat1),
+    matrix(c(0.5, 1.5, 2.5, 3.5), nrow = 2)
+  )
+
+  expect_equal(
+    offset_half_min(mat2),
+    mat2
+  )
+})
+
 test_that(".get_transformed_matrix works", {
   if (!requireNamespace("bestNormalize", quietly = TRUE)) {
     skip("Package \"bestNormalize\" must be installed.")

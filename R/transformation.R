@@ -185,16 +185,70 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
   ))
 }
 
+#' Applies a log-x transformation to matrix
+#'
+#' Applies a log-x transformation (by default log2) through the [log()]
+#' function.
+#'
+#' @param mat Numeric matrix.
+#' @param return_matrix_only Logical, should only the transformed matrix be
+#'   returned? If `TRUE`, the function will return a matrix. If `FALSE`, the
+#'   function instead returns a list with the transformed data and potentially
+#'   other information relevant to the transformation. Default value is `FALSE`.
+#' @param base Integer, the base with respect to which logarithms are computed.
+#' @param pre_log_function Function that will be applied to the matrix before
+#'   the log transformation (e.g. to apply an offset to the values to avoid
+#'   issues with zeros). If `NULL`, no function will be applied. Default value
+#'   is the [offset_half_min()] function.
+#' @returns Depending on the `return_matrix_only`, either a matrix of
+#'   transformed data, or a list with the following elements:
+#' * `transformed_data`: matrix of the transformed data;
+#' * `info_transformation`: a list with the log base used and the function
+#'    applied prior to log-transformation.
+#' @export
+transform_logx <- function(mat,
+                           return_matrix_only = FALSE,
+                           base = 2,
+                           pre_log_function = offset_half_min) {
 
+  if (!is.null(pre_log_function)) mat <- pre_log_function(mat)
 
-.get_transformed_matrix <- function(res, return_matrix_only) {
+  if (any(mat == 0)) warning("The matrix contains zero values; log-transformation will yield `-Inf`.")
+
+  res_mat <- log(mat, base = base)
+
   if (return_matrix_only) {
-    mat_transformed <- res
-  } else {
-    mat_transformed <- res[["transformed_data"]]
+    return(res_mat)
   }
 
-  return(mat_transformed)
+  res <- list(
+    log_base = base,
+    pre_log_function = pre_log_function
+  )
+
+  return(list(
+    transformed_data = res_mat,
+    info_transformation = res,
+    transformation = paste0("log", base)
+  ))
+}
+
+#' Add half-min offset to matrix
+#'
+#' If there are any zero values, adds a small offset to all values in a matrix.
+#' The offset is computed as half the minimum non-null value in the matrix. If
+#' there are no zeros in the matrix, no modifications will be made.
+#'
+#' @param mat Numeric matrix.
+#' @returns The matrix in the offset has been added to all values.
+#' @export
+offset_half_min <- function(mat) {
+  if (!any(mat == 0)) {
+    return(mat)
+  }
+
+  min_val <- min(mat[mat != 0])
+  mat + min_val / 2
 }
 
 #' Applies a transformation to a dataset from a MultiDataSet object
@@ -217,6 +271,7 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
 #' package. This method is applicable to count data only. This transformation is
 #' recommended for RNAseq or similar count-based datasets. In practice, applies
 #' the [transform_vst()] function.
+#' * `logx`:
 #' * `best-normalize-auto`: most appropriate normalisation method automatically
 #' selected from a number of options, implemented in the
 #' [bestNormalize::bestNormalize()] function from the `bestNormalize` package.
@@ -244,8 +299,8 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
 #' @param mo_data A \code{\link[MultiDataSet]{MultiDataSet-class}} object.
 #' @param dataset Character, name of the dataset to transform.
 #' @param transformation Character, transformation to be applied. Possible
-#'   values are: `vsn`, `vst-deseq2`, `best-normalize-auto` or
-#'   `best-normalize-manual`. See `Details`.
+#'   values are: `vsn`, `vst-deseq2`, `logx` `best-normalize-auto`
+#'   or `best-normalize-manual`. See `Details`.
 #' @param return_multidataset Logical, should a `MultiDataSet` object with the
 #'   original data replaced by the transformed data returned? If `FALSE`, the
 #'   output of the function depends on `return_matrix_only`. Default value is
@@ -291,11 +346,13 @@ transform_dataset <- function(mo_data,
 
   .check_names(
     transformation,
-    c("vsn", "vst-deseq2", "best-normalize-auto", "best-normalize-manual"),
+    c("vsn", "vst-deseq2", "logx", "best-normalize-auto", "best-normalize-manual"),
     "'transformation' argument: '_W_' is not a recognised transformation. Possible values are: '_C_'."
   )
 
-  if (transformation == "best-normalize-manual" & missing(method)) stop("'method' argument should be provided for 'best-normalize-manual' transformation.")
+  if (transformation == "best-normalize-manual" & missing(method)) {
+    stop("'method' argument should be provided for 'best-normalize-manual' transformation.")
+  }
 
   ## If returning a MultiDataSet object, cannot keep additional information about the transformation
   if (return_multidataset) return_matrix_only <- TRUE
@@ -307,6 +364,7 @@ transform_dataset <- function(mo_data,
     transf_name <- c(
       "vsn" = "Variance Stabilising Normalisation (vsn)",
       "vst-deseq2" = "Variance Stabilising Transformation (DESeq2)",
+      "logx" = "Log Transformation",
       "best-normalize-auto" = "automatic normalisation selection (bestNormalize)",
       "best-normalize-manual" = " transformation (bestNormalize)"
     )
@@ -317,11 +375,13 @@ transform_dataset <- function(mo_data,
     message("Applying ", transf_name_i, " to ", dataset, " dataset.")
   }
 
-  res <- switch(transformation,
-                "vsn" = transform_vsn(mat, return_matrix_only = return_matrix_only),
-                "vst-deseq2" = transform_vst(mat, return_matrix_only = return_matrix_only),
-                "best-normalize-auto" = transform_bestNormalise_auto(mat, return_matrix_only = return_matrix_only, ...),
-                "best-normalize-manual" = transform_bestNormalise_manual(mat, method, return_matrix_only = return_matrix_only, ...)
+  res <- switch(
+    transformation,
+    "vsn" = transform_vsn(mat, return_matrix_only = return_matrix_only),
+    "vst-deseq2" = transform_vst(mat, return_matrix_only = return_matrix_only),
+    "logx" = transform_logx(mat, return_matrix_only = return_matrix_only, ...),
+    "best-normalize-auto" = transform_bestNormalise_auto(mat, return_matrix_only = return_matrix_only, ...),
+    "best-normalize-manual" = transform_bestNormalise_manual(mat, method, return_matrix_only = return_matrix_only, ...)
   )
 
   ## Option to return a MultiDataSet object in which the original dataset is replaced by the transformed dataset
@@ -354,7 +414,11 @@ get_transformed_data <- function(mo_data, transformation_result) {
 
   ## Make sure that the names of the transformation_result list are the name of the datasets
   names(transformation_result) <- sapply(transformation_result, attr, "dataset_name")
-  .check_names(names(transformation_result), names(mo_data), "The following datasets are not in 'mo_data': '_W_'.")
+  .check_names(
+    names(transformation_result),
+    names(mo_data),
+    "The following datasets are not in 'mo_data': '_W_'."
+  )
 
   res <- mo_data
 
@@ -363,8 +427,11 @@ get_transformed_data <- function(mo_data, transformation_result) {
     if (is.matrix(transformation_result[[i]])) {
       new_mat <- transformation_result[[i]]
     } else {
-      if (!("transformed_data" %in% names(transformation_result[[i]]))) stop("Error with 'transformation_result': should be a list of matrices or a list of named lists, each with a 'transformed_data' element.")
-
+      if (!("transformed_data" %in% names(transformation_result[[i]]))) {
+        stop("Error with 'transformation_result': should be a list ",
+             "of matrices or a list of named lists, each with a",
+             " 'transformed_data' element.")
+      }
       new_mat <- transformation_result[[i]][["transformed_data"]]
     }
 
@@ -621,4 +688,15 @@ get_table_transformations <- function(transformation_result, best_normalize_deta
     dplyr::select(-transf)
 
   return(res)
+}
+
+
+.get_transformed_matrix <- function(res, return_matrix_only) {
+  if (return_matrix_only) {
+    mat_transformed <- res
+  } else {
+    mat_transformed <- res[["transformed_data"]]
+  }
+
+  return(mat_transformed)
 }
