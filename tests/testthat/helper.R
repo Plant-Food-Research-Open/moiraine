@@ -198,3 +198,10 @@ test_extract_samples_score <- function(x, ld) {
     dplyr::select(sample_id, score) |>
     tibble::deframe()
 }
+
+test_clean_expression <- function(x) {
+  as.character(x) |>
+    stringr::str_remove_all("\n") |>
+    stringr::str_replace_all("\\s+", " ") |>
+    stringr::str_remove_all("(?<=function) (?=\\()")
+}

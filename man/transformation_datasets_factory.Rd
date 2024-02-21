@@ -10,47 +10,70 @@ transformation_datasets_factory(
   return_matrix_only = FALSE,
   target_name_prefix = "",
   transformed_data_name = NULL,
+  log_bases = 2,
+  pre_log_functions = zero_to_half_min,
   methods,
   ...
 )
 }
 \arguments{
-\item{mo_data_target}{Symbol, the name of the target containing the \code{MultiDataSet} object.}
+\item{mo_data_target}{Symbol, the name of the target containing the
+\code{MultiDataSet} object.}
 
-\item{transformations}{Named character vector, name of each element is the name of a dataset
-to transform, corresponding element gives the type of transformation to apply to the dataset
-(e.g. \code{c(rnaseq = 'vst-deseq2', phenotypes = 'best-normalize-auto')}). See Details
-for a list of available transformations. If \code{'best-normalize-auto'} is selected, need to
-provide the \code{methods} argument as well.}
+\item{transformations}{Named character vector, name of each element is the
+name of a dataset to transform, corresponding element gives the type of
+transformation to apply to the dataset (e.g. \code{c(rnaseq = 'vst-deseq2', phenotypes = 'best-normalize-auto')}). See Details for a list of available
+transformations. If \code{'best-normalize-auto'} is selected, need to provide
+the \code{methods} argument as well.}
 
-\item{return_matrix_only}{Logical, should only the transformed matrix be returned for each
-transformation? If \code{TRUE}, only transformed matrices will be stored. If \code{FALSE},
-instead for each transformation, a list with the transformed data and potentially other
-information relevant to the transformation will be saved. Default value is \code{FALSE}.}
+\item{return_matrix_only}{Logical, should only the transformed matrix be
+returned for each transformation? If \code{TRUE}, only transformed matrices will
+be stored. If \code{FALSE}, instead for each transformation, a list with the
+transformed data and potentially other information relevant to the
+transformation will be saved. Default value is \code{FALSE}.}
 
-\item{target_name_prefix}{Character, a prefix to add to the name of the targets created by this target factory.
-Default value is \code{""}.}
+\item{target_name_prefix}{Character, a prefix to add to the name of the
+targets created by this target factory. Default value is \code{""}.}
 
-\item{transformed_data_name}{Character, the name of the target containing the \code{MultiDataSet} with
-transformed data to be created. If \code{NULL}, will be selected automatically. Default value is \code{NULL}.}
+\item{transformed_data_name}{Character, the name of the target containing the
+\code{MultiDataSet} with transformed data to be created. If \code{NULL}, will be
+selected automatically. Default value is \code{NULL}.}
 
-\item{methods}{Named character vector, gives for each dataset for which the \code{'best-normalize-manual'}
-transformation is selected which normalisation method should be applied. See possible values in
-Details.}
+\item{log_bases}{Numeric or named numeric list, gives for each dataset for
+which the \code{'logx'} transformation is selected the log base to use. If one
+value, will be used for all concerned datasets. Otherwise, can specify a
+different log-base for each concerned dataset by passing a named list.}
 
-\item{...}{Further arguments passed to the \code{\link{transform_dataset}} function or the
-\code{method} function from the \code{bestNormalize} package. Only relevant for \code{'best-normalize-XX'} transformations.}
+\item{pre_log_functions}{Function or named list of functions, gives for each
+dataset for which the `'logx`` transformation is selected the function that
+will be applied to the matrix before the log transformation (e.g. to apply
+an offset to the values to avoid issues with zeros). Default value is the
+\code{\link[=zero_to_half_min]{zero_to_half_min()}} function. If one value, will be used for all concerned
+datasets. Otherwise, can specify a different log-base for each concerned
+dataset by passing a named list.}
+
+\item{methods}{Character or named character list, gives for each dataset for
+which the \code{'best-normalize-manual'} transformation is selected the
+normalisation method that should be applied. See possible values in
+Details. If one value, will be used for all concerned datasets. Otherwise,
+can specify a different method for each concerned dataset by passing a
+named list.}
+
+\item{...}{Further arguments passed to the \code{\link{transform_dataset}}
+function or the \code{method} function from the \code{bestNormalize} package. Only
+relevant for \code{'best-normalize-XX'} transformations.}
 }
 \value{
-A list of target objects. With \code{target_name_prefix = ""} and \code{transformed_data_name = NULL},
-the following targets are created:
+A list of target objects. With \code{target_name_prefix = ""} and
+\code{transformed_data_name = NULL}, the following targets are created:
 \itemize{
-\item \code{transformations_spec}: generates a grouped tibble where each row corresponds to one dataset to be tranformed,
-with the columns specifying each dataset name and the transformation to apply.
-\item \code{transformations_runs_list}: a dynamic branching target that runs the \code{\link{transform_dataset}} function
-on each dataset. Returns a list.
-\item \code{transformed_set}: a target that returns the \code{MultiDataSet} object with the original data replaced by the
-transformed data.
+\item \code{transformations_spec}: generates a grouped tibble where each row
+corresponds to one dataset to be tranformed, with the columns specifying each
+dataset name and the transformation to apply.
+\item \code{transformations_runs_list}: a dynamic branching target that runs the
+\code{\link[=transform_dataset]{transform_dataset()}} function on each dataset. Returns a list.
+\item \code{transformed_set}: a target that returns the \code{MultiDataSet} object with the
+original data replaced by the transformed data.
 }
 }
 \description{
@@ -58,34 +81,44 @@ Create a list of targets to apply some transformation methods to one or more
 datasets in a \code{MultiDataSet} object.
 }
 \details{
-#' Currently implemented transformations and recommendations based on dataset type:
+Currently implemented transformations and recommendations based on dataset
+type:
 \itemize{
-\item \code{vsn}: Variance Stabilising normalisation, implemented in the \code{\link[vsn]{justvsn}}
-function from the \code{vsn} package. This method was originally developed for microarray intensities.
-In practice, applies the \code{\link{transform_vsn}} function. This transformation is recommended
-for microarray, metabolome, chemical or other intensity-based datasets.
+\item \code{vsn}: Variance Stabilising normalisation, implemented in the
+\code{\link[vsn:justvsn]{vsn::justvsn()}} function from the \code{vsn} package. This method was originally
+developed for microarray intensities. This transformation is recommended for
+microarray, metabolome, chemical or other intensity-based datasets. In
+practice, applies the \code{\link[=transform_vsn]{transform_vsn()}} function.
 \item \code{vst-deseq2}: Variance Stabilising Transformation, implemented in the
-\code{\link[DESeq2]{varianceStabilizingTransformation}} function from the \code{DESeq2} package.
-This method is applicable to count data only. In practice, applies the \code{\link{transform_vst}} function.
-This transformation is recommended for RNAseq or similar count-based datasets.
-\item \code{best-normalize-auto}: most appropriate normalisation method automatically selected from a number
-of options, implemented in the \code{\link[bestNormalize]{bestNormalize}} function from the
-\code{bestNormalize} package. In practice, applies the \code{\link{transform_bestNormalise_auto}} function.
-This transformation is recommended for phenotypes that are each measured on different scales (since the
-transformation method selected will potentially be different across the phenotypes), preferably with a
-reasonable number of features (less than 100) to avoid large computation times.
-\item \code{best-normalize-manual}: performs the same transformation (specified with the \code{method} argument)
-to each feature of a dataset. This transformation is recommended for phenotypes data in which the
-different phenotypes are measured on the same scale. The different normalisation methods are:
+\code{\link[DESeq2:varianceStabilizingTransformation]{DESeq2::varianceStabilizingTransformation()}} function from the \code{DESeq2}
+package. This method is applicable to count data only. This transformation is
+recommended for RNAseq or similar count-based datasets. In practice, applies
+the \code{\link[=transform_vst]{transform_vst()}} function.
+\item \code{logx}: log-transformation (default to log2, but base can be specified).
+In practice, applies the \code{\link[=transform_logx]{transform_logx()}} function.
+\item \code{best-normalize-auto}: most appropriate normalisation method automatically
+selected from a number of options, implemented in the
+\code{\link[bestNormalize:bestNormalize]{bestNormalize::bestNormalize()}} function from the \code{bestNormalize} package.
+This transformation is recommended for phenotypes that are each measured on
+different scales (since the transformation method selected will potentially
+be different across the features), preferably with a reasonable number of
+features (less than 100) to avoid large computation times. In practice,
+applies the \code{\link[=transform_bestNormalise_auto]{transform_bestNormalise_auto()}} function.
+\item \code{best-normalize-manual}: performs the same transformation (specified
+through the \code{method} argument) to each feature of a dataset. This
+transformation is recommended for phenotypes data in which the different
+phenotypes are measured on the same scale. The different normalisation
+methods are:
 \itemize{
 \item \code{"arcsinh_x"}: data is transformed as \code{log(x + sqrt(x^2 + 1))};
 \item \code{"boxcox"}: Box Cox transformation;
 \item \code{"center_scale"}: data is centered and scaled;
 \item \code{"exp_x"}: data is transformed as \code{exp(x)};
-\item \code{"log_x"}: data is transformed as \code{log_b(x+a)} (\code{a} and \code{b} either selected automatically or passed as
-arguments);
+\item \code{"log_x"}: data is transformed as \code{log_b(x+a)} (\code{a} and \code{b} either
+selected automatically per variable or passed as arguments);
 \item \code{"orderNorm"}: Ordered Quantile technique;
-\item \code{"sqrt_x"}: data transformed as \code{sqrt(x + a)} (\code{a} selected automatically or passed as argument),
+\item \code{"sqrt_x"}: data transformed as \code{sqrt(x + a)} (\code{a} selected automatically
+per variable or passed as argument),
 \item \code{"yeojohnson"}: Yeo-Johnson transformation.
 }
 }
@@ -116,15 +149,30 @@ list(
     transformed_data_name = "mo_set_transformed"
   ),
 
-  ## Example 2 - with a log2 transformation for the metabolome dataset
+  ## Example 2 - with a log2 transformation for both datasets
   transformation_datasets_factory(
     mo_set_complete,
     c(
-      "rnaseq" = "vst-deseq2",
-      "metabolome" = "best-normalize-manual"
+      "rnaseq" = "logx",
+      "metabolome" = "logx"
     ),
-    methods = c("metabolome" = "log_x"),
-    b = 2
+    log_bases = 2,
+    pre_log_functions = zero_to_half_min
+  ),
+
+  ## Example 3 - with different log bases for each dataset and a different
+  ## preprocessing function to be run before applying the log
+  transformation_datasets_factory(
+    mo_set_complete,
+    c(
+      "rnaseq" = "logx",
+      "metabolome" = "logx"
+    ),
+    log_bases = list(rnaseq = 10, metabolome = 2),
+    pre_log_functions = list(
+      rnaseq = \(x) x + 0.5,
+      metabolome = zero_to_half_min
+     )
   )
 )
 }

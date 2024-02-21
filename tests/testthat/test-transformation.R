@@ -117,28 +117,28 @@ test_that("transform_logx works", {
   mat1 <- matrix(c(0, 1, 2, 3), nrow = 2)
 
   expect_equal(
-    transform_logx(mat1, return_matrix_only = TRUE, base = 2),
-    log2(mat1 + 0.5)
+    transform_logx(mat1, return_matrix_only = TRUE, log_base = 2),
+    log2(zero_to_half_min(mat1))
   )
   expect_equal(
-    transform_logx(mat1, return_matrix_only = TRUE, base = 10, pre_log_function = \(x){x + 1}),
+    transform_logx(mat1, return_matrix_only = TRUE, log_base = 10, pre_log_function = \(x){x + 1}),
     log10(mat1 + 1)
   )
   expect_warning(
-    transform_logx(mat1, return_matrix_only = TRUE, base = 10, pre_log_function = NULL),
+    transform_logx(mat1, return_matrix_only = TRUE, log_base = 10, pre_log_function = \(x){x}),
     "The matrix contains zero values; log-transformation will yield `-Inf`."
   )
 
   expect_equal(
-    transform_logx(mat1, return_matrix_only = FALSE, base = 2),
+    transform_logx(mat1, return_matrix_only = FALSE, log_base = 2),
     list(
-      transformed_data = log2(mat1 + 0.5),
-      info_transformation = list(log_base = 2, pre_log_function = offset_half_min),
+      transformed_data = log2(zero_to_half_min(mat1)),
+      info_transformation = list(log_base = 2, pre_log_function = zero_to_half_min),
       transformation = "log2"
     )
   )
   expect_equal(
-    transform_logx(mat1, return_matrix_only = FALSE, base = 10, pre_log_function = \(x){x + 1}),
+    transform_logx(mat1, return_matrix_only = FALSE, log_base = 10, pre_log_function = \(x){x + 1}),
     list(
       transformed_data = log10(mat1 + 1),
       info_transformation = list(log_base = 10, pre_log_function = \(x){x + 1}),
@@ -147,17 +147,17 @@ test_that("transform_logx works", {
   )
 })
 
-test_that("offset_half_min works", {
+test_that("zero_to_half_min works", {
   mat1 <- matrix(c(0, 1, 2, 3), nrow = 2)
   mat2 <- matrix(c(2, 1, 2, 3), nrow = 2)
 
   expect_equal(
-    offset_half_min(mat1),
-    matrix(c(0.5, 1.5, 2.5, 3.5), nrow = 2)
+    zero_to_half_min(mat1),
+    matrix(c(0.5, 1, 2, 3), nrow = 2)
   )
 
   expect_equal(
-    offset_half_min(mat2),
+    zero_to_half_min(mat2),
     mat2
   )
 })
@@ -187,7 +187,7 @@ test_that("transform_dataset works", {
   )
   expect_error(
     transform_dataset(multiomics_set, "snps+A", "TEST"),
-    "'transformation' argument: 'TEST' is not a recognised transformation. Possible values are: 'vsn', 'vst-deseq2', 'best-normalize-auto', 'best-normalize-manual'."
+    "'transformation' argument: 'TEST' is not a recognised transformation. Possible values are: 'vsn', 'vst-deseq2', 'logx', 'best-normalize-auto', 'best-normalize-manual'."
   )
   expect_error(transform_dataset(multiomics_set, "snps+A", "best-normalize-manual"), "'method' argument should be provided for 'best-normalize-manual' transformation.")
 
@@ -202,4 +202,139 @@ test_that("transform_dataset works", {
   expect_equal(names(res), c("snps+A", "rnaseq", "metabolome", "phenotypes"))
 
   # expect_message(transform_dataset(multiomics_set, dataset = "snps+A", transformation = "best-normalize-auto", method = "center_scale"))
+})
+
+test_that("transformation_datasets_factory works - default", {
+  tar_res <- transformation_datasets_factory(
+    mo_set,
+    c("rnaseq" = "vst", "metabolome" = "vsn")
+  )
+
+  expect_type(tar_res, "list")
+  expect_equal(
+    purrr::map_chr(tar_res, \(x) x$settings$name),
+    c("transformations_spec", "transformations_runs_list", "transformed_set")
+  )
+  expect_s3_class(tar_res[[1]], "tar_stem")
+  expect_s3_class(tar_res[[2]], "tar_pattern")
+  expect_s3_class(tar_res[[3]], "tar_stem")
+
+  expect_equal(
+    tar_res[[1]]$command$expr,
+    str2expression("tibble::tibble(
+          dsn = names(c(\"rnaseq\" = \"vst\", \"metabolome\" = \"vsn\")),
+          transf = c(\"rnaseq\" = \"vst\", \"metabolome\" = \"vsn\"),
+          meth = NULL[[dsn]],
+          log_b = NULL[[dsn]],
+          prelog_f = NULL[[dsn]]
+        ) |>
+          dplyr::group_by(dsn) |>
+          targets::tar_group()")
+  )
+  expect_equal(
+    tar_res[[2]]$command$expr,
+    str2expression("transform_dataset(
+          mo_set,
+          dataset = transformations_spec$dsn,
+          transformation = transformations_spec$transf,
+          return_matrix_only = FALSE,
+          method = transformations_spec$meth,
+          log_base = transformations_spec$log_b,
+          pre_log_function = transformations_spec$prelog_f
+        )")
+  )
+  expect_equal(
+    tar_res[[3]]$command$expr,
+    str2expression("get_transformed_data(mo_set, transformations_runs_list)")
+  )
+
+  ## Adding prefix
+  tar_res <- transformation_datasets_factory(
+    mo_set,
+    c("rnaseq" = "vst", "metabolome" = "vsn"),
+    target_name_prefix = "TEST_"
+  )
+  expect_type(tar_res, "list")
+  expect_equal(
+    purrr::map_chr(tar_res, \(x) x$settings$name),
+    c("TEST_transformations_spec", "TEST_transformations_runs_list", "TEST_transformed_set")
+  )
+  expect_s3_class(tar_res[[1]], "tar_stem")
+  expect_s3_class(tar_res[[2]], "tar_pattern")
+  expect_s3_class(tar_res[[3]], "tar_stem")
+
+  ## Changing final set name
+  tar_res <- transformation_datasets_factory(
+    mo_set,
+    c("rnaseq" = "vst", "metabolome" = "vsn"),
+    transformed_data_name = "TEST"
+  )
+  expect_type(tar_res, "list")
+  expect_equal(
+    purrr::map_chr(tar_res, \(x) x$settings$name),
+    c("transformations_spec", "transformations_runs_list", "TEST")
+  )
+  expect_s3_class(tar_res[[1]], "tar_stem")
+  expect_s3_class(tar_res[[2]], "tar_pattern")
+  expect_s3_class(tar_res[[3]], "tar_stem")
+})
+
+test_that("transformation_datasets_factory works - logx", {
+  tar_res <- transformation_datasets_factory(
+    mo_set,
+    c("rnaseq" = "vst", "metabolome" = "logx")
+  )
+
+  expect_type(tar_res, "list")
+  expect_equal(tar_res[[1]]$settings$name, "transformations_spec")
+  expect_s3_class(tar_res[[1]], "tar_stem")
+
+  expect_equal(
+    tar_res[[1]]$command$expr |> test_clean_expression(),
+    expression(
+      tibble::tibble(
+          dsn = names(c(rnaseq = "vst", metabolome = "logx")),
+          transf = c(rnaseq = "vst", metabolome = "logx"),
+          meth = NULL[[dsn]],
+          log_b = list(metabolome = 2)[[dsn]],
+          prelog_f = list(metabolome = function(mat) {
+            if (!any(mat == 0)) {
+              return(mat)
+            }
+
+            min_val <- min(mat[mat != 0])
+            mat[mat == 0] <- min_val / 2
+
+            return(mat)
+          })[[dsn]]
+        ) |>
+          dplyr::group_by(dsn) |>
+          targets::tar_group()) |> test_clean_expression()
+  )
+
+  tar_res <- transformation_datasets_factory(
+    mo_set,
+    c("rnaseq" = "logx", "metabolome" = "logx"),
+    log_bases = list(rnaseq = 10, metabolome = 2),
+    pre_log_functions = list(
+      rnaseq = \(x) x + 0.5,
+      metabolome = \(x) x + 1
+    )
+  )
+
+  expect_equal(
+    tar_res[[1]]$command$expr |> test_clean_expression(),
+    expression(tibble::tibble(
+      dsn = names(c(rnaseq = "logx", metabolome = "logx")),
+      transf = c(rnaseq = "logx", metabolome = "logx"),
+      meth = NULL[[dsn]],
+      log_b = list(rnaseq = 10, metabolome = 2)[[dsn]],
+      prelog_f = list(
+        rnaseq = \(x) x + 0.5,
+        metabolome = \(x) x + 1
+      )[[dsn]]
+    ) |>
+      dplyr::group_by(dsn) |>
+      targets::tar_group()) |> test_clean_expression()
+  )
 })

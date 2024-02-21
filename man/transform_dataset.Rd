@@ -11,6 +11,8 @@ transform_dataset(
   return_multidataset = FALSE,
   return_matrix_only = FALSE,
   verbose = TRUE,
+  log_base = 2,
+  pre_log_function = zero_to_half_min,
   method,
   ...
 )
@@ -21,8 +23,8 @@ transform_dataset(
 \item{dataset}{Character, name of the dataset to transform.}
 
 \item{transformation}{Character, transformation to be applied. Possible
-values are: \code{vsn}, \code{vst-deseq2}, \code{best-normalize-auto} or
-\code{best-normalize-manual}. See \code{Details}.}
+values are: \code{vsn}, \code{vst-deseq2}, \code{logx} \code{best-normalize-auto}
+or \code{best-normalize-manual}. See \code{Details}.}
 
 \item{return_multidataset}{Logical, should a \code{MultiDataSet} object with the
 original data replaced by the transformed data returned? If \code{FALSE}, the
@@ -37,6 +39,14 @@ other information relevant to the transformation. Ignored if
 
 \item{verbose}{Logical, should information about the transformation be
 printed? Default value is \code{TRUE}.}
+
+\item{log_base}{Numeric, the base with respect to which logarithms are
+computed. Default value is \code{2}. Only used if \code{transformation = 'logx'}.}
+
+\item{pre_log_function}{Function that will be applied to the matrix before
+the log transformation (e.g. to apply an offset to the values to avoid
+issues with zeros). Default value is the \code{\link[=zero_to_half_min]{zero_to_half_min()}} function.
+Only used if \code{transformation = 'logx'}.}
 
 \item{method}{Character, if \code{transformation = 'best-normalize-manual'}, which
 normalisation method should be applied. See possible values in
@@ -79,6 +89,8 @@ practice, applies the \code{\link[=transform_vsn]{transform_vsn()}} function.
 package. This method is applicable to count data only. This transformation is
 recommended for RNAseq or similar count-based datasets. In practice, applies
 the \code{\link[=transform_vst]{transform_vst()}} function.
+\item \code{logx}: log-transformation (default to log2, but base can be specified).
+In practice, applies the \code{\link[=transform_logx]{transform_logx()}} function.
 \item \code{best-normalize-auto}: most appropriate normalisation method automatically
 selected from a number of options, implemented in the
 \code{\link[bestNormalize:bestNormalize]{bestNormalize::bestNormalize()}} function from the \code{bestNormalize} package.
@@ -98,10 +110,10 @@ methods are:
 \item \code{"center_scale"}: data is centered and scaled;
 \item \code{"exp_x"}: data is transformed as \code{exp(x)};
 \item \code{"log_x"}: data is transformed as \code{log_b(x+a)} (\code{a} and \code{b} either
-selected automatically or passed as arguments);
+selected automatically per variable or passed as arguments);
 \item \code{"orderNorm"}: Ordered Quantile technique;
 \item \code{"sqrt_x"}: data transformed as \code{sqrt(x + a)} (\code{a} selected automatically
-or passed as argument),
+per variable or passed as argument),
 \item \code{"yeojohnson"}: Yeo-Johnson transformation.
 }
 }

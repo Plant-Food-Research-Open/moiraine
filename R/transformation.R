@@ -163,16 +163,19 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
     )
   }
 
-  poss_methods <- c("arcsinh_x", "boxcox", "log_x", "sqrt_x", "yeojohnson", "center_scale", "exp_x", "orderNorm")
-  .check_names(method, poss_methods, "'method' argument: '_W_' not a valid method. Possible methods are: '_C_'.")
+  poss_methods <- c("arcsinh_x", "boxcox", "log_x", "sqrt_x",
+                    "yeojohnson", "center_scale", "exp_x", "orderNorm")
+  .check_names(
+    method,
+    poss_methods,
+    "'method' argument: '_W_' not a valid method. Possible methods are: '_C_'."
+  )
 
   res <- apply(mat, 1, function(x) {
     eval(str2expression(paste0("bestNormalize::", method, "(x, ...)")))
   })
 
-  res_mat <- t(sapply(res, function(x) {
-    x$x.t
-  }))
+  res_mat <- t(sapply(res, function(x) {x$x.t}))
 
   if (return_matrix_only) {
     return(res_mat)
@@ -195,11 +198,11 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
 #'   returned? If `TRUE`, the function will return a matrix. If `FALSE`, the
 #'   function instead returns a list with the transformed data and potentially
 #'   other information relevant to the transformation. Default value is `FALSE`.
-#' @param base Integer, the base with respect to which logarithms are computed.
+#' @param log_base Numeric, the base with respect to which logarithms are
+#'   computed.
 #' @param pre_log_function Function that will be applied to the matrix before
 #'   the log transformation (e.g. to apply an offset to the values to avoid
-#'   issues with zeros). If `NULL`, no function will be applied. Default value
-#'   is the [offset_half_min()] function.
+#'   issues with zeros). Default value is the [zero_to_half_min()] function.
 #' @returns Depending on the `return_matrix_only`, either a matrix of
 #'   transformed data, or a list with the following elements:
 #' * `transformed_data`: matrix of the transformed data;
@@ -208,47 +211,55 @@ transform_bestNormalise_manual <- function(mat, method, return_matrix_only = FAL
 #' @export
 transform_logx <- function(mat,
                            return_matrix_only = FALSE,
-                           base = 2,
-                           pre_log_function = offset_half_min) {
+                           log_base = 2,
+                           pre_log_function = zero_to_half_min) {
+
+  if (is.null(log_base)) {
+    stop("`log_base` argument cannot be `NULL`.")
+  }
+  if (is.null(pre_log_function)) {
+    stop("`pre_log_function` argument cannot be `NULL`.")
+  }
 
   if (!is.null(pre_log_function)) mat <- pre_log_function(mat)
 
   if (any(mat == 0)) warning("The matrix contains zero values; log-transformation will yield `-Inf`.")
 
-  res_mat <- log(mat, base = base)
+  res_mat <- log(mat, base = log_base)
 
   if (return_matrix_only) {
     return(res_mat)
   }
 
   res <- list(
-    log_base = base,
+    log_base = log_base,
     pre_log_function = pre_log_function
   )
 
   return(list(
     transformed_data = res_mat,
     info_transformation = res,
-    transformation = paste0("log", base)
+    transformation = paste0("log", log_base)
   ))
 }
 
-#' Add half-min offset to matrix
+#' Replace zeros with half-min in matrix
 #'
-#' If there are any zero values, adds a small offset to all values in a matrix.
-#' The offset is computed as half the minimum non-null value in the matrix. If
-#' there are no zeros in the matrix, no modifications will be made.
+#' Replace zero values in a matrix by half of the minimum non-null value in the
+#' matrix.
 #'
 #' @param mat Numeric matrix.
-#' @returns The matrix in the offset has been added to all values.
+#' @returns The matrix with zero values replaced.
 #' @export
-offset_half_min <- function(mat) {
+zero_to_half_min <- function(mat) {
   if (!any(mat == 0)) {
     return(mat)
   }
 
   min_val <- min(mat[mat != 0])
-  mat + min_val / 2
+  mat[mat == 0] <- min_val / 2
+
+  return(mat)
 }
 
 #' Applies a transformation to a dataset from a MultiDataSet object
@@ -271,7 +282,8 @@ offset_half_min <- function(mat) {
 #' package. This method is applicable to count data only. This transformation is
 #' recommended for RNAseq or similar count-based datasets. In practice, applies
 #' the [transform_vst()] function.
-#' * `logx`:
+#' * `logx`: log-transformation (default to log2, but base can be specified).
+#' In practice, applies the [transform_logx()] function.
 #' * `best-normalize-auto`: most appropriate normalisation method automatically
 #' selected from a number of options, implemented in the
 #' [bestNormalize::bestNormalize()] function from the `bestNormalize` package.
@@ -290,10 +302,10 @@ offset_half_min <- function(mat) {
 #'   * `"center_scale"`: data is centered and scaled;
 #'   * `"exp_x"`: data is transformed as `exp(x)`;
 #'   * `"log_x"`: data is transformed as `log_b(x+a)` (`a` and `b` either
-#'                selected automatically or passed as arguments);
+#'                selected automatically per variable or passed as arguments);
 #'   * `"orderNorm"`: Ordered Quantile technique;
 #'   * `"sqrt_x"`: data transformed as `sqrt(x + a)` (`a` selected automatically
-#'                 or passed as argument),
+#'                 per variable or passed as argument),
 #'   * `"yeojohnson"`: Yeo-Johnson transformation.
 #'
 #' @param mo_data A \code{\link[MultiDataSet]{MultiDataSet-class}} object.
@@ -312,6 +324,12 @@ offset_half_min <- function(mat) {
 #'   `return_multidataset` is `TRUE`. Default value is `FALSE`.
 #' @param verbose Logical, should information about the transformation be
 #'   printed? Default value is `TRUE`.
+#' @param log_base Numeric, the base with respect to which logarithms are
+#'   computed. Default value is `2`. Only used if `transformation = 'logx'`.
+#' @param pre_log_function Function that will be applied to the matrix before
+#'   the log transformation (e.g. to apply an offset to the values to avoid
+#'   issues with zeros). Default value is the [zero_to_half_min()] function.
+#'   Only used if `transformation = 'logx'`.
 #' @param method Character, if `transformation = 'best-normalize-manual'`, which
 #'   normalisation method should be applied. See possible values in
 #'   [transform_bestNormalise_manual()]. Ignored for other transformations.
@@ -334,6 +352,8 @@ transform_dataset <- function(mo_data,
                               return_multidataset = FALSE,
                               return_matrix_only = FALSE,
                               verbose = TRUE,
+                              log_base = 2,
+                              pre_log_function = zero_to_half_min,
                               method,
                               ...) {
   ## We don't want to subset the dataset
@@ -377,11 +397,31 @@ transform_dataset <- function(mo_data,
 
   res <- switch(
     transformation,
-    "vsn" = transform_vsn(mat, return_matrix_only = return_matrix_only),
-    "vst-deseq2" = transform_vst(mat, return_matrix_only = return_matrix_only),
-    "logx" = transform_logx(mat, return_matrix_only = return_matrix_only, ...),
-    "best-normalize-auto" = transform_bestNormalise_auto(mat, return_matrix_only = return_matrix_only, ...),
-    "best-normalize-manual" = transform_bestNormalise_manual(mat, method, return_matrix_only = return_matrix_only, ...)
+    "vsn" = transform_vsn(
+      mat,
+      return_matrix_only = return_matrix_only
+    ),
+    "vst-deseq2" = transform_vst(
+      mat,
+      return_matrix_only = return_matrix_only
+    ),
+    "logx" = transform_logx(
+      mat,
+      return_matrix_only = return_matrix_only,
+      log_base = log_base,
+      pre_log_function = pre_log_function
+    ),
+    "best-normalize-auto" = transform_bestNormalise_auto(
+      mat,
+      return_matrix_only = return_matrix_only,
+      ...
+    ),
+    "best-normalize-manual" = transform_bestNormalise_manual(
+      mat,
+      method,
+      return_matrix_only = return_matrix_only,
+      ...
+    )
   )
 
   ## Option to return a MultiDataSet object in which the original dataset is replaced by the transformed dataset
@@ -446,63 +486,91 @@ get_transformed_data <- function(mo_data, transformation_result) {
 #' Create a list of targets to apply some transformation methods to one or more
 #' datasets in a `MultiDataSet` object.
 #'
-#' #' Currently implemented transformations and recommendations based on dataset type:
-#' \itemize{
-#' \item `vsn`: Variance Stabilising normalisation, implemented in the \code{\link[vsn]{justvsn}}
-#' function from the `vsn` package. This method was originally developed for microarray intensities.
-#' In practice, applies the \code{\link{transform_vsn}} function. This transformation is recommended
-#' for microarray, metabolome, chemical or other intensity-based datasets.
-#' \item `vst-deseq2`: Variance Stabilising Transformation, implemented in the
-#' \code{\link[DESeq2]{varianceStabilizingTransformation}} function from the `DESeq2` package.
-#' This method is applicable to count data only. In practice, applies the \code{\link{transform_vst}} function.
-#' This transformation is recommended for RNAseq or similar count-based datasets.
-#' \item `best-normalize-auto`: most appropriate normalisation method automatically selected from a number
-#' of options, implemented in the \code{\link[bestNormalize]{bestNormalize}} function from the
-#' `bestNormalize` package. In practice, applies the \code{\link{transform_bestNormalise_auto}} function.
-#' This transformation is recommended for phenotypes that are each measured on different scales (since the
-#' transformation method selected will potentially be different across the phenotypes), preferably with a
-#' reasonable number of features (less than 100) to avoid large computation times.
-#' \item `best-normalize-manual`: performs the same transformation (specified with the `method` argument)
-#' to each feature of a dataset. This transformation is recommended for phenotypes data in which the
-#' different phenotypes are measured on the same scale. The different normalisation methods are:
-#' * `"arcsinh_x"`: data is transformed as `log(x + sqrt(x^2 + 1))`;
-#' * `"boxcox"`: Box Cox transformation;
-#' * `"center_scale"`: data is centered and scaled;
-#' * `"exp_x"`: data is transformed as `exp(x)`;
-#' * `"log_x"`: data is transformed as `log_b(x+a)` (`a` and `b` either selected automatically or passed as
-#' arguments);
-#' * `"orderNorm"`: Ordered Quantile technique;
-#' * `"sqrt_x"`: data transformed as `sqrt(x + a)` (`a` selected automatically or passed as argument),
-#' * `"yeojohnson"`: Yeo-Johnson transformation.
-#' }
+#' Currently implemented transformations and recommendations based on dataset
+#' type:
+#' * `vsn`: Variance Stabilising normalisation, implemented in the
+#' [vsn::justvsn()] function from the `vsn` package. This method was originally
+#' developed for microarray intensities. This transformation is recommended for
+#' microarray, metabolome, chemical or other intensity-based datasets. In
+#' practice, applies the [transform_vsn()] function.
+#' * `vst-deseq2`: Variance Stabilising Transformation, implemented in the
+#' [DESeq2::varianceStabilizingTransformation()] function from the `DESeq2`
+#' package. This method is applicable to count data only. This transformation is
+#' recommended for RNAseq or similar count-based datasets. In practice, applies
+#' the [transform_vst()] function.
+#' * `logx`: log-transformation (default to log2, but base can be specified).
+#' In practice, applies the [transform_logx()] function.
+#' * `best-normalize-auto`: most appropriate normalisation method automatically
+#' selected from a number of options, implemented in the
+#' [bestNormalize::bestNormalize()] function from the `bestNormalize` package.
+#' This transformation is recommended for phenotypes that are each measured on
+#' different scales (since the transformation method selected will potentially
+#' be different across the features), preferably with a reasonable number of
+#' features (less than 100) to avoid large computation times. In practice,
+#' applies the [transform_bestNormalise_auto()] function.
+#' * `best-normalize-manual`: performs the same transformation (specified
+#' through the `method` argument) to each feature of a dataset. This
+#' transformation is recommended for phenotypes data in which the different
+#' phenotypes are measured on the same scale. The different normalisation
+#' methods are:
+#'   * `"arcsinh_x"`: data is transformed as `log(x + sqrt(x^2 + 1))`;
+#'   * `"boxcox"`: Box Cox transformation;
+#'   * `"center_scale"`: data is centered and scaled;
+#'   * `"exp_x"`: data is transformed as `exp(x)`;
+#'   * `"log_x"`: data is transformed as `log_b(x+a)` (`a` and `b` either
+#'                selected automatically per variable or passed as arguments);
+#'   * `"orderNorm"`: Ordered Quantile technique;
+#'   * `"sqrt_x"`: data transformed as `sqrt(x + a)` (`a` selected automatically
+#'                 per variable or passed as argument),
+#'   * `"yeojohnson"`: Yeo-Johnson transformation.
 #'
-#' @param mo_data_target Symbol, the name of the target containing the `MultiDataSet` object.
-#' @param transformations Named character vector, name of each element is the name of a dataset
-#' to transform, corresponding element gives the type of transformation to apply to the dataset
-#' (e.g. `c(rnaseq = 'vst-deseq2', phenotypes = 'best-normalize-auto')`). See Details
-#' for a list of available transformations. If `'best-normalize-auto'` is selected, need to
-#' provide the `methods` argument as well.
-#' @param return_matrix_only Logical, should only the transformed matrix be returned for each
-#' transformation? If `TRUE`, only transformed matrices will be stored. If `FALSE`,
-#' instead for each transformation, a list with the transformed data and potentially other
-#' information relevant to the transformation will be saved. Default value is `FALSE`.
-#' @param target_name_prefix Character, a prefix to add to the name of the targets created by this target factory.
-#' Default value is `""`.
-#' @param transformed_data_name Character, the name of the target containing the `MultiDataSet` with
-#' transformed data to be created. If `NULL`, will be selected automatically. Default value is `NULL`.
-#' @param methods Named character vector, gives for each dataset for which the `'best-normalize-manual'`
-#' transformation is selected which normalisation method should be applied. See possible values in
-#' Details.
-#' @param ... Further arguments passed to the \code{\link{transform_dataset}} function or the
-#' `method` function from the `bestNormalize` package. Only relevant for `'best-normalize-XX'` transformations.
-#' @return A list of target objects. With `target_name_prefix = ""` and `transformed_data_name = NULL`,
-#' the following targets are created:
-#' * `transformations_spec`: generates a grouped tibble where each row corresponds to one dataset to be tranformed,
-#'   with the columns specifying each dataset name and the transformation to apply.
-#' * `transformations_runs_list`: a dynamic branching target that runs the \code{\link{transform_dataset}} function
-#'   on each dataset. Returns a list.
-#' * `transformed_set`: a target that returns the `MultiDataSet` object with the original data replaced by the
-#' transformed data.
+#' @param mo_data_target Symbol, the name of the target containing the
+#'   `MultiDataSet` object.
+#' @param transformations Named character vector, name of each element is the
+#'   name of a dataset to transform, corresponding element gives the type of
+#'   transformation to apply to the dataset (e.g. `c(rnaseq = 'vst-deseq2',
+#'   phenotypes = 'best-normalize-auto')`). See Details for a list of available
+#'   transformations. If `'best-normalize-auto'` is selected, need to provide
+#'   the `methods` argument as well.
+#' @param return_matrix_only Logical, should only the transformed matrix be
+#'   returned for each transformation? If `TRUE`, only transformed matrices will
+#'   be stored. If `FALSE`, instead for each transformation, a list with the
+#'   transformed data and potentially other information relevant to the
+#'   transformation will be saved. Default value is `FALSE`.
+#' @param target_name_prefix Character, a prefix to add to the name of the
+#'   targets created by this target factory. Default value is `""`.
+#' @param transformed_data_name Character, the name of the target containing the
+#'   `MultiDataSet` with transformed data to be created. If `NULL`, will be
+#'   selected automatically. Default value is `NULL`.
+#' @param methods Character or named character list, gives for each dataset for
+#'   which the `'best-normalize-manual'` transformation is selected the
+#'   normalisation method that should be applied. See possible values in
+#'   Details. If one value, will be used for all concerned datasets. Otherwise,
+#'   can specify a different method for each concerned dataset by passing a
+#'   named list.
+#' @param log_bases Numeric or named numeric list, gives for each dataset for
+#'   which the `'logx'` transformation is selected the log base to use. If one
+#'   value, will be used for all concerned datasets. Otherwise, can specify a
+#'   different log-base for each concerned dataset by passing a named list.
+#' @param pre_log_functions Function or named list of functions, gives for each
+#'   dataset for which the `'logx`` transformation is selected the function that
+#'   will be applied to the matrix before the log transformation (e.g. to apply
+#'   an offset to the values to avoid issues with zeros). Default value is the
+#'   [zero_to_half_min()] function. If one value, will be used for all concerned
+#'   datasets. Otherwise, can specify a different log-base for each concerned
+#'   dataset by passing a named list.
+#' @param ... Further arguments passed to the \code{\link{transform_dataset}}
+#'   function or the `method` function from the `bestNormalize` package. Only
+#'   relevant for `'best-normalize-XX'` transformations.
+#' @returns A list of target objects. With `target_name_prefix = ""` and
+#'   `transformed_data_name = NULL`, the following targets are created:
+#' * `transformations_spec`: generates a grouped tibble where each row
+#' corresponds to one dataset to be tranformed, with the columns specifying each
+#' dataset name and the transformation to apply.
+#' * `transformations_runs_list`: a dynamic branching target that runs the
+#' [transform_dataset()] function on each dataset. Returns a list.
+#' * `transformed_set`: a target that returns the `MultiDataSet` object with the
+#' original data replaced by the transformed data.
 #' @examples
 #' \dontrun{
 #' ## in the _targets.R
@@ -529,15 +597,30 @@ get_transformed_data <- function(mo_data, transformation_result) {
 #'     transformed_data_name = "mo_set_transformed"
 #'   ),
 #'
-#'   ## Example 2 - with a log2 transformation for the metabolome dataset
+#'   ## Example 2 - with a log2 transformation for both datasets
 #'   transformation_datasets_factory(
 #'     mo_set_complete,
 #'     c(
-#'       "rnaseq" = "vst-deseq2",
-#'       "metabolome" = "best-normalize-manual"
+#'       "rnaseq" = "logx",
+#'       "metabolome" = "logx"
 #'     ),
-#'     methods = c("metabolome" = "log_x"),
-#'     b = 2
+#'     log_bases = 2,
+#'     pre_log_functions = zero_to_half_min
+#'   ),
+#'
+#'   ## Example 3 - with different log bases for each dataset and a different
+#'   ## preprocessing function to be run before applying the log
+#'   transformation_datasets_factory(
+#'     mo_set_complete,
+#'     c(
+#'       "rnaseq" = "logx",
+#'       "metabolome" = "logx"
+#'     ),
+#'     log_bases = list(rnaseq = 10, metabolome = 2),
+#'     pre_log_functions = list(
+#'       rnaseq = \(x) x + 0.5,
+#'       metabolome = zero_to_half_min
+#'      )
 #'   )
 #' )
 #' }
@@ -547,42 +630,85 @@ transformation_datasets_factory <- function(mo_data_target,
                                             return_matrix_only = FALSE,
                                             target_name_prefix = "",
                                             transformed_data_name = NULL,
+                                            log_bases = 2,
+                                            pre_log_functions = zero_to_half_min,
                                             methods,
                                             ...) {
-  if (is.null(names(transformations))) stop("'transformations' vector should be named (see `?transformation_datasets_factory`).")
+  if (is.null(names(transformations))) {
+    stop("'transformations' vector should be named.")
+  }
 
   if (missing(methods)) methods <- NULL
+
+  if (any(transformations == "best-normalize-manual")) {
+    methods <- .make_var_list(
+      methods,
+      names(transformations)[transformations == "best-normalize-manual"]
+    )
+  }
+
+  if (any(transformations == "logx")) {
+    log_bases <- .make_var_list(
+      log_bases,
+      names(transformations)[transformations == "logx"]
+    )
+
+    # if (is.list(pre_log_functions)) {
+    #   pre_log_functions <- purrr::map_chr(pre_log_functions, \(x) deparse(substitute(x)))
+    # } else {
+    #   pre_log_functions <- deparse(substitute(pre_log_functions))
+    # }
+
+    pre_log_functions <- .make_var_list(
+      pre_log_functions,
+      names(transformations)[transformations == "logx"]
+    )
+  } else {
+    log_bases <- pre_log_functions <- NULL
+  }
 
   ## Target names
   transf_spec_name <- paste0(target_name_prefix, "transformations_spec")
   transf_run_name <- paste0(target_name_prefix, "transformations_runs_list")
-  if (is.null(transformed_data_name)) transformed_data_name <- paste0(target_name_prefix, "transformed_set")
+  if (is.null(transformed_data_name)) {
+    transformed_data_name <- paste0(target_name_prefix, "transformed_set")
+  }
 
   ## Target symbols
   trans_spec_target <- as.symbol(transf_spec_name)
   transf_run_target <- as.symbol(transf_run_name)
 
   list(
-    ## store the MAD specifications (arguments) as a tibble (one row per dataset to prefilter)
-    ## and group it by dataset name so that following targets will be applied to each row in turn
     targets::tar_target_raw(
       transf_spec_name,
-      substitute(tibble::tibble(dsn = names(transformations), transf = transformations, meth = methods[dsn]) |>
-                   dplyr::group_by(dsn) |>
-                   tar_group()),
+      substitute(
+        tibble::tibble(
+          dsn = names(transformations),
+          transf = transformations,
+          meth = methods[[dsn]],
+          log_b = log_bases[[dsn]],
+          prelog_f = pre_log_functions[[dsn]]
+        ) |>
+          dplyr::group_by(dsn) |>
+          targets::tar_group()),
       iteration = "group"
     ),
 
     ## Apply the transformation to each dataset
     targets::tar_target_raw(
       transf_run_name,
-      substitute(transform_dataset(mo_data_target,
-                                   dataset = trans_spec_target$dsn,
-                                   transformation = trans_spec_target$transf,
-                                   return_matrix_only = return_matrix_only,
-                                   method = trans_spec_target$meth,
-                                   ...
-      )),
+      substitute(
+        transform_dataset(
+          mo_data_target,
+          dataset = trans_spec_target$dsn,
+          transformation = trans_spec_target$transf,
+          return_matrix_only = return_matrix_only,
+          method = trans_spec_target$meth,
+          log_base = trans_spec_target$log_b,
+          pre_log_function = trans_spec_target$prelog_f,
+          ...
+        )
+      ),
       pattern = substitute(map(trans_spec_target)),
       iteration = "list"
     ),
@@ -630,66 +756,91 @@ transformation_datasets_factory <- function(mo_data_target,
 #' From the results of transformations on datasets, generates a table giving for
 #' each dataset the transformation that was applied to it.
 #'
-#' @param transformation_result A list in which each element is the result of
-#' a transformation applied to a different dataset, computed with the
-#' \code{\link{transform_dataset}} function.
-#' @param best_normalize_details Logical, should information about the transformations
-#' selected by bestNormalize for each feature be displayed? Default value is `FALSE`.
-#' @return A tibble with columns `'Dataset'` and `'Transformation'`. If
-#' `best_normalize_details = TRUE`, an additional column `'Details'` lists the chsoen
-#' transformation applied to each feature of the corresponding dataset for a bestNormalize
-#' transformation.
+#' @param transformation_result A list in which each element is the result of a
+#'   transformation applied to a different dataset, computed with the
+#'   [transform_dataset] function.
+#' @param best_normalize_details Logical, should information about the
+#'   transformations selected by bestNormalize for each feature be displayed?
+#'   Default value is `FALSE`.
+#' @returns A tibble with columns `'Dataset'` and `'Transformation'`. If
+#'   `best_normalize_details = TRUE`, an additional column `'Details'` lists the
+#'   chsoen transformation applied to each feature of the corresponding dataset
+#'   for a bestNormalize transformation.
 #' @export
-get_table_transformations <- function(transformation_result, best_normalize_details = FALSE) {
-  ## for devtools::check
-  Features <- Feature <- NULL
+get_table_transformations <- function(transformation_result,
+                                      best_normalize_details = FALSE) {
+    ## for devtools::check
+    Features <- Feature <- NULL
 
-  transf_name <- c(
-    "vsn" = "Variance Stabilising Normalisation (vsn)",
-    "vst-deseq2" = "Variance Stabilising Transformation (DESeq2)",
-    "best-normalize-auto" = "automatic normalisation selection (bestNormalize)",
-    "best-normalize-manual" = " transformation (bestNormalize)"
-  )
+    transf_name <- c(
+      "vsn" = "Variance Stabilising Normalisation (vsn)",
+      "vst-deseq2" = "Variance Stabilising Transformation (DESeq2)",
+      "logx" = "Log-X transformation",
+      "best-normalize-auto" = "automatic normalisation selection (bestNormalize)",
+      "best-normalize-manual" = " transformation (bestNormalize)"
+    )
 
-  ## for devtools::check()
-  transf <- Transformation <- Chosen_transformation <- NULL
+    ## for devtools::check()
+    transf <- Transformation <- Chosen_transformation <- NULL
 
-  names(transformation_result) <- sapply(transformation_result, attr, "dataset_name")
+    names(transformation_result) <- sapply(
+      transformation_result,
+      attr,
+      "dataset_name"
+    )
 
-  res <- tibble::tibble(
-    Dataset = sapply(transformation_result, attr, "dataset_name"),
-    transf = sapply(transformation_result, attr, "transformation")
-  ) |>
-    dplyr::mutate(Transformation = transf_name[transf])
+    res <- tibble::tibble(
+      Dataset = sapply(transformation_result, attr, "dataset_name"),
+      transf = sapply(transformation_result, attr, "transformation")
+    ) |>
+      dplyr::mutate(Transformation = transf_name[transf])
 
-  for (i in which(res$transf == "best-normalize-manual")) {
-    res$Transformation[i] <- paste0(.bestNormalize_get_transfo_name(transformation_result[[res$Dataset[i]]][["info_transformation"]][[1]]), res$Transformation[i])
+    for (i in which(res$transf == "logx")) {
+      res$Transformation[i] <- stringr::str_replace(
+        res$Transformation[i],
+        "X",
+        transformation_result$info_transformation$log_base
+      )
+    }
+
+    for (i in which(res$transf == "best-normalize-manual")) {
+      res$Transformation[i] <- paste0(
+          .bestNormalize_get_transfo_name(
+            transformation_result[[res$Dataset[i]]][["info_transformation"]][[1]]
+          ),
+          res$Transformation[i]
+        )
+    }
+
+    if (best_normalize_details & any(res$transf == "best-normalize-auto")) {
+      res$Details <- sapply(transformation_result, function(x) {
+        if (attr(x, "transformation") == "best-normalize-auto") {
+          info_list <- x$info_transformation
+
+          df <- tibble::tibble(
+            Feature = names(info_list),
+            Chosen_transformation = sapply(info_list, .bestNormalize_get_transfo_name)
+          ) |>
+            dplyr::group_by(Chosen_transformation) |>
+            dplyr::summarise(Features = paste0(Feature, collapse = ", "))
+
+          return(paste0(
+            "- ",
+            df$Chosen_transformation,
+            ": ",
+            df$Features,
+            collapse = "\n"
+          ))
+        }
+        return("")
+      })
+    }
+
+    res <- res |>
+      dplyr::select(-transf)
+
+    return(res)
   }
-
-  if (best_normalize_details & any(res$transf == "best-normalize-auto")) {
-    res$Details <- sapply(transformation_result, function(x) {
-      if (attr(x, "transformation") == "best-normalize-auto") {
-        info_list <- x$info_transformation
-
-        df <- tibble::tibble(
-          Feature = names(info_list),
-          Chosen_transformation = sapply(info_list, .bestNormalize_get_transfo_name)
-        ) |>
-          dplyr::group_by(Chosen_transformation) |>
-          dplyr::summarise(Features = paste0(Feature, collapse = ", "))
-
-        return(paste0("- ", df$Chosen_transformation, ": ", df$Features, collapse = "\n"))
-      }
-      return("")
-    })
-  }
-
-  res <- res |>
-    dplyr::select(-transf)
-
-  return(res)
-}
-
 
 .get_transformed_matrix <- function(res, return_matrix_only) {
   if (return_matrix_only) {
