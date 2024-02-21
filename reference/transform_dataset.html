@@ -67,6 +67,8 @@ through the <code>BestNormalise</code> package.</p>
 <span>  return_multidataset <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return_matrix_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  log_base <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  pre_log_function <span class="op">=</span> <span class="va">zero_to_half_min</span>,</span>
 <span>  <span class="va">method</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -84,8 +86,8 @@ through the <code>BestNormalise</code> package.</p>
 
 <dt>transformation</dt>
 <dd><p>Character, transformation to be applied. Possible
-values are: <code>vsn</code>, <code>vst-deseq2</code>, <code>best-normalize-auto</code> or
-<code>best-normalize-manual</code>. See <code>Details</code>.</p></dd>
+values are: <code>vsn</code>, <code>vst-deseq2</code>, <code>logx</code> <code>best-normalize-auto</code>
+or <code>best-normalize-manual</code>. See <code>Details</code>.</p></dd>
 
 
 <dt>return_multidataset</dt>
@@ -106,6 +108,18 @@ other information relevant to the transformation. Ignored if
 <dt>verbose</dt>
 <dd><p>Logical, should information about the transformation be
 printed? Default value is <code>TRUE</code>.</p></dd>
+
+
+<dt>log_base</dt>
+<dd><p>Numeric, the base with respect to which logarithms are
+computed. Default value is <code>2</code>. Only used if <code>transformation = 'logx'</code>.</p></dd>
+
+
+<dt>pre_log_function</dt>
+<dd><p>Function that will be applied to the matrix before
+the log transformation (e.g. to apply an offset to the values to avoid
+issues with zeros). Default value is the <code><a href="zero_to_half_min.html">zero_to_half_min()</a></code> function.
+Only used if <code>transformation = 'logx'</code>.</p></dd>
 
 
 <dt>method</dt>
@@ -146,6 +160,8 @@ practice, applies the <code><a href="transform_vsn.html">transform_vsn()</a></co
 package. This method is applicable to count data only. This transformation is
 recommended for RNAseq or similar count-based datasets. In practice, applies
 the <code><a href="transform_vst.html">transform_vst()</a></code> function.</p></li>
+<li><p><code>logx</code>: log-transformation (default to log2, but base can be specified).
+In practice, applies the <code><a href="transform_logx.html">transform_logx()</a></code> function.</p></li>
 <li><p><code>best-normalize-auto</code>: most appropriate normalisation method automatically
 selected from a number of options, implemented in the
 <code><a href="https://petersonr.github.io/bestNormalize/reference/bestNormalize.html" class="external-link">bestNormalize::bestNormalize()</a></code> function from the <code>bestNormalize</code> package.
@@ -163,10 +179,10 @@ methods are:</p><ul><li><p><code>"arcsinh_x"</code>: data is transformed as <cod
 <li><p><code>"center_scale"</code>: data is centered and scaled;</p></li>
 <li><p><code>"exp_x"</code>: data is transformed as <code>exp(x)</code>;</p></li>
 <li><p><code>"log_x"</code>: data is transformed as <code>log_b(x+a)</code> (<code>a</code> and <code>b</code> either
-selected automatically or passed as arguments);</p></li>
+selected automatically per variable or passed as arguments);</p></li>
 <li><p><code>"orderNorm"</code>: Ordered Quantile technique;</p></li>
 <li><p><code>"sqrt_x"</code>: data transformed as <code>sqrt(x + a)</code> (<code>a</code> selected automatically
-or passed as argument),</p></li>
+per variable or passed as argument),</p></li>
 <li><p><code>"yeojohnson"</code>: Yeo-Johnson transformation.</p></li>
 </ul></li>
 </ul></div>

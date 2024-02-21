@@ -532,6 +532,9 @@
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/transform_dataset.html</loc>
   </url>
   <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/transform_logx.html</loc>
+  </url>
+  <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/transform_vsn.html</loc>
   </url>
   <url>
@@ -539,5 +542,8 @@
   </url>
   <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/transformation_datasets_factory.html</loc>
+  </url>
+  <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/zero_to_half_min.html</loc>
   </url>
 </urlset>
