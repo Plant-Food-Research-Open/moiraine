@@ -801,7 +801,7 @@ get_table_transformations <- function(transformation_result,
       res$Transformation[i] <- stringr::str_replace(
         res$Transformation[i],
         "X",
-        transformation_result$info_transformation$log_base
+        paste0(transformation_result[[i]]$info_transformation$log_base)
       )
     }
 
