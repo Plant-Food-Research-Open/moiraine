@@ -221,9 +221,11 @@ transform_logx <- function(mat,
     stop("`pre_log_function` argument cannot be `NULL`.")
   }
 
-  if (!is.null(pre_log_function)) mat <- pre_log_function(mat)
+  mat <- pre_log_function(mat)
 
-  if (any(mat == 0)) warning("The matrix contains zero values; log-transformation will yield `-Inf`.")
+  if (any(mat == 0, na.rm = TRUE)) {
+    warning("The matrix contains zero values; log-transformation will yield `-Inf`.")
+  }
 
   res_mat <- log(mat, base = log_base)
 
@@ -653,12 +655,6 @@ transformation_datasets_factory <- function(mo_data_target,
       names(transformations)[transformations == "logx"]
     )
 
-    # if (is.list(pre_log_functions)) {
-    #   pre_log_functions <- purrr::map_chr(pre_log_functions, \(x) deparse(substitute(x)))
-    # } else {
-    #   pre_log_functions <- deparse(substitute(pre_log_functions))
-    # }
-
     pre_log_functions <- .make_var_list(
       pre_log_functions,
       names(transformations)[transformations == "logx"]
@@ -678,16 +674,22 @@ transformation_datasets_factory <- function(mo_data_target,
   trans_spec_target <- as.symbol(transf_spec_name)
   transf_run_target <- as.symbol(transf_run_name)
 
+  dsn_vals <- names(transformations)
+  transf_vals <- unname(transformations)
+  meth_vals <- purrr::map(dsn_vals, \(x) methods[[x]])
+  log_b_vals <- purrr::map(dsn_vals, \(x) log_bases[[x]])
+  prelog_f_vals <- purrr::map(dsn_vals, \(x) pre_log_functions[[x]])
+
   list(
     targets::tar_target_raw(
       transf_spec_name,
       substitute(
         tibble::tibble(
-          dsn = names(transformations),
-          transf = transformations,
-          meth = methods[[dsn]],
-          log_b = log_bases[[dsn]],
-          prelog_f = pre_log_functions[[dsn]]
+          dsn = dsn_vals,
+          transf = transf_vals,
+          meth = meth_vals,
+          log_b = log_b_vals,
+          prelog_f = prelog_f_vals
         ) |>
           dplyr::group_by(dsn) |>
           targets::tar_group()),
@@ -703,9 +705,9 @@ transformation_datasets_factory <- function(mo_data_target,
           dataset = trans_spec_target$dsn,
           transformation = trans_spec_target$transf,
           return_matrix_only = return_matrix_only,
-          method = trans_spec_target$meth,
-          log_base = trans_spec_target$log_b,
-          pre_log_function = trans_spec_target$prelog_f,
+          method = trans_spec_target$meth[[1]],
+          log_base = trans_spec_target$log_b[[1]],
+          pre_log_function = trans_spec_target$prelog_f[[1]],
           ...
         )
       ),

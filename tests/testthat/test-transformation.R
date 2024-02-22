@@ -220,28 +220,28 @@ test_that("transformation_datasets_factory works - default", {
   expect_s3_class(tar_res[[3]], "tar_stem")
 
   expect_equal(
-    tar_res[[1]]$command$expr,
-    str2expression("tibble::tibble(
-          dsn = names(c(\"rnaseq\" = \"vst\", \"metabolome\" = \"vsn\")),
-          transf = c(\"rnaseq\" = \"vst\", \"metabolome\" = \"vsn\"),
-          meth = NULL[[dsn]],
-          log_b = NULL[[dsn]],
-          prelog_f = NULL[[dsn]]
+    tar_res[[1]]$command$expr |> test_clean_expression(),
+    expression(tibble::tibble(
+          dsn = c("rnaseq", "metabolome"),
+          transf = c("vst", "vsn"),
+          meth = list(NULL, NULL),
+          log_b = list(NULL, NULL),
+          prelog_f = list(NULL, NULL)
         ) |>
           dplyr::group_by(dsn) |>
-          targets::tar_group()")
+          targets::tar_group()) |> test_clean_expression()
   )
   expect_equal(
-    tar_res[[2]]$command$expr,
-    str2expression("transform_dataset(
+    tar_res[[2]]$command$expr |> test_clean_expression(),
+    expression(transform_dataset(
           mo_set,
           dataset = transformations_spec$dsn,
           transformation = transformations_spec$transf,
           return_matrix_only = FALSE,
-          method = transformations_spec$meth,
-          log_base = transformations_spec$log_b,
-          pre_log_function = transformations_spec$prelog_f
-        )")
+          method = transformations_spec$meth[[1]],
+          log_base = transformations_spec$log_b[[1]],
+          pre_log_function = transformations_spec$prelog_f[[1]]
+        )) |> test_clean_expression()
   )
   expect_equal(
     tar_res[[3]]$command$expr,
@@ -293,11 +293,11 @@ test_that("transformation_datasets_factory works - logx", {
     tar_res[[1]]$command$expr |> test_clean_expression(),
     expression(
       tibble::tibble(
-          dsn = names(c(rnaseq = "vst", metabolome = "logx")),
-          transf = c(rnaseq = "vst", metabolome = "logx"),
-          meth = NULL[[dsn]],
-          log_b = list(metabolome = 2)[[dsn]],
-          prelog_f = list(metabolome = function(mat) {
+          dsn = c("rnaseq", "metabolome"),
+          transf = c("vst", "logx"),
+          meth = list(NULL, NULL),
+          log_b = list(NULL, 2),
+          prelog_f = list(NULL, function(mat) {
             if (!any(mat == 0)) {
               return(mat)
             }
@@ -306,7 +306,7 @@ test_that("transformation_datasets_factory works - logx", {
             mat[mat == 0] <- min_val / 2
 
             return(mat)
-          })[[dsn]]
+          })
         ) |>
           dplyr::group_by(dsn) |>
           targets::tar_group()) |> test_clean_expression()
@@ -325,14 +325,14 @@ test_that("transformation_datasets_factory works - logx", {
   expect_equal(
     tar_res[[1]]$command$expr |> test_clean_expression(),
     expression(tibble::tibble(
-      dsn = names(c(rnaseq = "logx", metabolome = "logx")),
-      transf = c(rnaseq = "logx", metabolome = "logx"),
-      meth = NULL[[dsn]],
-      log_b = list(rnaseq = 10, metabolome = 2)[[dsn]],
+      dsn = c("rnaseq", "metabolome"),
+      transf = c("logx", "logx"),
+      meth = list(NULL, NULL),
+      log_b =  list(10, 2),
       prelog_f = list(
-        rnaseq = \(x) x + 0.5,
-        metabolome = \(x) x + 1
-      )[[dsn]]
+        \(x) x + 0.5,
+        \(x) x + 1
+      )
     ) |>
       dplyr::group_by(dsn) |>
       targets::tar_group()) |> test_clean_expression()
