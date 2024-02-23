@@ -6,8 +6,8 @@
 #' @param file Name (and path) of the file to be created. Should end with `.R`.
 #'   Default value (recommended) is `"_targets.R"` (in the current directory).
 #' @param overwrite Logical, should existing file be overwritten?
-#' @return The file name (invisibly).
-#' @exports
+#' @returns The file name (invisibly).
+#' @export
 create_moiraine_pipeline <- function(file = "_targets.R", overwrite = FALSE) {
   if (!stringr::str_detect(file, "\\.R$")) {
     stop("'file' argument should end with '.R'.")
