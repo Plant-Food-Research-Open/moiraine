@@ -36,14 +36,13 @@ devtools::install_github("PlantandFoodResearch/moiraine")
 
 ## Example
 
-To get started, create a new analysis pipeline and associated report in
-your working directory with:
+To get started, create a new analysis pipeline in your working directory
+with:
 
 ``` r
 library(moiraine)
 
-create_targets_pipeline()
-create_report("integration_analysis_report.Rmd")
+create_moiraine_pipeline()
 ```
 
 Before using `moiraine`, we encourage you to get familiar with the

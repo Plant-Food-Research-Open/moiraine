@@ -2,12 +2,25 @@ url: https://bookish-disco-p832pyq.pages.github.io/
 template:
   bootstrap: 5
 
+navbar:
+  title: targets
+  type: default
+  left:
+  - text: Reference
+    href: reference/index.html
+  - text: Manual
+    href: https://solid-lamp-kq546rq.pages.github.io/
+  - text: News
+    href: news/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/PlantandFoodResearch/moiraine
+
 reference:
 - title: "Project management"
   desc: "Getting started with a new data integration project"
   contents:
-  - create_targets_pipeline
-  - create_report
+  - create_moiraine_pipeline
 
 - title: "Data import"
   desc: "Importing data into R"
@@ -81,6 +94,7 @@ reference:
   - transformation_datasets_factory
   - get_transformed_data
   - get_table_transformations
+  - zero_to_half_min
 
 - title: "Prefiltering"
   desc: "Features prefiltering for multi-omics set"
