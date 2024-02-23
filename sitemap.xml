@@ -16,6 +16,9 @@
     <loc>https://bookish-disco-p832pyq.pages.github.io/index.html</loc>
   </url>
   <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/news/index.html</loc>
+  </url>
+  <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/MetabolomeSet-class.html</loc>
   </url>
   <url>
@@ -70,6 +73,9 @@
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/consensus_importance_metric.html</loc>
   </url>
   <url>
+    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_moiraine_pipeline.html</loc>
+  </url>
+  <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_multiomics_set.html</loc>
   </url>
   <url>
@@ -77,12 +83,6 @@
   </url>
   <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_omics_set_factory.html</loc>
-  </url>
-  <url>
-    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_report.html</loc>
-  </url>
-  <url>
-    <loc>https://bookish-disco-p832pyq.pages.github.io/reference/create_targets_pipeline.html</loc>
   </url>
   <url>
     <loc>https://bookish-disco-p832pyq.pages.github.io/reference/diablo_generate_design_matrix.html</loc>
