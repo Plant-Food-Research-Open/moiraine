@@ -263,7 +263,7 @@ markers_qtls <- geno_fmeta_df |>
 
 set.seed(36)
 markers_subsampling <- geno_fmeta_df |>
-  filter(is.na(qtl_type), marker %in% markers_filtering) |>
+  filter(qtl_type == "non signif", marker %in% markers_filtering) |>
   slice_sample(n = 23000) |>
   pull(marker)
 
