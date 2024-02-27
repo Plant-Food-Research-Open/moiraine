@@ -12,6 +12,12 @@
   (such as mixOmics or MOFA), as well as visualisation of the results and comparison
   of different integration tools.">
 <title>Construction of Reproducible Pipelines for Testing and Comparing Multi-omics Integration Tools • moiraine</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -23,6 +29,7 @@
    construction of input objects for several multi-omics integration packages
   (such as mixOmics or MOFA), as well as visualisation of the results and comparison
   of different integration tools.">
+<meta property="og:image" content="https://bookish-disco-p832pyq.pages.github.io/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -36,7 +43,7 @@
     
     <a class="navbar-brand me-2" href="index.html">moiraine</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,11 +81,13 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="moiraine">moiraine<a class="anchor" aria-label="anchor" href="#moiraine"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="moiraine-">moiraine <a class="anchor" aria-label="anchor" href="#moiraine-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
-<p><code>moiraine</code> is a package for facilitating the construction of a reproducible analysis pipeline for multi-omics data integration. It provides functions to automate data import, pre-processing, transformation, and integration through several tools. It relies on the <a href="https://books.ropensci.org/targets/" class="external-link">targets</a> package to generate reproducible workflows. <code>moiraine</code> currently supports multi-omics data integration through:</p>
+<p><code>moiraine</code> is a package for facilitating the construction of a reproducible analysis pipeline for multi-omics data integration. It provides functions to automate data import, pre-processing, transformation, integration through several tools, as well as interpretation and comparison of the integration results. It relies on the <a href="https://books.ropensci.org/targets/" class="external-link">targets</a> package to generate reproducible workflows. <code>moiraine</code> currently supports multi-omics data integration through:</p>
 <ul>
 <li><p>sPLS and DIABLO from the mixOmics package;</p></li>
 <li><p>sO2PLS from the omicsPLS package;</p></li>
@@ -100,7 +109,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/PlantandFoodResearch/moiraine" class="external-link">moiraine</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/create_moiraine_pipeline.html">create_moiraine_pipeline</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Before using <code>moiraine</code>, we encourage you to get familiar with the <code>targets</code> package; the <a href="https://books.ropensci.org/targets/" class="external-link">manual</a> is a great place to start.</p>
+<p>The <a href="https://solid-lamp-kq546rq.pages.github.io/" class="external-link">user manual</a> provides an in-depth walk-through of a multi-omics integration analysis with the package.</p>
+<p>Before using <code>moiraine</code>, we encourage you to get familiar with the <code>targets</code> package; the <a href="https://books.ropensci.org/targets/" class="external-link"><code>targets</code> manual</a> is a great place to start.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
