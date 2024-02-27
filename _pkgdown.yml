@@ -1,8 +1,10 @@
 url: https://bookish-disco-p832pyq.pages.github.io/
 template:
   bootstrap: 5
+  bootswatch: zephyr
 
 navbar:
+  bg: light
   title: targets
   type: default
   left:

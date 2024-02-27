@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# moiraine
+# moiraine <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
@@ -13,8 +13,9 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 `moiraine` is a package for facilitating the construction of a
 reproducible analysis pipeline for multi-omics data integration. It
 provides functions to automate data import, pre-processing,
-transformation, and integration through several tools. It relies on the
-[targets](https://books.ropensci.org/targets/) package to generate
+transformation, integration through several tools, as well as
+interpretation and comparison of the integration results. It relies on
+the [targets](https://books.ropensci.org/targets/) package to generate
 reproducible workflows. `moiraine` currently supports multi-omics data
 integration through:
 
@@ -45,6 +46,10 @@ library(moiraine)
 create_moiraine_pipeline()
 ```
 
+The [user manual](https://solid-lamp-kq546rq.pages.github.io/) provides
+an in-depth walk-through of a multi-omics integration analysis with the
+package.
+
 Before using `moiraine`, we encourage you to get familiar with the
-`targets` package; the [manual](https://books.ropensci.org/targets/) is
-a great place to start.
+`targets` package; the [`targets`
+manual](https://books.ropensci.org/targets/) is a great place to start.
