@@ -2,6 +2,9 @@ url: https://bookish-disco-p832pyq.pages.github.io/
 template:
   bootstrap: 5
   bootswatch: zephyr
+  bslib:
+    font-size-sm: 1.1rem
+    light: "#80acff"
 
 navbar:
   bg: light

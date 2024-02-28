@@ -1,10 +1,8 @@
 library(hexSticker)
 library(tidyverse)
 library(sysfonts)
-library(geomtextpath)
 
 font_add_google(name = "Lora", regular.wt = "600")
-font_add_google(name = "Poppins", bold.wt = "800")
 
 make_weave <- function(strand_col = "black", background_col = "white") {
   toplot <- 0:2 |>
@@ -25,12 +23,6 @@ make_weave <- function(strand_col = "black", background_col = "white") {
     list_rbind(names_to = "braid") |>
     arrange(order) |>
     mutate(z = factor(z, levels = unique(z)))
-
-  toadd <- tibble(
-    x = seq(1, 5, 0.01),
-    y = sin(x +  4 * pi/3),
-    text = "omics"
-  )
 
   toplot |>
     ggplot(aes(x, y)) +
@@ -62,25 +54,13 @@ make_weave <- function(strand_col = "black", background_col = "white") {
       colour = strand_col,
       lineend = "round"
     ) +
-    # geom_textpath(
-    #   mapping = aes(label = text),
-    #   data = toadd,
-    #   #family = "Poppins",
-    #   fontface = "bold",
-    #   colour = background_col,
-    #   size = 3,
-    #   text_only = TRUE,
-    #   hjust = 0,
-    #   spacing = -200,
-    #   text_smoothing = 10
-    # ) +
     scale_y_continuous(limits = c(-3, 3)) +
     theme_void()
 }
 
-col_border <- "#003399"
 col_content <- "#ffffff"
-col_background <- "#003399"
+col_background <- "#002366"
+col_border <- col_background
 s <- sticker(
   make_weave(col_content, col_background),
   package = "moiraine",
