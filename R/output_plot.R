@@ -842,7 +842,7 @@ plot_features_weight_pair <- function(method_output,
 
     toplot <- method_output$features_weight
     axis_vars <- latent_dimensions
-    title <- paste0("Features ", y_label, " - ", attr(method_output, "method"))
+    title <- paste0(y_label, " - ", attr(method_output, "method"))
   } else {
     if (length(method_output) != 2) {
       stop(
@@ -878,7 +878,6 @@ plot_features_weight_pair <- function(method_output,
       )
 
     title <- paste0(
-      "Features ",
       y_label,
       " - ",
       paste0(names(method_output), collapse = " vs ")
