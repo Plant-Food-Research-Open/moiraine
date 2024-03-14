@@ -11,6 +11,8 @@ navbar:
   title: targets
   type: default
   left:
+  - text: Overview
+    href: https://solid-lamp-kq546rq.pages.github.io/overview.html
   - text: Reference
     href: reference/index.html
   - text: Manual
