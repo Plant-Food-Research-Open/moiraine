@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2024 moiraine authors
+Copyright (c) 2024 The New Zealand Institute for Plant and Food Research Limited
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
