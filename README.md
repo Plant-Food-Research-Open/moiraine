@@ -53,7 +53,7 @@ The workflow for a typical multi-omics integration analysis handled with
   pre-processing approaches.
 
 An overview of the capabilities of the package is available
-[here](https://solid-lamp-kq546rq.pages.github.io/overview.html).
+[here](https://plant-food-research-open.github.io/moiraine-manual/overview.html).
 
 ## Installation
 
@@ -62,7 +62,7 @@ You can install the development version of moiraine from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("PlantandFoodResearch/moiraine")
+devtools::install_github("Plant-Food-Research-Open/moiraine")
 ```
 
 ## Example
@@ -76,9 +76,10 @@ library(moiraine)
 create_moiraine_pipeline()
 ```
 
-The [user manual](https://solid-lamp-kq546rq.pages.github.io/) provides
-an in-depth walk-through of a multi-omics integration analysis with the
-package.
+The [user
+manual](https://plant-food-research-open.github.io/moiraine-manual/)
+provides an in-depth walk-through of a multi-omics integration analysis
+with the package.
 
 Before using `moiraine`, we encourage you to get familiar with the
 `targets` package; the [`targets`

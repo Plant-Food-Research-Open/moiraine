@@ -1,4 +1,4 @@
-url: https://bookish-disco-p832pyq.pages.github.io/
+url: https://plant-food-research-open.github.io/moiraine/
 template:
   bootstrap: 5
   bootswatch: zephyr
@@ -12,16 +12,16 @@ navbar:
   type: default
   left:
   - text: Overview
-    href: https://solid-lamp-kq546rq.pages.github.io/overview.html
+    href: https://plant-food-research-open.github.io/moiraine-manual/overview.html
   - text: Reference
     href: reference/index.html
   - text: Manual
-    href: https://solid-lamp-kq546rq.pages.github.io/
+    href: https://plant-food-research-open.github.io/moiraine-manual/
   - text: News
     href: news/index.html
   right:
   - icon: fa-github fa-lg
-    href: https://github.com/PlantandFoodResearch/moiraine
+    href: https://github.com/Plant-Food-Research-Open/moiraine
 
 reference:
 - title: "Project management"

@@ -12,8 +12,8 @@ Description: A package to facilitate the construction of reproducible pipelines 
    construction of input objects for several multi-omics integration packages
   (such as mixOmics or MOFA), as well as visualisation of the results and comparison
   of different integration tools.
-URL: https://github.com/PlantandFoodResearch/moiraine, https://bookish-disco-p832pyq.pages.github.io/
-BugReports: https://github.com/PlantandFoodResearch/moiraine/issues
+URL: https://github.com/Plant-Food-Research-Open/moiraine, https://plant-food-research-open.github.io/moiraine/
+BugReports: https://github.com/Plant-Food-Research-Open/moiraine/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
