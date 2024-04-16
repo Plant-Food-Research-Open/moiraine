@@ -8,7 +8,9 @@ comparison_heatmap_corr(
   output_list,
   latent_dimensions = NULL,
   include_missing_features = FALSE,
-  legend_ncol = 1
+  legend_ncol = length(output_list),
+  legend_position = "bottom",
+  legend_title = "correlation"
 )
 }
 \arguments{
@@ -26,7 +28,13 @@ examples). If \code{NULL} (default value), all latent dimensions will be used.}
 \code{\link[=get_features_weight_correlation]{get_features_weight_correlation()}} for details. Default value is \code{FALSE}.}
 
 \item{legend_ncol}{Integer, number of columns in the legend. Default value is
-\code{1}.}
+set to the length of \code{output_list}.}
+
+\item{legend_position}{Character, position of the legend. Should be one of
+\code{"bottom"} (default), \code{"top"}, \code{"left"} or \verb{"right}.}
+
+\item{legend_title}{Character, name to give to the heatmap colour legend.
+Intended to use to shorten the legend title if it goes out of frame.}
 }
 \value{
 a \code{ComplexHeatmap::Heatmap}.

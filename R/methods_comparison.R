@@ -124,10 +124,16 @@ get_samples_score_correlation <- function(output_list) {
 #'   [get_features_weight_correlation()] for details. Default value is `FALSE`.
 #' @param legend_ncol Integer, number of columns in the legend. Default value is
 #'   `1`.
+#' @param legend_position Character, position of the legend. Should be one of
+#'   `"bottom"` (default), `"top"`, `"left"` or `"right`.
+#' @param legend_title Character, name to give to the heatmap colour legend.
+#'   Intended to use to shorten the legend title if it goes out of frame.
 #' @returns a `ComplexHeatmap::Heatmap` (lower triangle only).
 .heatmap_features_weight_corr <- function(output_list,
                                           include_missing_features = FALSE,
-                                          legend_ncol = 1) {
+                                          legend_ncol = 1,
+                                          legend_position = "bottom",
+                                          legend_title = "correlation") {
   ## For devtools::check
   latent_dimension <- long_name <- short_name <- NULL
 
@@ -184,6 +190,9 @@ get_samples_score_correlation <- function(output_list) {
   ## Clustering of rows and columns
   hclust_fw <- hclust_matrix_rows(abs(cor_features_weight))
 
+  legend_bottom <- legend_position == "bottom"
+  legend_right <- legend_position == "right"
+
   hll <- ComplexHeatmap::Heatmap(
     cor_features_weight,
     col = circlize::colorRamp2(c(-1, 0, 1), c("blue", "white", "red")),
@@ -201,10 +210,10 @@ get_samples_score_correlation <- function(output_list) {
     left_annotation = row_ha,
     bottom_annotation = column_ha,
     ## Tweak legend
-    name = "Correlation",
+    name = legend_title,
     heatmap_legend_param = list(
-      direction = "horizontal",
-      title_position = "topcenter"
+      direction = ifelse(legend_bottom, "horizontal", "vertical"),
+      title_position = ifelse(legend_bottom, "topcenter", "topleft")
     ),
     ## Adding title
     row_title = "Features weight correlation",
@@ -364,7 +373,11 @@ get_samples_score_correlation <- function(output_list) {
 #' @param include_missing_features Logical, see
 #'   [get_features_weight_correlation()] for details. Default value is `FALSE`.
 #' @param legend_ncol Integer, number of columns in the legend. Default value is
-#'   `1`.
+#'   set to the length of `output_list`.
+#' @param legend_position Character, position of the legend. Should be one of
+#'   `"bottom"` (default), `"top"`, `"left"` or `"right`.
+#' @param legend_title Character, name to give to the heatmap colour legend.
+#'   Intended to use to shorten the legend title if it goes out of frame.
 #' @returns a `ComplexHeatmap::Heatmap`.
 #' @examplesIf FALSE
 #' ## Comparing the output from DIABLO, sO2PLS and MOFA
@@ -400,7 +413,9 @@ get_samples_score_correlation <- function(output_list) {
 comparison_heatmap_corr <- function(output_list,
                                     latent_dimensions = NULL,
                                     include_missing_features = FALSE,
-                                    legend_ncol = 1) {
+                                    legend_ncol = length(output_list),
+                                    legend_position = "bottom",
+                                    legend_title = "correlation") {
   output_list <- output_list |>
     .check_names_output_list() |>
     .filter_output_dimensions_list(latent_dimensions)
@@ -409,7 +424,9 @@ comparison_heatmap_corr <- function(output_list,
   hll <- .heatmap_features_weight_corr(
     output_list,
     include_missing_features,
-    legend_ncol
+    legend_ncol,
+    legend_position,
+    legend_title
   )
   dendro_fw <- hll@row_dend_param$obj
 
@@ -422,7 +439,8 @@ comparison_heatmap_corr <- function(output_list,
   ComplexHeatmap::draw(
     hll + hur,
     ht_gap = grid::unit(-70, "mm"),
-    heatmap_legend_side = "bottom"
+    heatmap_legend_side = legend_position,
+    annotation_legend_side = legend_position
   )
 }
 

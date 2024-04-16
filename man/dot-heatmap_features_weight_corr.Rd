@@ -7,7 +7,9 @@
 .heatmap_features_weight_corr(
   output_list,
   include_missing_features = FALSE,
-  legend_ncol = 1
+  legend_ncol = 1,
+  legend_position = "bottom",
+  legend_title = "correlation"
 )
 }
 \arguments{
@@ -19,6 +21,12 @@
 
 \item{legend_ncol}{Integer, number of columns in the legend. Default value is
 \code{1}.}
+
+\item{legend_position}{Character, position of the legend. Should be one of
+\code{"bottom"} (default), \code{"top"}, \code{"left"} or \verb{"right}.}
+
+\item{legend_title}{Character, name to give to the heatmap colour legend.
+Intended to use to shorten the legend title if it goes out of frame.}
 }
 \value{
 a \code{ComplexHeatmap::Heatmap} (lower triangle only).
