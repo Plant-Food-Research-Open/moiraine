@@ -1,6 +1,6 @@
 Package: moiraine
 Title: Construction of Reproducible Pipelines for Testing and Comparing Multi-omics Integration Tools
-Version: 1.0.0
+Version: 1.0.0.9000
 Authors@R: 
     c(person("Olivia", "Angelin-Bonnet", 
     email = "O.Angelin-Bonnet@massey.ac.nz",
@@ -30,7 +30,6 @@ Imports:
     ggpubr,
     ggrepel,
     grid,
-    here,
     methods,
     mixOmics,
     MOFA2,

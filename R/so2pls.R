@@ -666,7 +666,7 @@ so2pls_print_cv_sparsity <- function(cv_res_optim) {
       names_from = joint_component,
       values_from = n_features
     ) |>
-    dplyr::mutate(Total = rowSums(dplyr::across(where(is.numeric))))
+    dplyr::mutate(Total = rowSums(dplyr::across(tidyselect::where(is.numeric))))
 }
 
 #' Plot sparsity cross-validation results for sO2PLS

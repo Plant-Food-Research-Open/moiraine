@@ -7,12 +7,12 @@
 diablo_plot_tune(tune_res)
 }
 \arguments{
-\item{tune_res}{The cross-validation results, computed with \code{\link{diablo_tune}}.}
+\item{tune_res}{The cross-validation results, computed with \code{\link[=diablo_tune]{diablo_tune()}}.}
 }
 \value{
 A \code{ggplot2} object.
 }
 \description{
-Displays the error rate of a DIABLO run cross-validation to estimate the optimal number of features to retain from
-each dataset (\code{keepX}).
+Displays the error rate of a DIABLO run cross-validation to estimate the
+optimal number of features to retain from each dataset (\code{keepX}).
 }

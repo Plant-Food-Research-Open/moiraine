@@ -1122,7 +1122,7 @@ plot_features_weight_covariate <- function(method_output,
         ) |>
         dplyr::mutate(
           dplyr::across(
-            .cols = dplyr::where(\(x){!is.numeric(x)}),
+            .cols = tidyselect::where(\(x){!is.numeric(x)}),
             .fns = as.character
           )
         ),

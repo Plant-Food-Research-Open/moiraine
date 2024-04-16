@@ -595,7 +595,7 @@ diablo_table_optim_keepX <- function(tune_res) {
       )
   }) |>
     purrr::reduce(dplyr::bind_rows) |>
-    dplyr::mutate(Total = rowSums(dplyr::across(where(is.numeric))))
+    dplyr::mutate(Total = rowSums(dplyr::across(tidyselect::where(is.numeric))))
 
   return(res)
 }

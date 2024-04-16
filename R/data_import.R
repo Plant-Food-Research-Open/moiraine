@@ -180,7 +180,10 @@ import_fmetadata_gff <- function(file, feature_type, add_fields = NULL) {
       ## become vector
       tibble::as_tibble() |>
       dplyr::mutate(
-        dplyr::across(where(is.list), ~ sapply(.x, paste, collapse = " "))
+        dplyr::across(
+          tidyselect::where(is.list),
+          ~ sapply(.x, paste, collapse = " ")
+        )
       )
 
     .check_names(

@@ -238,7 +238,7 @@ join_features_metadata <- function(df, mo_data) {
     dplyr::filter(feature_id %in% df$feature_id) |>
     dplyr::select(
       feature_id,
-      where(~ any(!is.na(.x)))
+      tidyselect::where(~ any(!is.na(.x)))
     )
 
   if (nrow(fmeta) == 0) {
@@ -285,7 +285,7 @@ join_samples_metadata <- function(df, mo_data, datasets = NULL) {
     dplyr::filter(id %in% df$id) |>
     dplyr::select(
       id,
-      where(~ any(!is.na(.x)))
+      tidyselect::where(~ any(!is.na(.x)))
     )
 
   if (nrow(smeta) == 0) {
