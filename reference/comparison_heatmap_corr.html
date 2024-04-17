@@ -16,11 +16,11 @@ next to each other."><meta property="og:image" content="https://plant-food-resea
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-default navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-default navbar-expand-lg bg-light" data-bs-theme="default"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">moiraine</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,9 @@ next to each other.</p>
 <span>  <span class="va">output_list</span>,</span>
 <span>  latent_dimensions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  include_missing_features <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  legend_ncol <span class="op">=</span> <span class="fl">1</span></span>
+<span>  legend_ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">output_list</span><span class="op">)</span>,</span>
+<span>  legend_position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>  legend_title <span class="op">=</span> <span class="st">"correlation"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,7 +105,17 @@ examples). If <code>NULL</code> (default value), all latent dimensions will be u
 
 <dt>legend_ncol</dt>
 <dd><p>Integer, number of columns in the legend. Default value is
-<code>1</code>.</p></dd>
+set to the length of <code>output_list</code>.</p></dd>
+
+
+<dt>legend_position</dt>
+<dd><p>Character, position of the legend. Should be one of
+<code>"bottom"</code> (default), <code>"top"</code>, <code>"left"</code> or <code>"right</code>.</p></dd>
+
+
+<dt>legend_title</dt>
+<dd><p>Character, name to give to the heatmap colour legend.
+Intended to use to shorten the legend title if it goes out of frame.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -167,7 +179,7 @@ latent dimensions come from.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>
