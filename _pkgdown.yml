@@ -47,6 +47,7 @@ reference:
   - create_omics_set
   - create_omics_set_factory
   - create_multiomics_set
+  - add_omics_set
   - MetabolomeSet
   - PhenotypeSet
   - add_metabo
@@ -61,6 +62,7 @@ reference:
   - get_features
   - get_samples
   - get_datasets
+  - get_dataset_matrix
   - get_features_metadata
   - get_samples_metadata
   - get_samples_metadata_combined
@@ -75,6 +77,7 @@ reference:
   - plot_density_data
   - plot_meansd_data
   - plot_data_covariate
+  - plot_data_heatmap
 - subtitle: "Modifying"
   desc: "Modifying or subsetting datasets or metadata"
   contents:
@@ -88,6 +91,7 @@ reference:
   desc: "PCA and missing values imputation on multi-omics set"
   contents:
   - run_pca
+  - run_pca_matrix
   - get_complete_data
   - pca_complete_data_factory
   - plot_screeplot_pca
@@ -109,6 +113,8 @@ reference:
   contents:
   - select_features_mad
   - select_features_cov
+  - select_features_mad_matrix
+  - select_features_cov_matrix
   - get_filtered_dataset_variability
   - feature_preselection_mad_factory
   - feature_preselection_cov_factory
@@ -116,6 +122,7 @@ reference:
   - plot_feature_preselection_cov
 - subtitle: "Supervised (sPLS-DA)"
   contents:
+  - get_input_splsda
   - perf_splsda
   - run_splsda
   - get_filtered_dataset_splsda
@@ -152,6 +159,7 @@ reference:
 - subtitle: "sPLS"
   desc: "Unsupervised integration of 2 datasets with the sPLS method from mixOmics"
   contents:
+  - get_input_spls
   - get_input_mixomics_unsupervised
   - starts_with("spls_")
 
@@ -160,6 +168,8 @@ reference:
   contents:
   - get_output
   - get_latent_dimensions
+  - get_top_features
+  - get_selected_features
 - subtitle: "Plotting functions"
   contents:
   - plot_variance_explained
@@ -216,4 +226,4 @@ reference:
   contents:
   - '`add_metabo,MultiDataSet,MetabolomeSet-method`'
   - '`add_pheno,MultiDataSet,PhenotypeSet-method`'
-  - starts_with(".")
+  - starts_with("\\.")
