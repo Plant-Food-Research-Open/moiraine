@@ -5,3 +5,5 @@
 - Package here has been removed from dependencies (not needed).
 
 - `where()` function now imported from tidyselect instead of dplyr (as it required a newer version of dplyr).
+
+- Fixed typo in samples metadata file, samples with no value for "rnaseq_batch" variable now have `NA` rather than `"BNA"` values. 

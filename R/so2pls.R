@@ -777,8 +777,8 @@ so2pls_plot_cv_sparsity <- function(cv_res) {
     ggplot2::theme_bw() +
     ggplot2::theme(
       plot.title = ggplot2::element_text(hjust = 0.5),
-      legend.position = "bottom",
-      legend.title.align = 0.5
+      legend.title = ggplot2::element_text(hjust = 0.5),
+      legend.position = "bottom"
     ) +
     ggplot2::labs(
       title = paste0("Mean covariance between joint scores"),

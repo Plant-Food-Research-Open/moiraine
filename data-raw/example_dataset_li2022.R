@@ -404,7 +404,10 @@ smeta_df <- samples_raw_df |>
       gender == 1 ~ "female"
     ),
     feedlot = paste0("F", feedlot),
-    rnaseq_batch = paste0("B", rnaseq_batch)
+    rnaseq_batch = case_when(
+      is.na(rnaseq_batch) ~ NA_character_,
+      TRUE ~ paste0("B", rnaseq_batch)
+    )
   )
 
 
