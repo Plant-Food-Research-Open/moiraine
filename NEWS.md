@@ -7,3 +7,5 @@
 - `where()` function now imported from tidyselect instead of dplyr (as it required a newer version of dplyr).
 
 - Fixed typo in samples metadata file, samples with no value for "rnaseq_batch" variable now have `NA` rather than `"BNA"` values. 
+
+- `perf_splsda()` and `run_splsda()` now have a `seed` argument (hopefully self-explanatory :)). Accordingly, `feature_preselection_splsda_factory` now has arguments `seed_perf` and `seed_run` to pass on seeds to `perf_splsda()` and `run_splsda`. 

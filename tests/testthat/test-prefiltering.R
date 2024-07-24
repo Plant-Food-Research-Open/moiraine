@@ -21,7 +21,7 @@ test_that("feature_preselection_splsda_factory works", {
   ## whitespace error I cannot fix
   expect_equal(
     tar_res[[1]]$command$expr |> deparse() |> paste0(collapse = ""),
-    "expression(tar_group(dplyr::group_by(tibble::tibble(dsn = c(\"snps+A\", \"metabolome\"), tkn = list(50, 30), tkp = NULL), dsn)))"
+    "expression(tar_group(dplyr::group_by(tibble::tibble(dsn = c(\"snps+A\", \"metabolome\"), tkn = list(50, 30), tkp = NULL, sp = NULL, sr = NULL),     dsn)))"
   )
 
   # Testing targets command
@@ -31,9 +31,10 @@ test_that("feature_preselection_splsda_factory works", {
     }),
     list(
       expression(get_input_splsda(mo_data, splsda_spec$dsn, "pheno_group", NULL)),
-      expression(perf_splsda(individual_splsda_input)),
+      expression(perf_splsda(individual_splsda_input, seed = splsda_spec$sp)),
       expression(run_splsda(individual_splsda_input, perf_res = individual_splsda_perf,
-                            to_keep_n = splsda_spec$tkn, to_keep_prop = splsda_spec$tkp)),
+                            to_keep_n = splsda_spec$tkn, to_keep_prop = splsda_spec$tkp,
+                            seed = splsda_spec$sr)),
       expression(get_filtered_dataset_splsda(mo_data, individual_splsda_run))
     )
   )
@@ -46,7 +47,7 @@ test_that("feature_preselection_splsda_factory works", {
     list(
       NULL,
       expression(map(splsda_spec)),
-      expression(map(individual_splsda_input)),
+      expression(map(individual_splsda_input, splsda_spec)),
       expression(map(individual_splsda_input, individual_splsda_perf, splsda_spec)),
       NULL
     )
@@ -106,7 +107,7 @@ test_that("feature_preselection_splsda_factory works", {
   )
   expect_equal(
     tar_res3[[3]]$command$expr,
-    expression(perf_splsda(individual_splsda_input, ncomp_max = 10, folds = 3))
+    expression(perf_splsda(individual_splsda_input, seed = splsda_spec$sp, ncomp_max = 10, folds = 3))
   )
 
   ## Testing custom complete target name + custom prefix for target names
@@ -124,4 +125,42 @@ test_that("feature_preselection_splsda_factory works", {
     c("test_splsda_spec", "test_individual_splsda_input", "test_individual_splsda_perf",
       "test_individual_splsda_run", "final_test")
   )
+})
+
+test_that("feature_preselection_splsda_factory works (seed)", {
+  tar_res <- feature_preselection_splsda_factory(
+    mo_data,
+    group = "pheno_group",
+    to_keep_ns = list("snps+A" = 50, "metabolome" = 30)
+  )
+
+  expect_error(
+    feature_preselection_splsda_factory(
+      mo_data,
+      group = "pheno_group",
+      to_keep_ns = list("snps+A" = 50, "metabolome" = 30),
+      seed_perf = 1
+    ),
+    "`seed_perf` should be an integer vector with same length as `to_keep_ns` or `to_keep_props`."
+  )
+
+  expect_error(
+    feature_preselection_splsda_factory(
+      mo_data,
+      group = "pheno_group",
+      to_keep_ns = list("snps+A" = 50, "metabolome" = 30),
+      seed_perf = c("test" = 1, "rnaseq" = 2)
+    ),
+    "`seed_perf` names do not match `to_keep_ns` or `to_keep_props` names."
+  )
+
+  expect_no_error(
+    feature_preselection_splsda_factory(
+      mo_data,
+      group = "pheno_group",
+      to_keep_ns = list("snps+A" = 50, "metabolome" = 30),
+      seed_perf = c(1, 2)
+    )
+  )
+
 })

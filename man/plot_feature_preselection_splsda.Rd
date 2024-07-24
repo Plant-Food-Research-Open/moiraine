@@ -11,22 +11,26 @@ plot_feature_preselection_splsda(
 )
 }
 \arguments{
-\item{perf_splsda_res}{A list with the result from the \code{\link{perf_splsda}} for each dataset
-to be filtered.}
+\item{perf_splsda_res}{A list with the result from the
+\link{perf_splsda} for each dataset to be filtered.}
 
-\item{measure}{Which measure(s) should be displayed? Can be one of \code{"BER"}
-or \code{"overall"}. If NULL, all measures will be displayed. Default value is \code{NULL}.}
+\item{measure}{Which measure(s) should be displayed? Can be one of \code{"BER"} or
+\code{"overall"}. If NULL, all measures will be displayed. Default value is
+\code{NULL}.}
 
-\item{distance}{Which measure(s) should be displayed? Can be one of \code{"max.dist"},
-\code{"centroids.dist"} or \code{"mahalanobis.dist"}. If NULL, all measures will be displayed. Default value is \code{NULL}.}
+\item{distance}{Which measure(s) should be displayed? Can be one of
+\code{"max.dist"}, \code{"centroids.dist"} or \code{"mahalanobis.dist"}. If NULL, all
+measures will be displayed. Default value is \code{NULL}.}
 }
 \value{
 A ggplot.
 }
 \description{
 Displays the PLS-DA classification performance across different number of
-latent components for each prefiltered dataset. The classification error rates are computed with different measures
-(column facets) and different distance metrics (colours). A vertical grey bar represents for each dataset the number
-of latent components selected for the feature preselection step. In addition, a circle highlights the measure and
-distance metric used to select the number of latent component.
+latent components for each prefiltered dataset. The classification error
+rates are computed with different measures (column facets) and different
+distance metrics (colours). A vertical grey bar represents for each dataset
+the number of latent components selected for the feature preselection step.
+In addition, a circle highlights the measure and distance metric used to
+select the number of latent component.
 }

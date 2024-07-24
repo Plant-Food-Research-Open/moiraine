@@ -12,51 +12,77 @@ feature_preselection_splsda_factory(
   target_name_prefix = "",
   filtered_set_target_name = NULL,
   multilevel = NULL,
+  seed_perf = NULL,
+  seed_run = NULL,
   ...
 )
 }
 \arguments{
-\item{mo_data_target}{Symbol, the name of the target containing the \code{MultiDataSet} object.}
+\item{mo_data_target}{Symbol, the name of the target containing the
+\code{MultiDataSet} object.}
 
-\item{group}{Character, the column name in the samples information data-frame to use as samples group.}
+\item{group}{Character, the column name in the samples information data-frame
+to use as samples group.}
 
-\item{to_keep_ns}{Named integer vector, the number of feature to retain in each dataset to be prefiltered
-(names should correspond to a dataset name). Value should be less than the number of features in the
-corresponding dataset. Set to \code{NULL} in order to use \code{to_keep_props} instead.}
+\item{to_keep_ns}{Named integer vector, the number of feature to retain in
+each dataset to be prefiltered (names should correspond to a dataset name).
+Value should be less than the number of features in the corresponding
+dataset. Set to \code{NULL} in order to use \code{to_keep_props} instead.}
 
-\item{to_keep_props}{Named numeric vector, the proportion of features to retain in each dataset
-to be prefiltered (names should correspond to a dataset name). Value should be > 0 and < 1.
-Will be ignored if \code{to_keep_ns} is not \code{NULL}.}
+\item{to_keep_props}{Named numeric vector, the proportion of features to
+retain in each dataset to be prefiltered (names should correspond to a
+dataset name). Value should be > 0 and < 1. Will be ignored if \code{to_keep_ns}
+is not \code{NULL}.}
 
-\item{target_name_prefix}{Character, a prefix to add to the name of the targets created by this target factory.
-Default value is \code{""}.}
+\item{target_name_prefix}{Character, a prefix to add to the name of the
+targets created by this target factory. Default value is \code{""}.}
 
-\item{filtered_set_target_name}{Character, the name of the final target containing the filtered \code{MultiDataSet} object.
-If NULL, a name will automatically be supplied. Default value is \code{NULL}.}
+\item{filtered_set_target_name}{Character, the name of the final target
+containing the filtered \code{MultiDataSet} object. If NULL, a name will
+automatically be supplied. Default value is \code{NULL}.}
 
-\item{multilevel}{Character vector of length 1 or 3 to be used as information about repeated measurements.
-See \code{\link[=get_input_splsda]{get_input_splsda()}} for details. Default value is \code{NULL} (no repeated measurements).}
+\item{multilevel}{Character vector of length 1 or 3 to be used as information
+about repeated measurements. See \code{\link[=get_input_splsda]{get_input_splsda()}} for details. Default
+value is \code{NULL} (no repeated measurements).}
 
-\item{...}{Further arguments passed to the \code{\link{perf_splsda}} function.}
+\item{seed_perf}{Named integer vector, the seed to use for the
+\code{\link[=perf_splsda]{perf_splsda()}} function for each dataset. The length and names should
+match those of \code{to_keep_ns} or \code{to_keep_props}. If not named, the values
+will be used in order of the datasets in \code{to_keep_ns} or \code{to_keep_props}.
+Default value is \code{NULL}, i.e. no seed is set.
+@param seed_run Named integer vector, the seed to use for the
+\code{\link[=run_splsda]{run_splsda()}} function for each dataset. The length and names should
+match those of \code{to_keep_ns} or \code{to_keep_props}. If not named, the values
+will be used in order of the datasets in \code{to_keep_ns} or \code{to_keep_props}.
+Default value is \code{NULL}, i.e. no seed is set.}
+
+\item{...}{Further arguments passed to the \link{perf_splsda}
+function.}
 }
 \value{
-A list of target objects. With \code{target_name_prefix = ""} and \code{filtered_set_target_name = NULL},
-the following targets are created:
+A list of target objects. With \code{target_name_prefix = ""} and
+\code{filtered_set_target_name = NULL}, the following targets are created:
 \itemize{
-\item \code{splsda_spec}: generates a grouped tibble where each row corresponds to one dataset to be filtered,
-with the columns specifying each dataset name, and associated values from \code{to_keep_ns} and \code{to_keep_props}.
+\item \code{splsda_spec}: generates a grouped tibble where each row corresponds to one
+dataset to be filtered, with the columns specifying each dataset name, and
+associated values from \code{to_keep_ns} and \code{to_keep_props}.
 \itemize{
-\item \code{individual_splsda_input}: a dynamic branching target that runs the \code{\link[=get_input_splsda]{get_input_splsda()}} function for each dataset.
+\item \code{individual_splsda_input}: a dynamic branching target that runs the
+\code{\link[=get_input_splsda]{get_input_splsda()}} function for each dataset.
 }
-\item \code{individual_splsda_perf}: a dynamic branching target that runs the \code{\link[=perf_splsda]{perf_splsda()}} function for each dataset.
-\item \code{individual_splsda_run}: a dynamic branching target that runs the \code{\link[=run_splsda]{run_splsda()}} function for each dataset,
-using the results from \code{individual_splsda_perf} to guide the number of latent components to construct.
-\item \code{filtered_set_slpsda}: a target to retain from the original \code{MultiDataSet} object only features selected in each sPLS-DA run.
+\item \code{individual_splsda_perf}: a dynamic branching target that runs the
+\code{\link[=perf_splsda]{perf_splsda()}} function for each dataset.
+\item \code{individual_splsda_run}: a dynamic branching target that runs the
+\code{\link[=run_splsda]{run_splsda()}} function for each dataset, using the results from
+\code{individual_splsda_perf} to guide the number of latent components to
+construct.
+\item \code{filtered_set_slpsda}: a target to retain from the original \code{MultiDataSet}
+object only features selected in each sPLS-DA run.
 }
 }
 \description{
-Creates a list of targets to perform feature preselection on datasets from a \code{MultiDataSet}
-object with sPLS-DA (from the \code{mixOmics} package).
+Creates a list of targets to perform feature preselection on datasets from a
+\code{MultiDataSet} object with sPLS-DA (from the \code{mixOmics} package).
 }
 \examples{
 \dontrun{
