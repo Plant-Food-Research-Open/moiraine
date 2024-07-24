@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-07-09T04:44Z
+last_built: 2024-07-24T03:32Z
 urls:
   reference: https://plant-food-research-open.github.io/moiraine/reference
   article: https://plant-food-research-open.github.io/moiraine/articles

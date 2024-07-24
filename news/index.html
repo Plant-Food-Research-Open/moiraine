@@ -37,6 +37,7 @@
 <li><p>Package here has been removed from dependencies (not needed).</p></li>
 <li><p><code>where()</code> function now imported from tidyselect instead of dplyr (as it required a newer version of dplyr).</p></li>
 <li><p>Fixed typo in samples metadata file, samples with no value for “rnaseq_batch” variable now have <code>NA</code> rather than <code>"BNA"</code> values.</p></li>
+<li><p><code><a href="../reference/perf_splsda.html">perf_splsda()</a></code> and <code><a href="../reference/run_splsda.html">run_splsda()</a></code> now have a <code>seed</code> argument (hopefully self-explanatory :)). Accordingly, <code>feature_preselection_splsda_factory</code> now has arguments <code>seed_perf</code> and <code>seed_run</code> to pass on seeds to <code><a href="../reference/perf_splsda.html">perf_splsda()</a></code> and <code>run_splsda</code>.</p></li>
 </ul></div>
   </main></div>
 
