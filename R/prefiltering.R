@@ -760,7 +760,7 @@ get_filtered_dataset_splsda <- function(mo_data,
 #'   match those of `to_keep_ns` or `to_keep_props`. If not named, the values
 #'   will be used in order of the datasets in `to_keep_ns` or `to_keep_props`.
 #'   Default value is `NULL`, i.e. no seed is set.
-#'  @param seed_run Named integer vector, the seed to use for the
+#' @param seed_run Named integer vector, the seed to use for the
 #'   [run_splsda()] function for each dataset. The length and names should
 #'   match those of `to_keep_ns` or `to_keep_props`. If not named, the values
 #'   will be used in order of the datasets in `to_keep_ns` or `to_keep_props`.

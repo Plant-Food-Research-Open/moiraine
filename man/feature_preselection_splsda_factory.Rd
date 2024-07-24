@@ -49,8 +49,9 @@ value is \code{NULL} (no repeated measurements).}
 \code{\link[=perf_splsda]{perf_splsda()}} function for each dataset. The length and names should
 match those of \code{to_keep_ns} or \code{to_keep_props}. If not named, the values
 will be used in order of the datasets in \code{to_keep_ns} or \code{to_keep_props}.
-Default value is \code{NULL}, i.e. no seed is set.
-@param seed_run Named integer vector, the seed to use for the
+Default value is \code{NULL}, i.e. no seed is set.}
+
+\item{seed_run}{Named integer vector, the seed to use for the
 \code{\link[=run_splsda]{run_splsda()}} function for each dataset. The length and names should
 match those of \code{to_keep_ns} or \code{to_keep_props}. If not named, the values
 will be used in order of the datasets in \code{to_keep_ns} or \code{to_keep_props}.
