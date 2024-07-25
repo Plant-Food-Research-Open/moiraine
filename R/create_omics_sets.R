@@ -281,7 +281,8 @@ add_omics_set <- function(mo_data, omics_set, ds_name, ...) {
 #' @param sets_list List of [Biobase::eSet-class] objects, created via
 #'   [create_omics_set()]. Currently accepted objects: [Biobase::SnpSet-class],
 #'   [Biobase::ExpressionSet-class], [MetabolomeSet-class],
-#'   [PhenotypeSet-class].
+#'   [PhenotypeSet-class]. Note that feature IDs must be unique between the
+#'   sets, i.e. a same ID cannot be used in several omics sets.
 #' @param datasets_names Optional, vector of character, name for each Set
 #'   object. Will be appended to the data type in the resulting object. If the
 #'   `sets_list` list contains several objects of the same data type (e.g.
@@ -337,6 +338,15 @@ create_multiomics_set <- function(sets_list,
     ## if several sets_list elements have the same data type,
     ## must provide unique datasets_names
     datasets_names <- .make_unique_ids(cl)
+  }
+
+  features_list <- purrr::map(sets_list, Biobase::featureNames) |> unlist()
+  duplicated_features <- features_list[duplicated(features_list)]
+
+  if (length(duplicated_features) > 0) {
+    stop("Features ID cannot be repeated across omics sets. Feature IDs found across several sets include:\n'",
+         paste0(utils::head(duplicated_features, n = 5L), collapse = "', '"), "' (",
+         length(duplicated_features), " in total).")
   }
 
   res <- MultiDataSet::createMultiDataSet()

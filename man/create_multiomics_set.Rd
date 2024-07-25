@@ -10,7 +10,8 @@ create_multiomics_set(sets_list, datasets_names = NULL, show_warnings = TRUE)
 \item{sets_list}{List of \link[Biobase:class.eSet]{Biobase::eSet} objects, created via
 \code{\link[=create_omics_set]{create_omics_set()}}. Currently accepted objects: \link[Biobase:class.SnpSet]{Biobase::SnpSet},
 \link[Biobase:class.ExpressionSet]{Biobase::ExpressionSet}, \linkS4class{MetabolomeSet},
-\linkS4class{PhenotypeSet}.}
+\linkS4class{PhenotypeSet}. Note that feature IDs must be unique between the
+sets, i.e. a same ID cannot be used in several omics sets.}
 
 \item{datasets_names}{Optional, vector of character, name for each Set
 object. Will be appended to the data type in the resulting object. If the

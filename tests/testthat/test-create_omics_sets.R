@@ -271,6 +271,7 @@ test_that("create_omics_set_factory works - with metadata", {
 
 test_that("create_multiomics_set works", {
   omics_sets <- test_get_omics_list()
+  omics_sets_2snps <- test_get_omics_list_2snps()
 
   ## Testing correct input
   expect_error(create_multiomics_set(list()), "sets_list list is empty.")
@@ -294,8 +295,16 @@ test_that("create_multiomics_set works", {
   expect_equal(n_features(t1), c("snps" = 30, "rnaseq" = 35, "metabolome" = 40, "phenotypes" = 40))
   expect_equal(n_samples(t1), c("snps" = 15, "rnaseq" = 15, "metabolome" = 15, "phenotypes" = 15))
 
+  ## Testing duplicated feature IDs
+  expect_error(
+    create_multiomics_set(omics_sets[c(1:3, 1)], show_warnings = FALSE),
+    "Features ID cannot be repeated across omics sets. Feature IDs found across several sets include:
+'featureA_1', 'featureA_2', 'featureA_3', 'featureA_4', 'featureA_5' (30 in total).",
+    fixed = TRUE
+  )
+
   ## Testing two sets of the same data type - no input name
-  t2 <- create_multiomics_set(omics_sets[c(1:3, 1)], show_warnings = FALSE)
+  t2 <- create_multiomics_set(omics_sets_2snps, show_warnings = FALSE)
   expect_equal(names(t2), c("snps+1", "rnaseq", "metabolome", "snps+2"))
 
   ## Testing one set of each data type - input names
@@ -313,11 +322,11 @@ test_that("create_multiomics_set works", {
   expect_equal(names(t5), c("snps", "rnaseq+A", "metabolome+B", "phenotypes+C"))
 
   ## Testing two sets of the same data type - input names
-  t6 <- create_multiomics_set(omics_sets[c(1:3, 1)], LETTERS[1:4], show_warnings = FALSE)
+  t6 <- create_multiomics_set(omics_sets_2snps, LETTERS[1:4], show_warnings = FALSE)
   expect_equal(names(t6), c("snps+A", "rnaseq+B", "metabolome+C", "snps+D"))
 
   expect_error(
-    create_multiomics_set(omics_sets[c(1:3, 1)], LETTERS[c(1:3, 1)], show_warnings = FALSE),
+    create_multiomics_set(omics_sets_2snps, LETTERS[c(1:3, 1)], show_warnings = FALSE),
     "Dataset names for objects of a same type must be unique."
   )
 

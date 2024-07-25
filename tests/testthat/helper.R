@@ -95,6 +95,41 @@ test_get_omics_list <- function(data_list = NULL,
   return(omics_sets)
 }
 
+test_get_omics_list_2snps <- function() {
+  data_list <- test_get_data_list()
+  fmeta_list <- test_get_fmeta_list()
+  smeta_list <- test_get_smeta_list()
+
+  data_list[[4]] <- data_list[[1]]
+  rownames(data_list[[4]]) <- paste0(rownames(data_list[[4]]), "_DUP")
+
+  fmeta_list[[4]] <- fmeta_list[[1]]
+  rownames(fmeta_list[[4]]) <- paste0(rownames(fmeta_list[[4]]), "_DUP")
+
+  smeta_list[[4]] <- smeta_list[[1]]
+
+  types <- c(
+    "A" = "genomics",
+    "B" = "transcriptomics",
+    "C" = "metabolomics",
+    "D" = "genomics"
+  )
+
+  omics_sets <- purrr::map(
+    names(data_list),
+    ~ suppressWarnings(
+      create_omics_set(
+        data_list[[.x]],
+        omics_type = types[[.x]],
+        features_metadata = fmeta_list[[.x]],
+        samples_metadata = smeta_list[[.x]]
+      )
+    )
+  )
+
+  return(omics_sets)
+}
+
 test_get_multidataset <- function(data_list = NULL,
                                   fmeta_list = NULL,
                                   smeta_list = NULL) {
