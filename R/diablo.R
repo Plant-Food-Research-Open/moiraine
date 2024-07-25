@@ -365,29 +365,44 @@ diablo_get_optim_ncomp <- function(perf_res, measure = "Overall.BER", distance =
 
 #' Tunes keepX arg for DIABLO
 #'
-#' Performs cross-validation to estimate the optimal number of features to retain from each dataset for a DIABLO run.
+#' Performs cross-validation to estimate the optimal number of features to
+#' retain from each dataset for a DIABLO run.
 #'
-#' The \code{design_matrix} argument can either be a custom design matrix (for example as constructed via the
-#' \code{\link{diablo_generate_design_matrix}} function); or a character indicating the type of design matrix
-#' to generate. Possible values include:
-#' \itemize{
-#'     \item \code{'null'}: Off-diagonal elements of the design matrix are set to 0;
-#'     \item \code{'weighted_full'}: Off-diagonal elements of the design matrix are set to 0.1;
-#'     \item \code{'full'}: Off-diagonal elements of the design matrix are set to 1.
-#' }
+#' The `design_matrix`` argument can either be a custom design matrix (for
+#' example as constructed via the `diablo_generate_design_matrix` function); or
+#' a character indicating the type of design matrix to generate. Possible values
+#' include:
+#' * `'null'`: Off-diagonal elements of the design matrix are set to 0;
+#' * `'weighted_full'`: Off-diagonal elements of the design matrix are set to
+#'   0.1;
+#' * `'full'`: Off-diagonal elements of the design matrix are set to 1.
 #'
-#' @param mixomics_data A \code{mixOmics} input object created with \code{\link{get_input_mixomics_supervised}}.
-#' @param design_matrix Either numeric matrix created through \code{\link{diablo_generate_design_matrix}}, or character
-#' (accepted values are \code{'null'}, \code{'weighted_full'}, \code{'full'}). See Details.
-#' @param keepX_list Named list, gives for each omics dataset in the mixOmics input (i.e. excluding the response Y) a vector of values
-#' to test (i.e. number of features to return from this dataset). If \code{NULL} (default), a standard grid will
-#' be applied for each dataset and latent component, testing values: \code{seq(5, 30, 5)}.
-#' @param cpus Integer, the number of CPUs to use when running the code in parallel. For advanced users,
-#' see the \code{BPPARAM} argument of \code{\link[mixOmics]{tune.block.splsda}}.
-#' @param ... Arguments to be passed to the \code{\link[mixOmics]{tune.block.splsda}} function.
-#' @return A list, see \code{\link[mixOmics]{tune.block.splsda}}.
+#' @param mixomics_data A `mixOmics` input object created with
+#'   `get_input_mixomics_supervised()`.
+#' @param design_matrix Either numeric matrix created through
+#'   `diablo_generate_design_matrix`, or character (accepted values are
+#'   `'null'`, `'weighted_full'`, `'full'`). See Details.
+#' @param keepX_list Named list, gives for each omics dataset in the mixOmics
+#'   input (i.e. excluding the response Y) a vector of values to test (i.e.
+#'   number of features to return from this dataset). If `NULL` (default), a
+#'   standard grid will be applied for each dataset and latent component,
+#'   testing values: `seq(5, 30, 5)`.
+#' @param cpus Integer, the number of CPUs to use when running the code in
+#'   parallel. For advanced users, see the \code{BPPARAM} argument of
+#'   [mixOmics::tune.block.splsda()].
+#' @param seed Integer, seed to use. Default is `NULL`, i.e. no seed is set
+#'   inside the function.
+#' @param ... Arguments to be passed to the [mixOmics::tune.block.splsda()]
+#'   function.
+#' @returns A list, see [mixOmics::tune.block.splsda()].
 #' @export
-diablo_tune <- function(mixomics_data, design_matrix, keepX_list = NULL, cpus = NULL, ...) {
+diablo_tune <- function(mixomics_data,
+                        design_matrix,
+                        keepX_list = NULL,
+                        cpus = NULL,
+                        seed = NULL,
+                        ...) {
+
   ## Take care of the design matrix
   datasets_name <- setdiff(names(mixomics_data), "Y")
 
@@ -418,6 +433,8 @@ diablo_tune <- function(mixomics_data, design_matrix, keepX_list = NULL, cpus = 
   }
 
   BPPARAM <- .mixomics_cpus_to_bparam(cpus)
+
+  if (!is.null(seed)) set.seed(seed)
 
   mixOmics::tune.block.splsda(
     X = mixomics_data[datasets_name],
