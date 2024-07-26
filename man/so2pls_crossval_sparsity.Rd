@@ -2,7 +2,8 @@
 % Please edit documentation in R/so2pls.R
 \name{so2pls_crossval_sparsity}
 \alias{so2pls_crossval_sparsity}
-\title{Perform cross-validation to find the optimal number of features/groups to keep for each joint component for sO2PLS}
+\title{Perform cross-validation to find the optimal number of features/groups to
+keep for each joint component for sO2PLS}
 \usage{
 so2pls_crossval_sparsity(
   omicspls_input,
@@ -15,56 +16,74 @@ so2pls_crossval_sparsity(
   groupx = NULL,
   groupy = NULL,
   tol = 1e-10,
-  max_iterations = 100
+  max_iterations = 100,
+  seed = NULL
 )
 }
 \arguments{
-\item{omicspls_input}{A named list of length 2, produced by \code{\link{get_input_omicspls}}.}
+\item{omicspls_input}{A named list of length 2, produced by
+\code{\link[=get_input_omicspls]{get_input_omicspls()}}.}
 
 \item{n}{Integer, number of joint PLS components. Must be positive.}
 
-\item{nx}{Integer, number of orthogonal components in \code{X}. Negative values are interpreted as 0.}
+\item{nx}{Integer, number of orthogonal components in \code{X}. Negative values
+are interpreted as 0.}
 
-\item{ny}{Integer, number of orthogonal components in \code{Y}. Negative values are interpreted as 0.}
+\item{ny}{Integer, number of orthogonal components in \code{Y}. Negative values
+are interpreted as 0.}
 
-\item{nr_folds}{integer, number of folds for the cross-validation. Default value is 10.}
+\item{nr_folds}{integer, number of folds for the cross-validation. Default
+value is 10.}
 
-\item{keepx_seq}{Numeric vector, how many features/groups to keep for cross-validation in each of the
-joint components of \code{X}. Sparsity of each joint component will be selected sequentially.}
+\item{keepx_seq}{Numeric vector, how many features/groups to keep for
+cross-validation in each of the joint components of \code{X}. Sparsity of each
+joint component will be selected sequentially.}
 
-\item{keepy_seq}{Numeric vector, how many features/groups to keep for cross-validation in each of the
-joint components of \code{Y}. Sparsity of each joint component will be selected sequentially.}
+\item{keepy_seq}{Numeric vector, how many features/groups to keep for
+cross-validation in each of the joint components of \code{Y}. Sparsity of each
+joint component will be selected sequentially.}
 
-\item{groupx}{Character vector, group name of each \code{X}-feature. Its length must be equal to the number
-of features in \code{X}. The order of the group names must corresponds to the order of the features.
-If \code{NULL}, no groups are considered. Default value is \code{NULL}.}
+\item{groupx}{Character vector, group name of each \code{X}-feature. Its length
+must be equal to the number of features in \code{X}. The order of the group
+names must corresponds to the order of the features. If \code{NULL}, no groups
+are considered. Default value is \code{NULL}.}
 
-\item{groupy}{Character vector, group name of each \code{Y}-feature. Its length must be equal to the number
-of features in \code{Y}. The order of the group names must corresponds to the order of the features.
-If \code{NULL}, no groups are considered. Default value is \code{NULL}.}
+\item{groupy}{Character vector, group name of each \code{Y}-feature. Its length
+must be equal to the number of features in \code{Y}. The order of the group
+names must corresponds to the order of the features. If \code{NULL}, no groups
+are considered. Default value is \code{NULL}.}
 
-\item{tol}{Numeric, threshold for which the NIPALS method is deemed converged. Must be positive.
-Default value is \code{1e-10}.}
+\item{tol}{Numeric, threshold for which the NIPALS method is deemed
+converged. Must be positive. Default value is \code{1e-10}.}
 
-\item{max_iterations}{Integer, maximum number of iterations for the NIPALS method.}
+\item{max_iterations}{Integer, maximum number of iterations for the NIPALS
+method.}
+
+\item{seed}{Integer, seed to use. Default is \code{NULL}, i.e. no seed is set
+inside the function.}
 }
 \value{
 A list with the following elements:
 \itemize{
 \item \code{Best}: a vector giving for each join component the number of features
 to keep from \code{X} and \code{Y} that yield the highest covariance between the
-joint components of \code{X} and \code{Y} (elements \code{x1, y1, x2, y2}, etc),
-and the number of features to keep from \code{X} and \code{Y} yielding the highest covariance under the
-1 standard error rule (elements \code{x_1sd1, y_1sd1, x_1sd2, y_1sd2}, etc).
+joint components of \code{X} and \code{Y} (elements \code{x1}, \code{y1}, \code{x2}, \code{y2}, etc),
+and the number of features to keep from \code{X} and \code{Y} yielding the highest
+covariance under the 1 standard error rule (elements \code{x_1sd1}, \code{y_1sd1},
+\code{x_1sd2}, \code{y_1sd2}, etc).
 \item \code{Covs}: a list, with as many elements as number of joint components (\code{n}).
-Each element is a matrix giving the average covariance between the joint components of \code{X} and \code{Y}
-obtained across the folds, for each tested values of \code{keepx} (columns) and of \code{keepy} (rows).
+Each element is a matrix giving the average covariance between the joint
+components of \code{X} and \code{Y} obtained across the folds, for each tested values
+of \code{keepx} (columns) and of \code{keepy} (rows).
 \item \code{SEcov}: a list, with as many elements as number of joint components (\code{n}).
-Each element is a matrix giving the standard error of the covariance between the joint components of \code{X} and \code{Y}
-obtained across the folds, for each tested values of \code{keepx} (columns) and of \code{keepy} (rows).
+Each element is a matrix giving the standard error of the covariance
+between the joint components of \code{X} and \code{Y} obtained across the folds, for
+each tested values of \code{keepx} (columns) and of \code{keepy} (rows).
 }
 }
 \description{
-Computes the optimal number of features/groups to keep for each joint component for an sO2PLS run. Directly
-copied from the \code{\link[OmicsPLS]{crossval_sparsity}} function, but improved the output for plotting purposes.
+Computes the optimal number of features/groups to keep for each joint
+component for an sO2PLS run. Directly copied from the
+\code{\link[OmicsPLS:crossval_sparsity]{OmicsPLS::crossval_sparsity()}} function, but improved the output for
+plotting purposes.
 }

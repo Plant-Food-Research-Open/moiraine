@@ -181,6 +181,8 @@ spls_get_optim_ncomp <- function(spls_perf, thr = 0.0975, min_ncomp = 1) {
 #' @param cpus Integer, the number of CPUs to use when running the code in
 #'   parallel. For advanced users, see the `BPPARAM` argument of
 #'   [mixOmics::tune.spls()].
+#' @param seed Integer, seed to use. Default is `NULL`, i.e. no seed is set
+#'   inside the function.
 #' @param ... Further arguments passed to [mixOmics::tune.spls()].
 #' @returns A list (see [mixOmics::tune.spls()]).
 #' @export
@@ -188,6 +190,7 @@ spls_tune <- function(spls_input,
                       keepX = NULL,
                       keepY = NULL,
                       cpus = NULL,
+                      seed = NULL,
                       ...) {
 
 
@@ -200,6 +203,8 @@ spls_tune <- function(spls_input,
   keepY <- keepY[keepY <= ncol(spls_input[[2]])]
 
   BPPARAM <- .mixomics_cpus_to_bparam(cpus)
+
+  if (!is.null(seed)) set.seed(seed)
 
   spls_tune_res <- mixOmics::tune.spls(
     spls_input[[1]],

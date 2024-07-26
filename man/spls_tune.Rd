@@ -4,7 +4,14 @@
 \alias{spls_tune}
 \title{Performs cross-validation for mixomics sPLS to select optimal keepX and keepY}
 \usage{
-spls_tune(spls_input, keepX = NULL, keepY = NULL, cpus = NULL, ...)
+spls_tune(
+  spls_input,
+  keepX = NULL,
+  keepY = NULL,
+  cpus = NULL,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{spls_input}{A \code{mixOmics} input object created with
@@ -21,6 +28,9 @@ be used, see details).}
 \item{cpus}{Integer, the number of CPUs to use when running the code in
 parallel. For advanced users, see the \code{BPPARAM} argument of
 \code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}.}
+
+\item{seed}{Integer, seed to use. Default is \code{NULL}, i.e. no seed is set
+inside the function.}
 
 \item{...}{Further arguments passed to \code{\link[mixOmics:tune.spls]{mixOmics::tune.spls()}}.}
 }
