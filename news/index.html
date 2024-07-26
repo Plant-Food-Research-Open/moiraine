@@ -37,9 +37,8 @@
 <li><p>Package here has been removed from dependencies (not needed).</p></li>
 <li><p><code>where()</code> function now imported from tidyselect instead of dplyr (as it required a newer version of dplyr).</p></li>
 <li><p>Fixed typo in samples metadata file, samples with no value for “rnaseq_batch” variable now have <code>NA</code> rather than <code>"BNA"</code> values.</p></li>
-<li><p><code><a href="../reference/perf_splsda.html">perf_splsda()</a></code> and <code><a href="../reference/run_splsda.html">run_splsda()</a></code> now have a <code>seed</code> argument (hopefully self-explanatory :)). Accordingly, <code>feature_preselection_splsda_factory</code> now has arguments <code>seed_perf</code> and <code>seed_run</code> to pass on seeds to <code><a href="../reference/perf_splsda.html">perf_splsda()</a></code> and <code><a href="../reference/run_splsda.html">run_splsda()</a></code>.</p></li>
+<li><p><code><a href="../reference/perf_splsda.html">perf_splsda()</a></code>, <code><a href="../reference/run_splsda.html">run_splsda()</a></code>, <code><a href="../reference/diablo_tune.html">diablo_tune()</a></code>, <code><a href="../reference/spls_tune.html">spls_tune()</a></code> and <code><a href="../reference/so2pls_crossval_sparsity.html">so2pls_crossval_sparsity()</a></code> now have a <code>seed</code> argument (hopefully self-explanatory :)). Accordingly, <code>feature_preselection_splsda_factory</code> now has arguments <code>seed_perf</code> and <code>seed_run</code> to pass on seeds to <code><a href="../reference/perf_splsda.html">perf_splsda()</a></code> and <code><a href="../reference/run_splsda.html">run_splsda()</a></code>.</p></li>
 <li><p><code>create_multiomis_set()</code> now returns an error if some feature IDs are used across different omics sets. This is to prevent errors further down the line when visualising or subsetting the multi-omics data.</p></li>
-<li><p><code><a href="../reference/diablo_tune.html">diablo_tune()</a></code> now has a <code>seed</code> argument.</p></li>
 </ul></div>
   </main></div>
 
