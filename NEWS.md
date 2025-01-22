@@ -12,3 +12,5 @@
 
 - `create_multiomis_set()` now returns an error if some feature IDs are used across different omics sets. This is to prevent errors further down the line when visualising or subsetting the multi-omics data.
 
+
+- Fixed a bug which triggered an error when applying `get_output()` to DIABLO results with only one latent component.

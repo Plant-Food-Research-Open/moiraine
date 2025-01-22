@@ -633,7 +633,11 @@ diablo_get_wa_coord <- function(diablo_res) {
 
   weighted_arrays <- lapply(datasets_name, function(i) {
     variates <- arrays[[i]]
-    w <- diag(weights[which(datasets_name == i), ])
+    w <- diag(
+      weights[which(datasets_name == i), ],
+      nrow = ncol(variates),
+      ncol = ncol(variates)
+    )
     weighted_variates <- variates %*% w
     dimnames(weighted_variates) <- dimnames(variates)
 
