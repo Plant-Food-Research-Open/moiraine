@@ -160,6 +160,7 @@ get_targets_running_time <- function(target_patterns = c("sPLS" = "^spls_",
 }
 
 #' @rdname get_targets_running_time
+#' @export
 plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
                                                   "sO2PLS" = "^so2pls_",
                                                   "MOFA" = "^mofa_",
