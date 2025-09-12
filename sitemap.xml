@@ -14,6 +14,7 @@
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/add_pheno-MultiDataSet-PhenotypeSet-method.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/add_pheno-methods.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/add_samples_metadata.html</loc></url>
+<url><loc>https://plant-food-research-open.github.io/moiraine/reference/aggr_patterns_fct.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/check_feature_sets.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/check_input_multidataset.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/check_is_multidataset.html</loc></url>
@@ -76,6 +77,7 @@
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_input_spls.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_input_splsda.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_latent_dimensions.html</loc></url>
+<url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_method_functions.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_output.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_pca_arguments.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_samples.html</loc></url>
@@ -84,6 +86,7 @@
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_samples_score_correlation.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_selected_features.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_table_transformations.html</loc></url>
+<url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_targets_running_time.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_top_features.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/get_transformed_data.html</loc></url>
 <url><loc>https://plant-food-research-open.github.io/moiraine/reference/ggpairs_custom.html</loc></url>
