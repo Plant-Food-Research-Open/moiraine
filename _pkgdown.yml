@@ -203,6 +203,14 @@ reference:
   - consensus_importance_metric
   - show_consensus_metrics
 
+- title: "Running times assessment"
+  desc: "Assessment and comparison of the pipeline running time"
+  contents:
+  - get_targets_running_time
+  - plot_running_time
+  - get_method_functions
+  - aggr_patterns_fct
+
 - title: "Other (utils)"
   desc: "Other miscellaneous functions"
 - subtitle: "Helper MultiDataSet object"

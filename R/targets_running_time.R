@@ -193,15 +193,22 @@ plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
 
   toadd <- toplot |>
     dplyr::group_by(pattern) |>
-    dplyr::arrange(dplyr::desc(fct_pat)) |>
+    dplyr::slice_max(time, n = 1, with_ties = FALSE) |>
+    dplyr::ungroup() |>
     dplyr::mutate(
-      time_accr = cumsum(time),
-      rank = rank(dplyr::desc(time))
-    ) |>
-    dplyr::slice_max(time, n = 3, with_ties = TRUE) |>
-    dplyr::group_by() |>
-    dplyr::filter(!(time < 1 & rank > 1)) |>
-    dplyr::mutate(time = time_accr - (time / 2))
+      total_lab = dplyr::case_when(
+        total > 60 ~ paste0(round(total / 60, 1), "h"),
+        total < 1 ~ paste0(round(total * 60, 1), "s"),
+        TRUE ~ paste0(round(total, 1), "m")
+      ),
+      time_lab = dplyr::case_when(
+        time > 60 ~ paste0(round(time / 60, 1), "h"),
+        time < 1 ~ paste0(round(time * 60, 1), "s"),
+        TRUE ~ paste0(round(time, 1), "m")
+      ),
+      lab = stringr::str_glue(" Total: {total_lab} | {fct}: {time_lab}"),
+      time = 0
+    )
 
 
   breaks_fct <- function(x) {
@@ -221,10 +228,14 @@ plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
       linewidth = 0,
       show.legend = FALSE
     ) +
-    ggrepel::geom_text_repel(
-      ggplot2::aes(label = fct),
+    ggplot2::geom_text(
+      ggplot2::aes(label = lab),
       data = toadd,
-      nudge_x = 0.5
+      hjust = 0,
+      nudge_x = 0.4
+    ) +
+    ggplot2::scale_x_discrete(
+      expand = ggplot2::expansion(add = c(0.4, 0.7))
     ) +
     ggplot2::scale_y_continuous(
       breaks = breaks_fct,
