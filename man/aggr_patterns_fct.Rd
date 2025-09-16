@@ -2,7 +2,7 @@
 % Please edit documentation in R/targets_running_time.R
 \name{aggr_patterns_fct}
 \alias{aggr_patterns_fct}
-\title{Aggregate regexp patterns for a search.}
+\title{Aggregate regexp patterns for a search}
 \usage{
 aggr_patterns_fct(x)
 }
@@ -13,5 +13,5 @@ aggr_patterns_fct(x)
 Character, aggregated regex patterns.
 }
 \description{
-Aggregate regexp patterns for a search.
+Aggregate regexp patterns for a search
 }

@@ -37,7 +37,7 @@ get_method_functions <- function() {
   )
 }
 
-#' Aggregate regexp patterns for a search.
+#' Aggregate regexp patterns for a search
 #'
 #' @param x Character vector, the regex patterns.
 #' @returns Character, aggregated regex patterns.
@@ -46,9 +46,11 @@ aggr_patterns_fct <- function(x) {
   paste0("(", x, ")", collapse = "|")
 }
 
-#' Extract/plot running time of functions used for different integration
-#' methods.
+#' Extract/plot running time of functions used for different integration methods
 #'
+#' In the plot, the coloured blocks in each bar each represent one of the steps
+#' (targets) that correspond to an integration method. The text above each bar
+#' shows the function that took the longest to run for each integration method.
 #'
 #' @param target_patterns Named character vector, regex patterns used to extract
 #'   targets by their names.
@@ -170,7 +172,8 @@ plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
                               target_exclude_patterns = NULL,
                               method_functions = get_method_functions()) {
   ## For devtools::check()
-  pattern <- seconds <- fct <- fct_pat <- time <- time_accr <- total <- n <- NULL
+  pattern <- seconds <- fct <- fct_pat <- time <- lab <- total <- NULL
+  n <- colour_tmp <- NULL
 
   toplot <- get_targets_running_time(
     target_patterns,
@@ -188,8 +191,13 @@ plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
       time = seconds / 60,
       total = sum(time),
       n = (1:dplyr::n()) %% 2,
+      colour_tmp = rep(c("#aa87d0", "#8350ba"), length.out = dplyr::n())
     ) |>
     dplyr::ungroup()
+
+  colour_tmp_vec <- toplot |>
+    dplyr::select(fct_pat, colour_tmp) |>
+    tibble::deframe()
 
   toadd <- toplot |>
     dplyr::group_by(pattern) |>
@@ -241,6 +249,7 @@ plot_running_time <- function(target_patterns = c("sPLS" = "^spls_",
       breaks = breaks_fct,
       expand = ggplot2::expansion(mult = c(0, 0.05))
     ) +
+    ggplot2::scale_colour_manual(values = colour_tmp_vec) +
     ggplot2::scale_fill_manual(values = c("#8350ba", "#aa87d0")) +
     ggplot2::coord_flip() +
     ggplot2::labs(
