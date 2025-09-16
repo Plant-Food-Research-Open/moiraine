@@ -3,8 +3,7 @@
 \name{get_targets_running_time}
 \alias{get_targets_running_time}
 \alias{plot_running_time}
-\title{Extract/plot running time of functions used for different integration
-methods.}
+\title{Extract/plot running time of functions used for different integration methods}
 \usage{
 get_targets_running_time(
   target_patterns = c(sPLS = "^spls_", sO2PLS = "^so2pls_", MOFA = "^mofa_", DIABLO =
@@ -44,8 +43,9 @@ each integration method (\code{get_targets_running_time}), or a ggplot
 (\code{plot_running_time}).
 }
 \description{
-Extract/plot running time of functions used for different integration
-methods.
+In the plot, the coloured blocks in each bar each represent one of the steps
+(targets) that correspond to an integration method. The text above each bar
+shows the function that took the longest to run for each integration method.
 }
 \examples{
 \dontrun{
