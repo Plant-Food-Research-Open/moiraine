@@ -1,4 +1,4 @@
-# moiraine (development version)
+# moiraine 1.0.1
 
 - New functions `get_targets_running_time()` and `plot_running_time()` to view the running time of each target associated with an integration method. 
 
