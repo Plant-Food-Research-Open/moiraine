@@ -1,5 +1,7 @@
 # moiraine 1.0.1
 
+- Fixed bug in `so2pls_get_optim_ncomp()` which was breaking in presence of NAs.
+
 - New functions `get_targets_running_time()` and `plot_running_time()` to view the running time of each target associated with an integration method. 
 
 - In `comparison_heatmap_corr()`, the user can now choose the legend position through the `legend_position` parameter.

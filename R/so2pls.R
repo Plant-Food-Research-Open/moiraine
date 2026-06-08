@@ -293,7 +293,7 @@ so2pls_get_optim_ncomp <- function(cv_res) {
         ~ as.integer(stringr::str_extract(.x, "\\d+"))
       )
     ) |>
-    dplyr::filter(MSE == min(MSE)) |>
+    dplyr::filter(MSE == min(MSE, na.rm = TRUE)) |>
     dplyr::select(n, nx, ny)
 
   unlist(df)
